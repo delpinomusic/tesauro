@@ -1,530 +1,865 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Tesauro Armónico de la Guitarra</title>
-    <style>
-        @font-face {
-            font-family: 'Bravura';
-            src: url('fonts/Bravura.woff2') format('woff2');
-            font-weight: normal; font-style: normal; font-display: block;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tesauro Armónico · Guitarra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f9f8f5;
+  --surface: #ffffff;
+  --surface-2: #f2f1ee;
+  --border: #e4e2dc;
+  --border-strong: #ccc9c0;
+  --text: #1c1b18;
+  --text-2: #6b6860;
+  --text-3: #9e9b94;
+  --accent: #2563eb;
+  --accent-subtle: #eff4ff;
+  --purple-art: #7c3aed;
+  --freeze: #0891b2;
+  --freeze-bg: #ecfeff;
 
-        :root {
-            --bg-color: #fdf4dd; 
-            --text-main: #1d1d1f;
-            --text-secondary: #6e6e73;
-            --accent: #0071e3;
-            --purple: #af52de;
-            --freeze-color: #00bcd4;
-            
-            --fret-color: #636366; 
-            --string-color: #8e8e93;
-            --fret-text: #3a3a3c;
-            
-            --color-p2: #28a745; 
-            --color-p3: #d9a400; 
-            --color-p5: #e67e22; 
-            --color-p7: #0056b3; 
-            --color-px: #505055;
-            --alert-red: #d70015;
-        }
+  --c-p2: #16a34a;
+  --c-p3: #ca8a04;
+  --c-p5: #ea580c;
+  --c-p7: #2563eb;
+  --c-px: #71717a;
+  --c-alert: #dc2626;
 
-        html, body { 
-            height: 100vh; width: 100vw; overflow: hidden; margin: 0; padding: 0;
-            background: var(--bg-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            display: flex; flex-direction: column; align-items: center; -webkit-font-smoothing: antialiased;
-        }
+  --fret: #c4bfb5;
+  --string: #d1ccc0;
+  --nut: #57534e;
 
-        .header { text-align: center; padding: 25px 0 10px 0; flex-shrink: 0; }
-        h1 { font-weight: 200; font-size: 34px; margin: 0; color: var(--text-main); }
-        h1 i { font-style: italic; font-weight: 200; }
-        .subtitle { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; }
+  --r: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+}
 
-        .top-controls { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 20px; flex-shrink: 0; }
-        .input-group { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .input-group label { font-size: 9px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
-        
-        input[type="text"] {
-            padding: 5px 0; border: none; border-bottom: 1px solid #d2d2d7;
-            font-size: 26px; width: 80px; text-align: center; outline: none; 
-            background: transparent; font-weight: 300; transition: border-color 0.3s;
-        }
-        input[type="text"]:focus { border-bottom-color: var(--accent); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .checks-container { display: flex; gap: 30px; }
-        .checks-column { display: flex; flex-direction: column; gap: 8px; }
-        .check-group { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
-        .check-group label { font-size: 13px; color: var(--text-secondary); cursor: pointer; font-weight: 400; }
-        
-        input[type="checkbox"] {
-            appearance: none; -webkit-appearance: none; width: 18px; height: 18px; 
-            border: 1px solid #c1c1c7; border-radius: 4px; cursor: pointer;
-            display: inline-grid; place-content: center; background: rgba(255,255,255,0.5);
-        }
-        input[type="checkbox"]:checked { background-color: var(--purple); border-color: var(--purple); }
-        input[type="checkbox"]:checked::before {
-            content: ""; width: 10px; height: 10px; box-shadow: inset 1em 1em white;
-            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-        }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
 
-        .piano-container { display: flex; justify-content: center; margin-bottom: 20px; width: 100%; flex-shrink: 0; overflow-x: auto; padding: 10px 0; }
-        .keyboard-key {
-            min-width: 18px; height: 50px; background: #fffcf5; border: 0.5px solid #d2d2d7;
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            border-radius: 0 0 3px 3px; position: relative;
-        }
-        .keyboard-key.black { background: #1d1d1f; min-width: 11px; height: 30px; margin: 0 -5.5px; z-index: 2; border: none; }
-        .keyboard-key.active { background: #f2f2f7; border-bottom: 3px solid var(--accent); }
-        .middle-c-dot { width: 4px; height: 4px; background-color: #ffd1dc; border-radius: 50%; margin-bottom: 8px; }
+.app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  overflow: hidden;
+}
 
-        .main-layout {
-            display: flex; flex-direction: row; width: 95%; max-width: 1400px;
-            gap: 30px; align-items: flex-start; flex-grow: 1; overflow: hidden;
-        }
+/* ── Header ── */
+.header {
+  padding: 16px 28px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.header h1 {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.header h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-2);
+}
+.header-version {
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.06em;
+  font-weight: 400;
+}
 
-        #contenedor-svg { flex: 3; display: flex; align-items: center; justify-content: center; position: relative;}
-        svg { width: 100%; height: auto; }
+/* ── Top bar ── */
+.top-bar {
+  padding: 12px 28px 14px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
 
-        .side-panel {
-            flex: 1.4; display: flex; flex-direction: column; gap: 20px;
-            max-height: 100%; overflow-y: auto; padding-right: 10px;
-        }
+/* Note input */
+.nota-wrap { position: relative; margin-top: 14px; }
+.nota-label {
+  position: absolute;
+  top: -14px; left: 0;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+#inputNota {
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border-strong);
+  width: 90px;
+  padding: 2px 4px 3px;
+  outline: none;
+  transition: border-color 0.15s;
+  text-align: center;
+}
+#inputNota:focus { border-bottom-color: var(--accent); }
 
-        .symbol-zone { display: flex; align-items: center; justify-content: flex-end; gap: 8px; min-width: 130px; }
-        .diff-triangles { display: flex; gap: 2px; color: var(--alert-red); font-size: 9px; width: 30px; justify-content: flex-end; }
-        .smufl { font-family: "Bravura", serif; font-size: 34px; line-height: 1; color: var(--text-main); width: 40px; text-align: center; }
-        .cents-badge { font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 4px; background: rgba(0,0,0,0.05); min-width: 35px; text-align: center; }
+/* Divider */
+.divider {
+  width: 1px;
+  height: 36px;
+  background: var(--border);
+  flex-shrink: 0;
+}
 
-        .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
-        .dot-sample { width: 10px; height: 10px; border-radius: 50%; }
+/* Piano */
+.piano-outer {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  flex: 1;
+  min-width: 0;
+}
+.piano-outer::-webkit-scrollbar { display: none; }
 
-        .info-box { font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
-        .info-line { margin-bottom: 6px; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: space-between; }
-        .info-line b { color: var(--text-main); font-weight: 500; }
-        .info-line.frozen { background: rgba(0, 188, 212, 0.08); border-left: 3px solid var(--freeze-color); padding-left: 5px; border-radius: 0 4px 4px 0; }
-        
-        .note-tag { 
-            font-size: 10px; background: #e8e8ed; color: var(--text-main); 
-            padding: 2px 5px; border-radius: 3px; font-weight: 700; margin-right: 8px;
-            min-width: 24px; text-align: center;
-        }
+.piano-keys {
+  display: flex;
+  align-items: flex-start;
+  height: 40px;
+  padding: 0 2px;
+}
 
-        .btn-freeze { 
-            cursor: pointer; display: flex; align-items: center; justify-content: center; 
-            margin-right: 8px; transition: transform 0.2s; 
-        }
-        .btn-freeze:hover { transform: scale(1.2); }
-        .btn-freeze svg { width: 16px; height: 16px; fill: none; stroke: var(--text-secondary); stroke-width: 2; }
-        .btn-freeze.active svg { stroke: var(--freeze-color); fill: rgba(0, 188, 212, 0.2); }
+.key {
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.1s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.key.white {
+  width: 18px;
+  height: 40px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 3px 3px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 3px;
+}
+.key.white:hover { background: #f0efea; }
+.key.white.active {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+}
+.key.white.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2.5px;
+  background: var(--accent);
+  border-radius: 0 0 2px 2px;
+}
+.key.black {
+  width: 11px;
+  height: 24px;
+  background: var(--text);
+  border-radius: 0 0 2px 2px;
+  margin: 0 -5.5px;
+  z-index: 2;
+}
+.key.black:hover { background: #3a3a3a; }
+.key.black.active { background: var(--accent); }
+.middle-c-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.4;
+  margin-bottom: 5px;
+  flex-shrink: 0;
+}
 
-        .cuerda { stroke: var(--string-color); stroke-width: 1.2; }
-        .label-cuerda { font-size: 11px; text-anchor: end; fill: var(--text-main); font-weight: 700; }
-        .label-romano { font-size: 10px; fill: var(--fret-text); text-anchor: middle; font-weight: 700; }
-        .traste-metal { stroke: var(--fret-color); stroke-width: 1.8; }
-        .cejuela { stroke: #1d1d1f; stroke-width: 4; }
-        
-        .nodo { stroke: white; stroke-width: 1.5; }
-        .guia-nodo { stroke-width: 1; stroke-dasharray: 2,2; opacity: 1; }
-        .guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple); opacity: 0.7; }
-        .guia-horizontal { stroke-width: 2.5; stroke-dasharray: 2,1; opacity: 1; } 
-        .icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
-    </style>
+/* Checks */
+.checks-wrap {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.check-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  transition: all 0.15s;
+  user-select: none;
+  white-space: nowrap;
+  background: var(--surface);
+}
+.check-pill:hover { border-color: var(--border-strong); }
+.check-pill:has(input:checked) {
+  background: var(--accent-subtle);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.check-pill input[type="checkbox"] {
+  appearance: none;
+  width: 13px; height: 13px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  background: white;
+}
+.check-pill:has(input:checked) input[type="checkbox"] {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.check-pill:has(input:checked) input[type="checkbox"]::before {
+  content: '';
+  width: 7px; height: 7px;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background: white;
+}
+.check-pill label {
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.btn-clear {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.btn-clear:hover { border-color: var(--border-strong); color: var(--text-2); }
+
+/* ── Main ── */
+.main {
+  display: grid;
+  grid-template-columns: 1fr 290px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+@media (max-width: 860px) {
+  .main { grid-template-columns: 1fr; grid-template-rows: 1fr 200px; }
+  .side-panel { border-left: none; border-top: 1px solid var(--border); }
+}
+@media (min-width: 1280px) {
+  .main { grid-template-columns: 1fr 320px; }
+}
+@media (min-width: 1600px) {
+  .main { grid-template-columns: 1fr 380px; }
+  #inputNota { font-size: 34px; width: 100px; }
+}
+
+/* ── Fretboard ── */
+.fretboard-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+#mastil { width: 100%; height: auto; max-height: 100%; }
+
+/* SVG classes */
+.cuerda { stroke: var(--string); }
+.label-cuerda { font-size: 10.5px; text-anchor: end; fill: var(--text-2); font-weight: 600; font-family: 'Inter', sans-serif; }
+.label-romano { font-size: 9px; fill: var(--text-3); text-anchor: middle; font-weight: 500; font-family: 'Inter', sans-serif; }
+.traste-metal { stroke: var(--fret); stroke-width: 1.5; }
+.cejuela { stroke: var(--nut); stroke-width: 3; }
+.nodo { stroke: white; stroke-width: 1.5; }
+.guia-vertical { stroke-width: 1; stroke-dasharray: 3,2; opacity: 0.85; }
+.guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: 0.6; }
+.icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
+
+/* ── Side panel ── */
+.side-panel {
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.panel-top {
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text-2);
+  font-weight: 400;
+}
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Results */
+.results-list {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.results-list::-webkit-scrollbar { width: 4px; }
+.results-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 6px;
+  color: var(--text-3);
+  font-size: 13px;
+  padding: 20px;
+  text-align: center;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.result-row:last-child { border-bottom: none; }
+.result-row:hover { background: var(--surface-2); }
+.result-row.frozen { background: var(--freeze-bg); }
+.result-row.frozen:hover { background: #e0f9fc; }
+
+.freeze-btn {
+  width: 20px; height: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 3px;
+  display: grid;
+  place-content: center;
+  flex-shrink: 0;
+  color: var(--text-3);
+  transition: all 0.12s;
+}
+.freeze-btn:hover { color: var(--freeze); background: var(--freeze-bg); }
+.freeze-btn.on { color: var(--freeze); }
+.freeze-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.row-body { flex: 1; min-width: 0; }
+.row-main {
+  font-size: 12.5px;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.row-main b { font-weight: 600; }
+.row-sub { font-size: 11px; color: var(--text-3); margin-top: 0.5px; }
+
+.row-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.diff-dots { display: flex; gap: 2px; }
+.diff-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--c-alert); opacity: 0.45; }
+
+.cents {
+  font-family: 'Inter', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  min-width: 34px;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.frozen-tag {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--freeze);
+  background: #cffafe;
+  padding: 1px 4px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Bravura font for SMuFL symbols */
+@font-face {
+  font-family: 'Bravura';
+  src: url('fonts/Bravura.woff2') format('woff2');
+  font-weight: normal; font-style: normal; font-display: block;
+}
+.sym {
+  font-family: 'Bravura', serif;
+  font-size: 24px;
+  line-height: 1;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+</style>
 </head>
 <body>
+<div class="app">
 
-    <div class="header">
-        <h1>Tesauro <i>armónico</i> de la guitarra</h1>
-        <div class="subtitle">Juan del Pino · 2026 · v5.2.1</div>
+  <div class="header">
+    <h1>Tesauro <em>armónico</em> de la guitarra</h1>
+    <span class="header-version">Juan del Pino · v5.2.1</span>
+  </div>
+
+  <div class="top-bar">
+    <div class="nota-wrap">
+      <span class="nota-label">Nota</span>
+      <input type="text" id="inputNota" value="B4" oninput="actualizarDesdeInput()" spellcheck="false" autocomplete="off">
     </div>
 
-    <div class="top-controls">
-        <div class="input-group">
-            <label>Nota Objetivo</label>
-            <input type="text" id="inputNota" value="B4" oninput="actualizarDesdeInput()" spellcheck="false">
-        </div>
-        
-        <div class="checks-container">
-            <div class="checks-column">
-                <div class="check-group">
-                    <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
-                    <label for="checkArtificial">Armónicos Artificiales (8.ª)</label>
-                </div>
-                <div class="check-group">
-                    <input type="checkbox" id="checkSuperiores" onchange="buscarNota()">
-                    <label for="checkSuperiores">Parciales Superiores (8-12)</label>
-                </div>
-            </div>
-            <div class="checks-column">
-                <div class="check-group">
-                    <input type="checkbox" id="checkCercanos" onchange="buscarNota()">
-                    <label for="checkCercanos">Armónicos cercanos (~50c)</label>
-                </div>
-                <div class="check-group">
-                    <button onclick="borrarCongelados()" style="font-size: 9px; cursor: pointer; border: 1px solid #d2d2d7; background: white; border-radius: 4px; padding: 2px 6px;">BORRAR CONGELADOS</button>
-                </div>
-            </div>
-        </div>
+    <div class="divider"></div>
+
+    <div class="piano-outer" id="piano"></div>
+
+    <div class="divider"></div>
+
+    <div class="checks-wrap">
+      <label class="check-pill">
+        <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
+        <label for="checkArtificial">Art. 8.ª</label>
+      </label>
+      <label class="check-pill">
+        <input type="checkbox" id="checkSuperiores" onchange="buscarNota()">
+        <label for="checkSuperiores">Parciales 8–12</label>
+      </label>
+      <label class="check-pill">
+        <input type="checkbox" id="checkCercanos" onchange="buscarNota()">
+        <label for="checkCercanos">~50¢</label>
+      </label>
+      <button class="btn-clear" onclick="borrarCongelados()">Borrar ❄</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="fretboard-wrap">
+      <svg id="mastil" viewBox="0 0 1000 310">
+        <g id="trastero"></g>
+        <g id="cuerdas-group"></g>
+        <g id="capa-nodos"></g>
+      </svg>
     </div>
 
-    <div class="piano-container" id="piano"></div>
-
-    <div class="main-layout">
-        <div id="contenedor-svg">
-            <svg id="mastil" viewBox="0 0 1000 360">
-                <g id="trastero"></g>
-                <g id="cuerdas-group"></g>
-                <g id="capa-nodos"></g>
-            </svg>
+    <div class="side-panel">
+      <div class="panel-top">
+        <span class="panel-label">Armónicos</span>
+        <div class="legend">
+          <div class="legend-item"><div class="dot" style="background:var(--c-p2)"></div>Oct.</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-p3)"></div>5.ª</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-p5)"></div>3.ª</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-p7)"></div>7.ª m</div>
+          <div class="legend-item"><div class="dot" style="background:var(--freeze)"></div>❄</div>
         </div>
-
-        <div class="side-panel">
-            <div class="legend" id="leyenda"></div>
-            <div id="infoBox" class="info-box"></div>
-        </div>
+      </div>
+      <div class="results-list" id="infoBox"></div>
     </div>
+  </div>
+</div>
 
 <script>
-    const LARGO_CUERDA = 850; 
-    const OFFSET_X = 80;
-    const CUERDAS_DATA = [
-        { nota: "E4", y: 70, midi: 64 }, { nota: "B3", y: 110, midi: 59 },
-        { nota: "G3", y: 150, midi: 55 }, { nota: "D3", y: 190, midi: 50 },
-        { nota: "A2", y: 230, midi: 45 }, { nota: "E2", y: 270, midi: 40 }
-    ];
+const LARGO_CUERDA = 860;
+const OFFSET_X = 72;
 
-    const SERIE = [
-        {p:2, s:12, c:'var(--color-p2)', n:'Octava', cents: 0, sym: "\uE261", frac: "1/2"}, 
-        {p:3, s:19.02, c:'var(--color-p3)', n:'5ª Justa', cents: 2, sym: "\uE282", frac: "1/3"},
-        {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava', cents: 0, sym: "\uE261", frac: "1/4"},
-        {p:5, s:27.86, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1", frac: "1/5"},
-        {p:6, s:31.02, c:'var(--color-p3)', n:'2ª Oct. + 5ª', cents: 2, sym: "\uE282", frac: "1/6"},
-        {p:7, s:33.69, c:'var(--color-p7)', n:'7ª Menor', cents: -31, sym: "\uE281", frac: "1/7"},
-        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava', cents: 0, sym: "\uE261", frac: "1/8"},
-        {p:9, s:38.04, c:'var(--color-px)', n:'2ª Mayor', cents: 4, sym: "\uE261", frac: "1/9"},
-        {p:10, s:39.86, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1", frac: "1/10"},
-        {p:11, s:41.51, c:'var(--color-px)', n:'4ª Aumentada', cents: -49, sym: "\uE280", frac: "1/11"},
-        {p:12, s:43.02, c:'var(--color-p3)', n:'3ª Oct. + 5ª', cents: 2, sym: "\uE282", frac: "1/12"}
-    ];
+const CUERDAS_DATA = [
+  { nota:"E4", y:56,  midi:64 },
+  { nota:"B3", y:98,  midi:59 },
+  { nota:"G3", y:140, midi:55 },
+  { nota:"D3", y:182, midi:50 },
+  { nota:"A2", y:224, midi:45 },
+  { nota:"E2", y:266, midi:40 }
+];
 
-    let congelados = [];
-    let resultadosActuales = [];
+const SERIE = [
+  {p:2,  s:12,    c:'var(--c-p2)', n:'Octava',          cents:0,   sym:"\uE261", frac:"1/2"},
+  {p:3,  s:19.02, c:'var(--c-p3)', n:'5.ª Justa',       cents:2,   sym:"\uE282", frac:"1/3"},
+  {p:4,  s:24,    c:'var(--c-p2)', n:'2.ª Octava',      cents:0,   sym:"\uE261", frac:"1/4"},
+  {p:5,  s:27.86, c:'var(--c-p5)', n:'3.ª Mayor',       cents:-14, sym:"\uE2C1", frac:"1/5"},
+  {p:6,  s:31.02, c:'var(--c-p3)', n:'2.ª Oct. + 5.ª',  cents:2,   sym:"\uE282", frac:"1/6"},
+  {p:7,  s:33.69, c:'var(--c-p7)', n:'7.ª Menor',       cents:-31, sym:"\uE281", frac:"1/7"},
+  {p:8,  s:36,    c:'var(--c-p2)', n:'3.ª Octava',      cents:0,   sym:"\uE261", frac:"1/8"},
+  {p:9,  s:38.04, c:'var(--c-px)', n:'2.ª Mayor',       cents:4,   sym:"\uE261", frac:"1/9"},
+  {p:10, s:39.86, c:'var(--c-p5)', n:'3.ª Mayor',       cents:-14, sym:"\uE2C1", frac:"1/10"},
+  {p:11, s:41.51, c:'var(--c-px)', n:'4.ª Aumentada',   cents:-49, sym:"\uE280", frac:"1/11"},
+  {p:12, s:43.02, c:'var(--c-p3)', n:'3.ª Oct. + 5.ª',  cents:2,   sym:"\uE282", frac:"1/12"}
+];
 
-    function toRoman(n) {
-        const rom = ["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
-        return rom[n] || n;
+let congelados = [];
+let resultadosActuales = [];
+
+const snowSVG = `<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>`;
+
+function toRoman(n) {
+  const r=["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
+  return r[n]||n;
+}
+function gcd(a,b){return b?gcd(b,a%b):a;}
+function getX(t){return OFFSET_X+(LARGO_CUERDA-(LARGO_CUERDA/Math.pow(2,t/12)));}
+function getXRatio(r){return OFFSET_X+(LARGO_CUERDA*r);}
+function generarID(r){return r.type==='nat'?`nat-${r.cuerda.nota}-${r.arm.p}`:`art-${r.cuerda.nota}-${r.traste}`;}
+function getCentsColor(c){
+  if(Math.abs(c)<=5) return "var(--c-p2)";
+  if(c<0) return "var(--c-p7)";
+  return "var(--c-p5)";
+}
+function notaToMidi(n){
+  const m=n.match(/([A-G]#?)(\d)/);
+  if(!m) return null;
+  const idx=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"].indexOf(m[1]);
+  if(idx===-1) return null;
+  return(parseInt(m[2])+1)*12+idx;
+}
+
+function init(){
+  buildPiano();
+  dibujarMastil();
+  buscarNota();
+  highlightKey("B4");
+}
+
+function buildPiano(){
+  const piano=document.getElementById('piano');
+  const nombres=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+  const notas=[];
+  // E3 to B6
+  for(let o=3;o<=6;o++){
+    for(let i=0;i<12;i++){
+      let n=nombres[i]+o;
+      if(o===3&&i<4) continue; // E3 is index 4 in nombres
+      notas.push(n);
     }
+  }
+  const wrap=document.createElement('div');
+  wrap.className='piano-keys';
+  notas.forEach(n=>{
+    const k=document.createElement('div');
+    k.className=`key ${n.includes('#')?'black':'white'}`;
+    k.dataset.note=n;
+    if(n==="C4"){const d=document.createElement('div');d.className='middle-c-dot';k.appendChild(d);}
+    k.onclick=()=>{document.getElementById('inputNota').value=n;buscarNota();highlightKey(n);};
+    wrap.appendChild(k);
+  });
+  piano.appendChild(wrap);
+}
 
-    function getCentsColor(cents) {
-        if (Math.abs(cents) <= 5) return "var(--color-p2)";
-        if (cents < 0) return "var(--color-p7)";
-        return "var(--color-p5)";
+function highlightKey(note){
+  document.querySelectorAll('.key').forEach(k=>k.classList.toggle('active',k.dataset.note===note.toUpperCase()));
+}
+
+function actualizarDesdeInput(){
+  const val=document.getElementById('inputNota').value.trim().toUpperCase();
+  buscarNota();
+  highlightKey(val);
+}
+
+function dibujarMastil(){
+  const trastero=document.getElementById('trastero');
+  trastero.innerHTML="";
+
+  for(let i=0;i<=22;i++){
+    let x=getX(i);
+    let l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",x);l.setAttribute("y1",36);l.setAttribute("x2",x);l.setAttribute("y2",280);
+    l.classList.add(i===0?"cejuela":"traste-metal");
+    trastero.appendChild(l);
+    if(i>0&&(i<=16||i%2===0)){
+      let t=document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x",x);t.setAttribute("y",28);
+      t.textContent=toRoman(i);t.classList.add("label-romano");
+      trastero.appendChild(t);
     }
+  }
 
-    function init() {
-        const piano = document.getElementById('piano');
-        const nombres = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-        const notas = [];
-        for(let oct=2; oct<=7; oct++) {
-            for(let i=0; i<12; i++) {
-                let n = nombres[i] + oct;
-                if(oct === 2 && i < 4) continue;
-                if(oct === 7 && i > 0) break;
-                notas.push(n);
-            }
+  // Fret position dots
+  [3,5,7,9,12,15,17,19,21].forEach(f=>{
+    const cx=(getX(f-1)+getX(f))/2;
+    if(f===12){
+      [290,298].forEach(cy=>{
+        const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+        c.setAttribute("cx",cx);c.setAttribute("cy",cy);c.setAttribute("r",2.5);
+        c.setAttribute("fill","var(--border-strong)");trastero.appendChild(c);
+      });
+    } else {
+      const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+      c.setAttribute("cx",cx);c.setAttribute("cy",294);c.setAttribute("r",2.5);
+      c.setAttribute("fill","var(--border-strong)");trastero.appendChild(c);
+    }
+  });
+
+  const cg=document.getElementById('cuerdas-group');
+  cg.innerHTML="";
+  const widths=[0.8,1.0,1.2,1.45,1.7,2.0];
+  CUERDAS_DATA.forEach((c,i)=>{
+    let l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",OFFSET_X);l.setAttribute("y1",c.y);
+    l.setAttribute("x2",OFFSET_X+LARGO_CUERDA);l.setAttribute("y2",c.y);
+    l.classList.add("cuerda");l.style.strokeWidth=widths[i];
+    cg.appendChild(l);
+    let t=document.createElementNS("http://www.w3.org/2000/svg","text");
+    t.setAttribute("x",OFFSET_X-8);t.setAttribute("y",c.y+4);
+    t.textContent=c.nota;t.classList.add("label-cuerda");
+    cg.appendChild(t);
+  });
+}
+
+function buscarNota(){
+  const input=document.getElementById('inputNota').value.trim().toUpperCase();
+  const targetMidi=notaToMidi(input);
+  const capa=document.getElementById('capa-nodos');
+  const showHigh=document.getElementById('checkSuperiores').checked;
+  const useTol=document.getElementById('checkCercanos').checked;
+  const checkArt=document.getElementById('checkArtificial').checked;
+
+  capa.innerHTML="";
+  const idsC=new Set(congelados.map(c=>c.id));
+  resultadosActuales=[];
+
+  if(targetMidi){
+    const TOL=useTol?0.5:0.05;
+    CUERDAS_DATA.forEach(cuerda=>{
+      SERIE.forEach(arm=>{
+        if(arm.p>7&&!showHigh) return;
+        const diff=(cuerda.midi+arm.s)-targetMidi;
+        if(Math.abs(diff)<=TOL){
+          const desv=Math.round(diff*100);
+          const px=Math.round(getXRatio(1/arm.p));
+          resultadosActuales.push({cuerda,arm,desv,absDesv:Math.abs(desv),type:'nat',dificultad:calcDif(arm.p,px)});
         }
-
-        notas.forEach(n => {
-            const k = document.createElement('div');
-            k.className = `keyboard-key ${n.includes('#') ? 'black' : ''}`;
-            k.dataset.note = n;
-            if (n === "C4") k.innerHTML = '<div class="middle-c-dot"></div>';
-            k.onclick = () => { 
-                document.getElementById('inputNota').value = n; 
-                buscarNota(); 
-                highlightKey(n); 
-            };
-            piano.appendChild(k);
-        });
-
-        const ley = document.getElementById('leyenda');
-        const cats = [
-            {t:'Octavas', c:'var(--color-p2)'}, 
-            {t:'Quintas', c:'var(--color-p3)'}, 
-            {t:'Terceras', c:'var(--color-p5)'}, 
-            {t:'7.ª Menor', c:'var(--color-p7)'},
-            {t:'Congelado', c:'var(--freeze-color)'}
-        ];
-        ley.innerHTML = "";
-        cats.forEach(cat => ley.innerHTML += `<div class="legend-item"><div class="dot-sample" style="background:${cat.c}"></div>${cat.t}</div>`);
-
-        dibujarMastil();
-        buscarNota();
-        highlightKey("B4");
-    }
-
-    function highlightKey(noteName) {
-        document.querySelectorAll('.keyboard-key').forEach(k => {
-            k.classList.toggle('active', k.dataset.note === noteName.toUpperCase());
-        });
-    }
-
-    function actualizarDesdeInput() {
-        const val = document.getElementById('inputNota').value.trim().toUpperCase();
-        buscarNota();
-        highlightKey(val);
-    }
-
-    function getX(t) { return OFFSET_X + (LARGO_CUERDA - (LARGO_CUERDA / Math.pow(2, t / 12))); }
-    function getXRatio(r) { return OFFSET_X + (LARGO_CUERDA * r); }
-    function gcd(a,b) { return b ? gcd(b, a%b) : a; }
-
-    function toggleFreeze(id) {
-        const index = congelados.findIndex(c => c.id === id);
-        if (index > -1) {
-            congelados.splice(index, 1);
-        } else {
-            const item = resultadosActuales.find(r => generarID(r) === id);
-            if (item) {
-                // Capturar la nota objetivo actual para la fila congelada
-                const notaActual = document.getElementById('inputNota').value.trim().toUpperCase();
-                congelados.push({...item, id, notaObjetivo: notaActual});
-            }
+      });
+      if(checkArt){
+        for(let tP=1;tP<=15;tP++){
+          if(tP+12>22) continue;
+          if(Math.abs((cuerda.midi+tP+12)-targetMidi)<=0.05)
+            resultadosActuales.push({cuerda,traste:tP,type:'art',dificultad:0});
         }
-        buscarNota();
+      }
+    });
+  }
+
+  congelados.forEach(c=>dibujarArmonico(c,true));
+  resultadosActuales.forEach(r=>{if(!idsC.has(generarID(r))) dibujarArmonico(r,false);});
+  resultadosActuales.sort((a,b)=>(a.absDesv||0)-(b.absDesv||0));
+  renderTabla();
+}
+
+function dibujarArmonico(r,isFrozen){
+  const color=isFrozen?'var(--freeze)':(r.type==='nat'?r.arm.c:'var(--purple-art)');
+  if(r.type==='nat'){
+    const drawn=new Set();
+    for(let n=1;n<r.arm.p;n++){
+      if(gcd(n,r.arm.p)===1){
+        const xPos=Math.round(getXRatio(n/r.arm.p));
+        if(!drawn.has(xPos)){drawNode(xPos,r.cuerda.y,color);drawn.add(xPos);}
+      }
     }
+  } else {
+    drawArt(getX(r.traste),getX(r.traste+12),r.cuerda.y,color);
+  }
+}
 
-    function borrarCongelados() {
-        congelados = [];
-        buscarNota();
+function drawNode(x,y,c){
+  const capa=document.getElementById('capa-nodos');
+  const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
+  const esExacto=Math.abs(tt-Math.round(tt))<0.1;
+  if(!esExacto){
+    const bar=document.createElementNS("http://www.w3.org/2000/svg","line");
+    bar.setAttribute("x1",x);bar.setAttribute("y1",y-13);bar.setAttribute("x2",x);bar.setAttribute("y2",y+13);
+    bar.setAttribute("stroke",c);bar.classList.add("guia-vertical");
+    capa.appendChild(bar);
+  }
+  const el=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  el.setAttribute("cx",x);el.setAttribute("cy",y);el.setAttribute("r",7);
+  el.setAttribute("fill",c);el.classList.add("nodo");
+  capa.appendChild(el);
+}
+
+function drawArt(xI,xD,y,color){
+  const capa=document.getElementById('capa-nodos');
+  capa.appendChild(drawHand(xI,y+22,'L',color));
+  const p=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  p.setAttribute("cx",xI);p.setAttribute("cy",y);p.setAttribute("r",4);
+  p.setAttribute("fill","none");p.setAttribute("stroke",color);p.setAttribute("stroke-width","2");
+  capa.appendChild(p);
+  capa.appendChild(drawHand(xD,y+22,'R',color));
+  const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+  l.setAttribute("x1",xD);l.setAttribute("y1",y-12);l.setAttribute("x2",xD);l.setAttribute("y2",y+12);
+  l.classList.add("guia-90");l.style.stroke=color;
+  capa.appendChild(l);
+  const ci=document.createElementNS("http://www.w3.org/2000/svg","circle");
+  ci.setAttribute("cx",xD);ci.setAttribute("cy",y);ci.setAttribute("r",7);
+  ci.setAttribute("fill",color);ci.classList.add("nodo");
+  capa.appendChild(ci);
+}
+
+function drawHand(x,y,t,color){
+  const g=document.createElementNS("http://www.w3.org/2000/svg","g");
+  const p=document.createElementNS("http://www.w3.org/2000/svg","path");
+  p.classList.add("icono-mano");p.setAttribute("stroke",color);
+  p.setAttribute("d",t==='L'?`M${x-4},${y} a4,4 0 0,1 8,0`:`M${x-4},${y} l8,0 M${x},${y} l0,-5`);
+  g.appendChild(p);return g;
+}
+
+function calcDif(parcial,x){
+  const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
+  const esExacto=Math.abs(tt-Math.round(tt))<0.1;
+  if(esExacto&&parcial<=4) return 0;
+  let n=1;
+  if(tt>13||parcial>8) n=2;
+  if(tt>17&&parcial>9) n=3;
+  return n;
+}
+
+function toggleFreeze(id){
+  const idx=congelados.findIndex(c=>c.id===id);
+  if(idx>-1){ congelados.splice(idx,1); }
+  else {
+    const item=resultadosActuales.find(r=>generarID(r)===id);
+    if(item){
+      const nota=document.getElementById('inputNota').value.trim().toUpperCase();
+      congelados.push({...item,id,notaObjetivo:nota});
     }
+  }
+  buscarNota();
+}
 
-    function generarID(r) {
-        return r.type === 'nat' ? `nat-${r.cuerda.nota}-${r.arm.p}` : `art-${r.cuerda.nota}-${r.traste}`;
-    }
+function borrarCongelados(){congelados=[];buscarNota();}
 
-    function dibujarMastil() {
-        const trastero = document.getElementById('trastero');
-        trastero.innerHTML = "";
-        for (let i = 0; i <= 22; i++) {
-            let x = getX(i);
-            let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            l.setAttribute("x1", x); l.setAttribute("y1", 50); l.setAttribute("x2", x); l.setAttribute("y2", 290);
-            l.classList.add(i === 0 ? "cejuela" : "traste-metal");
-            trastero.appendChild(l);
-            if (i > 0 && (i <= 16 || i % 2 === 0)) {
-                let t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                t.setAttribute("x", x); t.setAttribute("y", 40);
-                t.textContent = toRoman(i); t.classList.add("label-romano");
-                trastero.appendChild(t);
-            }
-        }
-        const cuerdasGroup = document.getElementById('cuerdas-group');
-        cuerdasGroup.innerHTML = "";
-        CUERDAS_DATA.forEach(c => {
-            let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            l.setAttribute("x1", OFFSET_X); l.setAttribute("y1", c.y); l.setAttribute("x2", OFFSET_X+LARGO_CUERDA); l.setAttribute("y2", c.y);
-            l.classList.add("cuerda"); cuerdasGroup.appendChild(l);
-            let txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            txt.setAttribute("x", OFFSET_X-15); txt.setAttribute("y", c.y+4);
-            txt.textContent = c.nota; txt.classList.add("label-cuerda");
-            cuerdasGroup.appendChild(txt);
-        });
-    }
+function renderTabla(){
+  const box=document.getElementById('infoBox');
+  const idsC=new Set(congelados.map(c=>c.id));
+  const rows=[
+    ...congelados.map(r=>buildRow(r,true)),
+    ...resultadosActuales.filter(r=>!idsC.has(generarID(r))).map(r=>buildRow(r,false))
+  ];
+  if(!rows.length){
+    box.innerHTML=`<div class="empty-state"><span style="font-size:22px;opacity:.3">♩</span><span>Sin armónicos para esta nota</span></div>`;
+    return;
+  }
+  box.innerHTML=rows.join('');
+}
 
-    function buscarNota() {
-        const input = document.getElementById('inputNota').value.trim().toUpperCase();
-        const targetMidi = notaToMidi(input);
-        const capa = document.getElementById('capa-nodos');
-        const info = document.getElementById('infoBox');
-        const showHigh = document.getElementById('checkSuperiores').checked;
-        const useTolerance = document.getElementById('checkCercanos').checked;
-        const checkArt = document.getElementById('checkArtificial').checked;
-        
-        capa.innerHTML = ""; info.innerHTML = "";
-        
-        // 1. Identificar IDs congelados
-        const idsCongelados = new Set(congelados.map(c => c.id));
+function buildRow(r,frozen){
+  const id=frozen?r.id:generarID(r);
+  const fc=frozen?' frozen':'';
+  const ba=frozen?' on':'';
+  const tag=frozen?`<span class="frozen-tag">${r.notaObjetivo}</span> `:'';
 
-        // 2. Buscar nuevos armónicos
-        resultadosActuales = [];
-        if (targetMidi) {
-            const TOLERANCIA_MIDI = useTolerance ? 0.5 : 0.05;
-            CUERDAS_DATA.forEach(cuerda => {
-                SERIE.forEach(arm => {
-                    if (arm.p > 7 && !showHigh) return;
-                    let armMidi = cuerda.midi + arm.s;
-                    let diff = armMidi - targetMidi;
-                    if (Math.abs(diff) <= TOLERANCIA_MIDI) {
-                        let centsDesv = Math.round(diff * 100);
-                        let primerX = Math.round(getXRatio(1/arm.p));
-                        resultadosActuales.push({
-                            cuerda: cuerda, arm: arm, desv: centsDesv, absDesv: Math.abs(centsDesv), 
-                            type: 'nat', dificultad: calcularDificultad(arm.p, primerX)
-                        });
-                    }
-                });
+  const diffHTML=r.dificultad>0
+    ?`<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(r.dificultad)}</div>`
+    :'';
 
-                if (checkArt) {
-                    for (let tP = 1; tP <= 15; tP++) {
-                        let artMidi = (cuerda.midi + tP) + 12;
-                        if (Math.abs(artMidi - targetMidi) <= 0.05) {
-                            resultadosActuales.push({ cuerda: cuerda, traste: tP, type: 'art', dificultad: 0 });
-                        }
-                    }
-                }
-            });
-        }
+  if(r.type==='nat'){
+    const cc=frozen?'var(--freeze)':getCentsColor(r.desv);
+    const cbg=frozen?'#cffafe':'var(--surface-2)';
+    const cs=(r.desv>0?'+':'')+r.desv+'¢';
+    return `<div class="result-row${fc}">
+      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}')" title="${frozen?'Descongelar':'Congelar'}">${snowSVG}</button>
+      <div class="row-body">
+        <div class="row-main">${tag}Cuerda <b>${r.cuerda.nota}</b> · P${r.arm.p} <span style="opacity:.6;font-size:11px">(${r.arm.frac})</span></div>
+        <div class="row-sub">${r.arm.n}</div>
+      </div>
+      <div class="row-right">
+        ${diffHTML}
+        <span class="sym" style="color:${frozen?'var(--freeze)':r.arm.c}">${r.arm.sym}</span>
+        <span class="cents" style="color:${cc};background:${cbg}">${cs}</span>
+      </div>
+    </div>`;
+  } else {
+    const ac=frozen?'var(--freeze)':'var(--purple-art)';
+    return `<div class="result-row${fc}">
+      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}')" title="${frozen?'Descongelar':'Congelar'}">${snowSVG}</button>
+      <div class="row-body">
+        <div class="row-main">${tag}Art. 8.ª en <b>${r.cuerda.nota}</b> · Tr. ${r.traste}</div>
+        <div class="row-sub">Armónico artificial</div>
+      </div>
+      <div class="row-right">
+        <span class="sym" style="color:${ac}">\uE261</span>
+        <span class="cents">0¢</span>
+      </div>
+    </div>`;
+  }
+}
 
-        // 3. Dibujar Congelados
-        congelados.forEach(c => dibujarArmonico(c, true));
-
-        // 4. Dibujar Nuevos (que no estén ya congelados)
-        resultadosActuales.forEach(res => {
-            if (!idsCongelados.has(generarID(res))) {
-                dibujarArmonico(res, false);
-            }
-        });
-
-        resultadosActuales.sort((a, b) => (a.absDesv || 0) - (b.absDesv || 0));
-        renderTabla();
-    }
-
-    function dibujarArmonico(r, isFrozen) {
-        const color = isFrozen ? 'var(--freeze-color)' : (r.type === 'nat' ? r.arm.c : 'var(--purple)');
-        
-        if (r.type === 'nat') {
-            let nodosDibujadosEnEstaCuerda = new Set();
-            for (let n = 1; n < r.arm.p; n++) {
-                if (gcd(n, r.arm.p) === 1) {
-                    let xPos = Math.round(getXRatio(n/r.arm.p));
-                    if (!nodosDibujadosEnEstaCuerda.has(xPos)) {
-                        drawNode(xPos, r.cuerda.y, color); 
-                        nodosDibujadosEnEstaCuerda.add(xPos);
-                    }
-                }
-            }
-        } else {
-            drawArt(getX(r.traste), getX(r.traste + 12), r.cuerda.y, color);
-        }
-    }
-
-    function renderTabla() {
-        const info = document.getElementById('infoBox');
-        const htmlCongelados = congelados.map(r => generarFilaHTML(r, true)).join("");
-        
-        const idsCongelados = new Set(congelados.map(c => c.id));
-        const htmlNuevos = resultadosActuales
-            .filter(r => !idsCongelados.has(generarID(r)))
-            .map(r => generarFilaHTML(r, false)).join("");
-
-        info.innerHTML = (htmlCongelados + htmlNuevos) || "No se detectan armónicos.";
-    }
-
-    function generarFilaHTML(r, isFrozen) {
-        const id = isFrozen ? r.id : generarID(r);
-        const iconFrozenClass = isFrozen ? "active" : "";
-        const rowClass = isFrozen ? "frozen" : "";
-        const copoSVG = `<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>`;
-
-        let noteTag = isFrozen ? `<div class="note-tag">${r.notaObjetivo}</div>` : "";
-        let triangulosHTML = r.dificultad > 0 ? `<div class="diff-triangles">${"▲".repeat(r.dificultad)}</div>` : `<div class="diff-triangles"></div>`;
-        
-        if (r.type === 'nat') {
-            let centsColor = isFrozen ? 'var(--freeze-color)' : getCentsColor(r.desv);
-            return `
-                <div class="info-line ${rowClass}">
-                    <div style="display:flex; align-items:center">
-                        ${noteTag}
-                        <div class="btn-freeze ${iconFrozenClass}" onclick="toggleFreeze('${id}')">${copoSVG}</div>
-                        <span>Cuerda <b>${r.cuerda.nota}</b>: P${r.arm.p} <small>(${r.arm.frac})</small> <span style="font-size:11px; margin-left:5px; opacity:0.8">— ${r.arm.n}</span></span>
-                    </div>
-                    <div class="symbol-zone">
-                        ${triangulosHTML}
-                        <span class="smufl">${r.arm.sym}</span>
-                        <span class="cents-badge" style="color: ${centsColor}">${r.desv > 0 ? '+' : ''}${r.desv}¢</span>
-                    </div>
-                </div>`;
-        } else {
-            return `
-                <div class="info-line ${rowClass}">
-                    <div style="display:flex; align-items:center">
-                        ${noteTag}
-                        <div class="btn-freeze ${iconFrozenClass}" onclick="toggleFreeze('${id}')">${copoSVG}</div>
-                        <span>Art. 8ª en <b>${r.cuerda.nota}</b>: Tr. ${r.traste}</span>
-                    </div>
-                    <div class="symbol-zone">
-                        <div class="diff-triangles"></div>
-                        <span class="smufl" style="color:${isFrozen ? 'var(--freeze-color)' : 'var(--purple)'}">\uE261</span>
-                        <span class="cents-badge">0¢</span>
-                    </div>
-                </div>`;
-        }
-    }
-
-    function calcularDificultad(parcial, x) {
-        let trasteTeorico = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
-        let esTrasteExacto = Math.abs(trasteTeorico - Math.round(trasteTeorico)) < 0.1;
-        if (esTrasteExacto && parcial <= 4) return 0;
-        let nivel = 1;
-        if (trasteTeorico > 13 || parcial > 8) nivel = 2;
-        if (trasteTeorico > 17 && parcial > 9) nivel = 3;
-        return nivel;
-    }
-
-    function drawNode(x, y, c) {
-        const capa = document.getElementById('capa-nodos');
-        let trasteTeorico = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
-        let esTrasteExacto = Math.abs(trasteTeorico - Math.round(trasteTeorico)) < 0.1;
-
-        if (!esTrasteExacto) {
-            let barrita = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            barrita.setAttribute("x1", x - 6); barrita.setAttribute("y1", y); 
-            barrita.setAttribute("x2", x + 6); barrita.setAttribute("y2", y);
-            barrita.setAttribute("stroke", c); barrita.classList.add("guia-horizontal");
-            capa.appendChild(barrita);
-        }
-
-        let el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", 7.5);
-        el.setAttribute("fill", c); el.classList.add("nodo");
-        capa.appendChild(el);
-    }
-
-    function drawArt(xI, xD, y, color) {
-        const capa = document.getElementById('capa-nodos');
-        capa.appendChild(drawHand(xI, y + 25, 'L', color));
-        let p = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        p.setAttribute("cx", xI); p.setAttribute("cy", y); p.setAttribute("r", 4);
-        p.setAttribute("fill", "none"); p.setAttribute("stroke", color); p.setAttribute("stroke-width", "2.5");
-        capa.appendChild(p);
-        capa.appendChild(drawHand(xD, y + 25, 'R', color));
-        let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
-        l.setAttribute("x1", xD); l.setAttribute("y1", y-12); l.setAttribute("x2", xD); l.setAttribute("y2", y+12);
-        l.classList.add("guia-90"); l.style.stroke = color;
-        capa.appendChild(l);
-        let c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        c.setAttribute("cx", xD); c.setAttribute("cy", y); c.setAttribute("r", 7.5);
-        c.setAttribute("fill", color); c.classList.add("nodo");
-        capa.appendChild(c);
-    }
-
-    function drawHand(x, y, t, color) {
-        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        p.classList.add("icono-mano"); p.setAttribute("stroke", t === 'L' && color === 'var(--purple)' ? "#48484a" : color);
-        p.setAttribute("d", t === 'L' ? `M${x-4},${y} a4,4 0 0,1 8,0` : `M${x-4},${y} l8,0 M${x},${y} l0,-5`);
-        g.appendChild(p); return g;
-    }
-
-    function notaToMidi(n) {
-        const m = n.match(/([A-G]#?)(\d)/); if(!m) return null;
-        const index = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"].indexOf(m[1]);
-        return (parseInt(m[2])+1)*12 + index;
-    }
-
-    init();
+init();
 </script>
 </body>
 </html>
