@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Tesauro Armónico de la Guitarra</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent: #0071e3;
+            --purple: #af52de;
+            --fret-color: #f2f2f2;
+            --color-p2: #34c759; 
+            --color-p3: #ffcc00; 
+            --color-p5: #ff9500; 
+            --color-p7: #007aff; 
+        }
+
+        html, body { 
+            height: 100vh; width: 100vw; overflow: hidden; margin: 0; padding: 0;
+            background: var(--bg-color); 
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Cabecera minimalista original */
+        .header { text-align: center; padding: 40px 0 10px 0; flex-shrink: 0; }
+        h1 { font-weight: 200; font-size: 34px; margin: 0; color: var(--text-main); }
+        h1 i { font-style: italic; font-weight: 200; }
+        .subtitle { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; }
+
+        .top-controls { display: flex; gap: 40px; align-items: flex-end; margin-bottom: 30px; flex-shrink: 0; }
+        .input-group { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .input-group label { font-size: 9px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        input[type="text"] {
+            padding: 5px 0; border: none; border-bottom: 1px solid #d2d2d7;
+            font-size: 26px; width: 80px; text-align: center; outline: none; 
+            background: transparent; font-weight: 300; transition: border-color 0.3s;
+        }
+        input[type="text"]:focus { border-bottom-color: var(--accent); }
+
+        .check-group { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; margin-bottom: 8px; }
+        .check-group label { font-size: 13px; color: var(--text-secondary); cursor: pointer; font-weight: 300; }
+        
+        input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; width: 18px; height: 18px; 
+            border: 1px solid #d2d2d7; border-radius: 4px; cursor: pointer;
+            display: inline-grid; place-content: center;
+        }
+        input[type="checkbox"]:checked { background-color: var(--purple); border-color: var(--purple); }
+        input[type="checkbox"]:checked::before {
+            content: ""; width: 10px; height: 10px; box-shadow: inset 1em 1em white;
+            clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        }
+
+        /* Piano sutil */
+        .piano-container { display: flex; justify-content: center; margin-bottom: 40px; width: 100%; flex-shrink: 0; }
+        .keyboard-key {
+            min-width: 22px; height: 80px; background: white; border: 0.5px solid #f2f2f2;
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+            border-radius: 0 0 3px 3px;
+        }
+        .keyboard-key.black { background: #1d1d1f; min-width: 14px; height: 50px; margin: 0 -7px; z-index: 2; border: none; }
+        .keyboard-key.active { background: #fafafa; border-bottom: 3px solid var(--accent); }
+        .middle-c-dot { width: 4px; height: 4px; background-color: #ffd1dc; border-radius: 50%; margin-bottom: 8px; }
+
+        /* Dashboard Flotante (Sin recuadros) */
+        .dashboard {
+            display: grid; grid-template-columns: 200px 1fr; gap: 50px;
+            width: 85%; max-width: 1000px; margin-bottom: 20px;
+            flex-shrink: 0; min-height: 100px;
+        }
+
+        .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: flex-start; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; color: var(--text-secondary); }
+        .dot-sample { width: 12px; height: 12px; border-radius: 50%; }
+
+        .info-box { 
+            font-size: 12px; color: var(--text-secondary); 
+            line-height: 1.8; font-weight: 300;
+        }
+        .info-line { margin-bottom: 4px; }
+        .info-line b { color: var(--text-main); font-weight: 500; }
+
+        /* Mástil Proporcional */
+        #contenedor-svg { 
+            width: 100%; max-width: 1200px; flex-grow: 1; 
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        svg { width: 90%; height: auto; }
+
+        .cuerda { stroke: #efefef; stroke-width: 1.2; }
+        .label-cuerda { font-size: 11px; font-weight: 400; text-anchor: end; fill: var(--text-main); }
+        .label-romano { font-size: 10px; fill: #d2d2d7; text-anchor: middle; font-weight: 400; }
+        .traste-metal { stroke: #f6f6f6; stroke-width: 1.5; }
+        .cejuela { stroke: #1d1d1f; stroke-width: 3; }
+        
+        .nodo { stroke: rgba(255,255,255,1); stroke-width: 1.5; }
+        .guia-90 { stroke-width: 0.8; stroke-dasharray: 3,3; stroke: var(--purple); opacity: 0.4; }
+        .icono-mano { fill: none; stroke-width: 1.2; stroke-linecap: round; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Tesauro <i>armónico</i> de la guitarra</h1>
+        <div class="subtitle">Juan del Pino · 2026 · v3.6</div>
+    </div>
+
+    <div class="top-controls">
+        <div class="input-group">
+            <label>Nota Objetivo</label>
+            <input type="text" id="inputNota" value="B4" oninput="buscarNota()" spellcheck="false">
+        </div>
+        <div class="check-group">
+            <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
+            <label for="checkArtificial">Armónicos Artificiales</label>
+        </div>
+    </div>
+
+    <div class="piano-container" id="piano"></div>
+
+    <div class="dashboard">
+        <div class="legend" id="leyenda"></div>
+        <div class="info-box" id="infoBox"></div>
+    </div>
+
+    <div id="contenedor-svg">
+        <svg id="mastil" viewBox="0 0 1000 360">
+            <g id="trastero"></g>
+            <g id="cuerdas-group"></g>
+            <g id="capa-nodos"></g>
+        </svg>
+    </div>
+
+<script>
+    const LARGO_CUERDA = 850; 
+    const OFFSET_X = 80;
+    const CUERDAS_DATA = [
+        { nota: "E4", y: 70, midi: 64 }, { nota: "B3", y: 110, midi: 59 },
+        { nota: "G3", y: 150, midi: 55 }, { nota: "D3", y: 190, midi: 50 },
+        { nota: "A2", y: 230, midi: 45 }, { nota: "E2", y: 270, midi: 40 }
+    ];
+
+    const SERIE = [
+        {p:2, s:12, c:'var(--color-p2)', n:'Octava'},
+        {p:3, s:19, c:'var(--color-p3)', n:'5ª Justa'},
+        {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava'},
+        {p:5, s:28, c:'var(--color-p5)', n:'3ª Mayor'},
+        {p:6, s:31, c:'var(--color-p3)', n:'2ª Oct. + 5ª'},
+        {p:7, s:34, c:'var(--color-p7)', n:'7ª Menor'},
+        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava'}
+    ];
+
+    function toRoman(n) {
+        const rom = ["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
+        return rom[n] || n;
+    }
+
+    function init() {
+        const piano = document.getElementById('piano');
+        const notas = ["E3","F3","F#3","G3","G#3","A3","A#3","B3","C4","C#4","D4","D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6"];
+        notas.forEach(n => {
+            const k = document.createElement('div');
+            k.className = `keyboard-key ${n.includes('#') ? 'black' : ''}`;
+            if (n === "C4") k.innerHTML = '<div class="middle-c-dot"></div>';
+            k.onclick = () => { document.getElementById('inputNota').value = n; buscarNota(); highlightKey(k); };
+            piano.appendChild(k);
+        });
+
+        const ley = document.getElementById('leyenda');
+        const cats = [{t:'Octavas', c:'var(--color-p2)'}, {t:'Quintas', c:'var(--color-p3)'}, {t:'Terceras', c:'var(--color-p5)'}, {t:'7ª Menor', c:'var(--color-p7)'}];
+        cats.forEach(cat => ley.innerHTML += `<div class="legend-item"><div class="dot-sample" style="background:${cat.c}"></div>${cat.t}</div>`);
+
+        dibujarMastil();
+        buscarNota();
+    }
+
+    function highlightKey(activeKey) {
+        document.querySelectorAll('.keyboard-key').forEach(k => k.classList.remove('active'));
+        activeKey.classList.add('active');
+    }
+
+    function getX(t) { return OFFSET_X + (LARGO_CUERDA - (LARGO_CUERDA / Math.pow(2, t / 12))); }
+    function getXRatio(r) { return OFFSET_X + (LARGO_CUERDA * r); }
+    function gcd(a,b) { return b ? gcd(b, a%b) : a; }
+
+    function dibujarMastil() {
+        const trastero = document.getElementById('trastero');
+        for (let i = 0; i <= 22; i++) {
+            let x = getX(i);
+            let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            l.setAttribute("x1", x); l.setAttribute("y1", 50); l.setAttribute("x2", x); l.setAttribute("y2", 290);
+            l.classList.add(i === 0 ? "cejuela" : "traste-metal");
+            trastero.appendChild(l);
+            if (i > 0 && (i <= 16 || i % 2 === 0)) {
+                let t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                t.setAttribute("x", x); t.setAttribute("y", 40);
+                t.textContent = toRoman(i); t.classList.add("label-romano");
+                trastero.appendChild(t);
+            }
+        }
+        CUERDAS_DATA.forEach(c => {
+            let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            l.setAttribute("x1", OFFSET_X); l.setAttribute("y1", c.y); l.setAttribute("x2", OFFSET_X+LARGO_CUERDA); l.setAttribute("y2", c.y);
+            l.classList.add("cuerda"); document.getElementById('cuerdas-group').appendChild(l);
+            let txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            txt.setAttribute("x", OFFSET_X-15); txt.setAttribute("y", c.y+4);
+            txt.textContent = c.nota; txt.classList.add("label-cuerda");
+            document.getElementById('cuerdas-group').appendChild(txt);
+        });
+    }
+
+    function buscarNota() {
+        const input = document.getElementById('inputNota').value.trim().toUpperCase();
+        const targetMidi = notaToMidi(input);
+        const capa = document.getElementById('capa-nodos');
+        const info = document.getElementById('infoBox');
+        capa.innerHTML = ""; info.innerHTML = "";
+        if (!targetMidi) return;
+
+        let res = [];
+        CUERDAS_DATA.forEach(cuerda => {
+            let usados = new Set();
+            SERIE.forEach(arm => {
+                if (cuerda.midi + arm.s === targetMidi) {
+                    for (let n = 1; n < arm.p; n++) {
+                        if (gcd(n, arm.p) === 1) {
+                            let xPos = Math.round(getXRatio(n/arm.p));
+                            if (!usados.has(xPos)) {
+                                drawNode(xPos, cuerda.y, arm.c);
+                                usados.add(xPos);
+                                res.push(`Cuerda <b>${cuerda.nota}</b>: Parcial ${arm.p} en 1/${arm.p}`);
+                            }
+                        }
+                    }
+                }
+            });
+            if (document.getElementById('checkArtificial').checked) {
+                for (let tP = 1; tP <= 15; tP++) {
+                    if (cuerda.midi + tP + 12 === targetMidi) {
+                        drawArt(Math.round(getX(tP)), Math.round(getX(tP + 12)), cuerda.y);
+                        res.push(`Cuerda <b>${cuerda.nota}</b>: Artificial (Traste ${tP})`);
+                    }
+                }
+            }
+        });
+        info.innerHTML = res.length ? res.map(h => `<div class="info-line">${h}</div>`).join("") : "No se detectan armónicos.";
+    }
+
+    function drawNode(x, y, c) {
+        let el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", 7);
+        el.setAttribute("fill", c); el.classList.add("nodo");
+        document.getElementById('capa-nodos').appendChild(el);
+    }
+
+    function drawArt(xI, xD, y) {
+        const capa = document.getElementById('capa-nodos');
+        capa.appendChild(drawHand(xI, y + 25, 'L'));
+        let p = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        p.setAttribute("cx", xI); p.setAttribute("cy", y); p.setAttribute("r", 4);
+        p.setAttribute("fill", "none"); p.setAttribute("stroke", "var(--purple)"); p.setAttribute("stroke-width", "2");
+        capa.appendChild(p);
+        capa.appendChild(drawHand(xD, y + 25, 'R'));
+        let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        l.setAttribute("x1", xD); l.setAttribute("y1", y-12); l.setAttribute("x2", xD); l.setAttribute("y2", y+12);
+        l.classList.add("guia-90"); capa.appendChild(l);
+        let c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        c.setAttribute("cx", xD); c.setAttribute("cy", y); c.setAttribute("r", 7);
+        c.setAttribute("fill", "var(--purple)"); c.classList.add("nodo");
+        capa.appendChild(c);
+    }
+
+    function drawHand(x, y, t) {
+        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.classList.add("icono-mano"); p.setAttribute("stroke", t === 'L' ? "#d2d2d7" : "var(--purple)");
+        p.setAttribute("d", t === 'L' ? `M${x-4},${y} a4,4 0 0,1 8,0` : `M${x-4},${y} l8,0 M${x},${y} l0,-5`);
+        g.appendChild(p); return g;
+    }
+
+    function notaToMidi(n) {
+        const m = n.match(/([A-G]#?)(\d)/); if(!m) return null;
+        const index = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"].indexOf(m[1]);
+        return (parseInt(m[2])+1)*12 + index;
+    }
+
+    init();
+</script>
+</body>
+</html>
