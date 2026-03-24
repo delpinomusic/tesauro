@@ -16,8 +16,8 @@
             --text-secondary: #6e6e73;
             --accent: #0071e3;
             --purple: #af52de;
+            --freeze-color: #00bcd4;
             
-            /* Diapasón suavizado: colores menos negros y más grises profundos */
             --fret-color: #636366; 
             --string-color: #8e8e93;
             --fret-text: #3a3a3c;
@@ -87,7 +87,7 @@
         svg { width: 100%; height: auto; }
 
         .side-panel {
-            flex: 1.2; display: flex; flex-direction: column; gap: 20px;
+            flex: 1.4; display: flex; flex-direction: column; gap: 20px;
             max-height: 100%; overflow-y: auto; padding-right: 10px;
         }
 
@@ -103,8 +103,22 @@
         .info-box { font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
         .info-line { margin-bottom: 6px; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: space-between; }
         .info-line b { color: var(--text-main); font-weight: 500; }
+        .info-line.frozen { background: rgba(0, 188, 212, 0.08); border-left: 3px solid var(--freeze-color); padding-left: 5px; border-radius: 0 4px 4px 0; }
+        
+        .note-tag { 
+            font-size: 10px; background: #e8e8ed; color: var(--text-main); 
+            padding: 2px 5px; border-radius: 3px; font-weight: 700; margin-right: 8px;
+            min-width: 24px; text-align: center;
+        }
 
-        /* Estilos del diapasón refinados */
+        .btn-freeze { 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; 
+            margin-right: 8px; transition: transform 0.2s; 
+        }
+        .btn-freeze:hover { transform: scale(1.2); }
+        .btn-freeze svg { width: 16px; height: 16px; fill: none; stroke: var(--text-secondary); stroke-width: 2; }
+        .btn-freeze.active svg { stroke: var(--freeze-color); fill: rgba(0, 188, 212, 0.2); }
+
         .cuerda { stroke: var(--string-color); stroke-width: 1.2; }
         .label-cuerda { font-size: 11px; text-anchor: end; fill: var(--text-main); font-weight: 700; }
         .label-romano { font-size: 10px; fill: var(--fret-text); text-anchor: middle; font-weight: 700; }
@@ -122,7 +136,7 @@
 
     <div class="header">
         <h1>Tesauro <i>armónico</i> de la guitarra</h1>
-        <div class="subtitle">Juan del Pino · 2026 · v5.1.0</div>
+        <div class="subtitle">Juan del Pino · 2026 · v5.2.1</div>
     </div>
 
     <div class="top-controls">
@@ -135,7 +149,7 @@
             <div class="checks-column">
                 <div class="check-group">
                     <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
-                    <label for="checkArtificial">Armónicos Artificiales</label>
+                    <label for="checkArtificial">Armónicos Artificiales (8.ª)</label>
                 </div>
                 <div class="check-group">
                     <input type="checkbox" id="checkSuperiores" onchange="buscarNota()">
@@ -147,9 +161,8 @@
                     <input type="checkbox" id="checkCercanos" onchange="buscarNota()">
                     <label for="checkCercanos">Armónicos cercanos (~50c)</label>
                 </div>
-                <div class="check-group disabled-option">
-                    <input type="checkbox" id="checkMultifonicos" disabled>
-                    <label for="checkMultifonicos">Multifónicos</label>
+                <div class="check-group">
+                    <button onclick="borrarCongelados()" style="font-size: 9px; cursor: pointer; border: 1px solid #d2d2d7; background: white; border-radius: 4px; padding: 2px 6px;">BORRAR CONGELADOS</button>
                 </div>
             </div>
         </div>
@@ -182,18 +195,21 @@
     ];
 
     const SERIE = [
-        {p:2, s:12, c:'var(--color-p2)', n:'Octava', cents: 0, sym: "\uE261"}, 
-        {p:3, s:19.02, c:'var(--color-p3)', n:'5ª Justa', cents: 2, sym: "\uE282"},
-        {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava', cents: 0, sym: "\uE261"},
-        {p:5, s:27.86, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1"},
-        {p:6, s:31.02, c:'var(--color-p3)', n:'2ª Oct. + 5ª', cents: 2, sym: "\uE282"},
-        {p:7, s:33.69, c:'var(--color-p7)', n:'7ª Menor', cents: -31, sym: "\uE281"},
-        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava', cents: 0, sym: "\uE261"},
-        {p:9, s:38.04, c:'var(--color-px)', n:'2ª Mayor', cents: 4, sym: "\uE261"},
-        {p:10, s:39.86, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1"},
-        {p:11, s:41.51, c:'var(--color-px)', n:'4ª Aumentada', cents: -49, sym: "\uE280"},
-        {p:12, s:43.02, c:'var(--color-p3)', n:'3ª Oct. + 5ª', cents: 2, sym: "\uE282"}
+        {p:2, s:12, c:'var(--color-p2)', n:'Octava', cents: 0, sym: "\uE261", frac: "1/2"}, 
+        {p:3, s:19.02, c:'var(--color-p3)', n:'5ª Justa', cents: 2, sym: "\uE282", frac: "1/3"},
+        {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava', cents: 0, sym: "\uE261", frac: "1/4"},
+        {p:5, s:27.86, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1", frac: "1/5"},
+        {p:6, s:31.02, c:'var(--color-p3)', n:'2ª Oct. + 5ª', cents: 2, sym: "\uE282", frac: "1/6"},
+        {p:7, s:33.69, c:'var(--color-p7)', n:'7ª Menor', cents: -31, sym: "\uE281", frac: "1/7"},
+        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava', cents: 0, sym: "\uE261", frac: "1/8"},
+        {p:9, s:38.04, c:'var(--color-px)', n:'2ª Mayor', cents: 4, sym: "\uE261", frac: "1/9"},
+        {p:10, s:39.86, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1", frac: "1/10"},
+        {p:11, s:41.51, c:'var(--color-px)', n:'4ª Aumentada', cents: -49, sym: "\uE280", frac: "1/11"},
+        {p:12, s:43.02, c:'var(--color-p3)', n:'3ª Oct. + 5ª', cents: 2, sym: "\uE282", frac: "1/12"}
     ];
+
+    let congelados = [];
+    let resultadosActuales = [];
 
     function toRoman(n) {
         const rom = ["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
@@ -238,7 +254,7 @@
             {t:'Quintas', c:'var(--color-p3)'}, 
             {t:'Terceras', c:'var(--color-p5)'}, 
             {t:'7.ª Menor', c:'var(--color-p7)'},
-            {t:'Parciales Sup.', c:'var(--color-px)'}
+            {t:'Congelado', c:'var(--freeze-color)'}
         ];
         ley.innerHTML = "";
         cats.forEach(cat => ley.innerHTML += `<div class="legend-item"><div class="dot-sample" style="background:${cat.c}"></div>${cat.t}</div>`);
@@ -264,15 +280,28 @@
     function getXRatio(r) { return OFFSET_X + (LARGO_CUERDA * r); }
     function gcd(a,b) { return b ? gcd(b, a%b) : a; }
 
-    function calcularDificultad(parcial, x) {
-        let trasteTeorico = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
-        let esTrasteExacto = Math.abs(trasteTeorico - Math.round(trasteTeorico)) < 0.1;
-        if (esTrasteExacto && parcial <= 4) return 0;
-        
-        let nivel = 1;
-        if (trasteTeorico > 13 || parcial > 8) nivel = 2;
-        if (trasteTeorico > 17 && parcial > 9) nivel = 3;
-        return nivel;
+    function toggleFreeze(id) {
+        const index = congelados.findIndex(c => c.id === id);
+        if (index > -1) {
+            congelados.splice(index, 1);
+        } else {
+            const item = resultadosActuales.find(r => generarID(r) === id);
+            if (item) {
+                // Capturar la nota objetivo actual para la fila congelada
+                const notaActual = document.getElementById('inputNota').value.trim().toUpperCase();
+                congelados.push({...item, id, notaObjetivo: notaActual});
+            }
+        }
+        buscarNota();
+    }
+
+    function borrarCongelados() {
+        congelados = [];
+        buscarNota();
+    }
+
+    function generarID(r) {
+        return r.type === 'nat' ? `nat-${r.cuerda.nota}-${r.arm.p}` : `art-${r.cuerda.nota}-${r.traste}`;
     }
 
     function dibujarMastil() {
@@ -314,87 +343,138 @@
         const checkArt = document.getElementById('checkArtificial').checked;
         
         capa.innerHTML = ""; info.innerHTML = "";
-        if (!targetMidi) return;
+        
+        // 1. Identificar IDs congelados
+        const idsCongelados = new Set(congelados.map(c => c.id));
 
-        let resultados = [];
-        const TOLERANCIA_MIDI = useTolerance ? 0.5 : 0.05;
+        // 2. Buscar nuevos armónicos
+        resultadosActuales = [];
+        if (targetMidi) {
+            const TOLERANCIA_MIDI = useTolerance ? 0.5 : 0.05;
+            CUERDAS_DATA.forEach(cuerda => {
+                SERIE.forEach(arm => {
+                    if (arm.p > 7 && !showHigh) return;
+                    let armMidi = cuerda.midi + arm.s;
+                    let diff = armMidi - targetMidi;
+                    if (Math.abs(diff) <= TOLERANCIA_MIDI) {
+                        let centsDesv = Math.round(diff * 100);
+                        let primerX = Math.round(getXRatio(1/arm.p));
+                        resultadosActuales.push({
+                            cuerda: cuerda, arm: arm, desv: centsDesv, absDesv: Math.abs(centsDesv), 
+                            type: 'nat', dificultad: calcularDificultad(arm.p, primerX)
+                        });
+                    }
+                });
 
-        CUERDAS_DATA.forEach(cuerda => {
-            SERIE.forEach(arm => {
-                if (arm.p > 7 && !showHigh) return;
-                let armMidi = cuerda.midi + arm.s;
-                let diff = armMidi - targetMidi;
-
-                if (Math.abs(diff) <= TOLERANCIA_MIDI) {
-                    let centsDesv = Math.round(diff * 100);
-                    let primerX = Math.round(getXRatio(1/arm.p));
-                    let difNivel = calcularDificultad(arm.p, primerX);
-
-                    resultados.push({
-                        cuerda: cuerda, arm: arm, desv: centsDesv, absDesv: Math.abs(centsDesv), type: 'nat', dificultad: difNivel
-                    });
-
-                    let nodosDibujadosEnEstaCuerda = new Set();
-                    for (let n = 1; n < arm.p; n++) {
-                        if (gcd(n, arm.p) === 1) {
-                            let xPos = Math.round(getXRatio(n/arm.p));
-                            if (!nodosDibujadosEnEstaCuerda.has(xPos)) {
-                                drawNode(xPos, cuerda.y, arm.c); 
-                                nodosDibujadosEnEstaCuerda.add(xPos);
-                            }
+                if (checkArt) {
+                    for (let tP = 1; tP <= 15; tP++) {
+                        let artMidi = (cuerda.midi + tP) + 12;
+                        if (Math.abs(artMidi - targetMidi) <= 0.05) {
+                            resultadosActuales.push({ cuerda: cuerda, traste: tP, type: 'art', dificultad: 0 });
                         }
                     }
                 }
             });
+        }
 
-            if (checkArt) {
-                for (let tP = 1; tP <= 15; tP++) {
-                    let artMidi = (cuerda.midi + tP) + 12;
-                    if (Math.abs(artMidi - targetMidi) <= 0.05) {
-                        resultados.push({
-                            cuerda: cuerda, traste: tP, type: 'art', dificultad: 0
-                        });
-                        drawArt(getX(tP), getX(tP + 12), cuerda.y);
+        // 3. Dibujar Congelados
+        congelados.forEach(c => dibujarArmonico(c, true));
+
+        // 4. Dibujar Nuevos (que no estén ya congelados)
+        resultadosActuales.forEach(res => {
+            if (!idsCongelados.has(generarID(res))) {
+                dibujarArmonico(res, false);
+            }
+        });
+
+        resultadosActuales.sort((a, b) => (a.absDesv || 0) - (b.absDesv || 0));
+        renderTabla();
+    }
+
+    function dibujarArmonico(r, isFrozen) {
+        const color = isFrozen ? 'var(--freeze-color)' : (r.type === 'nat' ? r.arm.c : 'var(--purple)');
+        
+        if (r.type === 'nat') {
+            let nodosDibujadosEnEstaCuerda = new Set();
+            for (let n = 1; n < r.arm.p; n++) {
+                if (gcd(n, r.arm.p) === 1) {
+                    let xPos = Math.round(getXRatio(n/r.arm.p));
+                    if (!nodosDibujadosEnEstaCuerda.has(xPos)) {
+                        drawNode(xPos, r.cuerda.y, color); 
+                        nodosDibujadosEnEstaCuerda.add(xPos);
                     }
                 }
             }
-        });
+        } else {
+            drawArt(getX(r.traste), getX(r.traste + 12), r.cuerda.y, color);
+        }
+    }
 
-        resultados.sort((a, b) => (a.absDesv || 0) - (b.absDesv || 0));
+    function renderTabla() {
+        const info = document.getElementById('infoBox');
+        const htmlCongelados = congelados.map(r => generarFilaHTML(r, true)).join("");
+        
+        const idsCongelados = new Set(congelados.map(c => c.id));
+        const htmlNuevos = resultadosActuales
+            .filter(r => !idsCongelados.has(generarID(r)))
+            .map(r => generarFilaHTML(r, false)).join("");
 
-        let resHTML = resultados.map(r => {
-            let triangulosHTML = r.dificultad > 0 ? `<div class="diff-triangles">${"▲".repeat(r.dificultad)}</div>` : `<div class="diff-triangles"></div>`;
-            
-            if (r.type === 'nat') {
-                let centsColor = getCentsColor(r.desv);
-                return `
-                    <div class="info-line">
-                        <span>Cuerda <b>${r.cuerda.nota}</b>: P${r.arm.p} (1/${r.arm.p})</span>
-                        <div class="symbol-zone">
-                            ${triangulosHTML}
-                            <span class="smufl">${r.arm.sym}</span>
-                            <span class="cents-badge" style="color: ${centsColor}">${r.desv > 0 ? '+' : ''}${r.desv}¢</span>
-                        </div>
-                    </div>`;
-            } else {
-                return `
-                    <div class="info-line">
-                        <span>Art. Octava en <b>${r.cuerda.nota}</b>: Tr. ${r.traste}</span>
-                        <div class="symbol-zone">
-                            <div class="diff-triangles"></div>
-                            <span class="smufl" style="color:var(--purple)">\uE261</span>
-                            <span class="cents-badge">0¢</span>
-                        </div>
-                    </div>`;
-            }
-        });
+        info.innerHTML = (htmlCongelados + htmlNuevos) || "No se detectan armónicos.";
+    }
 
-        info.innerHTML = resHTML.length ? resHTML.join("") : "No se detectan armónicos.";
+    function generarFilaHTML(r, isFrozen) {
+        const id = isFrozen ? r.id : generarID(r);
+        const iconFrozenClass = isFrozen ? "active" : "";
+        const rowClass = isFrozen ? "frozen" : "";
+        const copoSVG = `<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>`;
+
+        let noteTag = isFrozen ? `<div class="note-tag">${r.notaObjetivo}</div>` : "";
+        let triangulosHTML = r.dificultad > 0 ? `<div class="diff-triangles">${"▲".repeat(r.dificultad)}</div>` : `<div class="diff-triangles"></div>`;
+        
+        if (r.type === 'nat') {
+            let centsColor = isFrozen ? 'var(--freeze-color)' : getCentsColor(r.desv);
+            return `
+                <div class="info-line ${rowClass}">
+                    <div style="display:flex; align-items:center">
+                        ${noteTag}
+                        <div class="btn-freeze ${iconFrozenClass}" onclick="toggleFreeze('${id}')">${copoSVG}</div>
+                        <span>Cuerda <b>${r.cuerda.nota}</b>: P${r.arm.p} <small>(${r.arm.frac})</small> <span style="font-size:11px; margin-left:5px; opacity:0.8">— ${r.arm.n}</span></span>
+                    </div>
+                    <div class="symbol-zone">
+                        ${triangulosHTML}
+                        <span class="smufl">${r.arm.sym}</span>
+                        <span class="cents-badge" style="color: ${centsColor}">${r.desv > 0 ? '+' : ''}${r.desv}¢</span>
+                    </div>
+                </div>`;
+        } else {
+            return `
+                <div class="info-line ${rowClass}">
+                    <div style="display:flex; align-items:center">
+                        ${noteTag}
+                        <div class="btn-freeze ${iconFrozenClass}" onclick="toggleFreeze('${id}')">${copoSVG}</div>
+                        <span>Art. 8ª en <b>${r.cuerda.nota}</b>: Tr. ${r.traste}</span>
+                    </div>
+                    <div class="symbol-zone">
+                        <div class="diff-triangles"></div>
+                        <span class="smufl" style="color:${isFrozen ? 'var(--freeze-color)' : 'var(--purple)'}">\uE261</span>
+                        <span class="cents-badge">0¢</span>
+                    </div>
+                </div>`;
+        }
+    }
+
+    function calcularDificultad(parcial, x) {
+        let trasteTeorico = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
+        let esTrasteExacto = Math.abs(trasteTeorico - Math.round(trasteTeorico)) < 0.1;
+        if (esTrasteExacto && parcial <= 4) return 0;
+        let nivel = 1;
+        if (trasteTeorico > 13 || parcial > 8) nivel = 2;
+        if (trasteTeorico > 17 && parcial > 9) nivel = 3;
+        return nivel;
     }
 
     function drawNode(x, y, c) {
         const capa = document.getElementById('capa-nodos');
-        
         let trasteTeorico = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
         let esTrasteExacto = Math.abs(trasteTeorico - Math.round(trasteTeorico)) < 0.1;
 
@@ -402,15 +482,8 @@
             let barrita = document.createElementNS("http://www.w3.org/2000/svg", "line");
             barrita.setAttribute("x1", x - 6); barrita.setAttribute("y1", y); 
             barrita.setAttribute("x2", x + 6); barrita.setAttribute("y2", y);
-            barrita.setAttribute("stroke", c);
-            barrita.classList.add("guia-horizontal");
+            barrita.setAttribute("stroke", c); barrita.classList.add("guia-horizontal");
             capa.appendChild(barrita);
-
-            let guia = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            guia.setAttribute("x1", x); guia.setAttribute("y1", y - 18); 
-            guia.setAttribute("x2", x); guia.setAttribute("y2", y + 18);
-            guia.setAttribute("stroke", c); guia.classList.add("guia-nodo");
-            capa.appendChild(guia);
         }
 
         let el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -419,27 +492,28 @@
         capa.appendChild(el);
     }
 
-    function drawArt(xI, xD, y) {
+    function drawArt(xI, xD, y, color) {
         const capa = document.getElementById('capa-nodos');
-        capa.appendChild(drawHand(xI, y + 25, 'L'));
+        capa.appendChild(drawHand(xI, y + 25, 'L', color));
         let p = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         p.setAttribute("cx", xI); p.setAttribute("cy", y); p.setAttribute("r", 4);
-        p.setAttribute("fill", "none"); p.setAttribute("stroke", "var(--purple)"); p.setAttribute("stroke-width", "2.5");
+        p.setAttribute("fill", "none"); p.setAttribute("stroke", color); p.setAttribute("stroke-width", "2.5");
         capa.appendChild(p);
-        capa.appendChild(drawHand(xD, y + 25, 'R'));
+        capa.appendChild(drawHand(xD, y + 25, 'R', color));
         let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
         l.setAttribute("x1", xD); l.setAttribute("y1", y-12); l.setAttribute("x2", xD); l.setAttribute("y2", y+12);
-        l.classList.add("guia-90"); capa.appendChild(l);
+        l.classList.add("guia-90"); l.style.stroke = color;
+        capa.appendChild(l);
         let c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         c.setAttribute("cx", xD); c.setAttribute("cy", y); c.setAttribute("r", 7.5);
-        c.setAttribute("fill", "var(--purple)"); c.classList.add("nodo");
+        c.setAttribute("fill", color); c.classList.add("nodo");
         capa.appendChild(c);
     }
 
-    function drawHand(x, y, t) {
+    function drawHand(x, y, t, color) {
         const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
         const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        p.classList.add("icono-mano"); p.setAttribute("stroke", t === 'L' ? "#48484a" : "var(--purple)");
+        p.classList.add("icono-mano"); p.setAttribute("stroke", t === 'L' && color === 'var(--purple)' ? "#48484a" : color);
         p.setAttribute("d", t === 'L' ? `M${x-4},${y} a4,4 0 0,1 8,0` : `M${x-4},${y} l8,0 M${x},${y} l0,-5`);
         g.appendChild(p); return g;
     }
