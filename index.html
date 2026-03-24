@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Tesauro Armónico de la Guitarra</title>
     <style>
+        /* 1. CARGA DE LA FUENTE LOCAL */
+        @font-face {
+            font-family: 'Bravura';
+            src: url('fonts/Bravura.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: block;
+        }
+
         :root {
             --bg-color: #ffffff;
             --text-main: #1d1d1f;
@@ -30,7 +39,7 @@
         h1 i { font-style: italic; font-weight: 200; }
         .subtitle { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; }
 
-        .top-controls { display: flex; gap: 40px; align-items: flex-end; margin-bottom: 20px; flex-shrink: 0; }
+        .top-controls { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 20px; flex-shrink: 0; }
         .input-group { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .input-group label { font-size: 9px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
         
@@ -41,9 +50,13 @@
         }
         input[type="text"]:focus { border-bottom-color: var(--accent); }
 
-        .check-group { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; margin-bottom: 8px; }
+        .checks-column { display: flex; flex-direction: column; gap: 8px; }
+        .check-group { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .check-group label { font-size: 13px; color: var(--text-secondary); cursor: pointer; font-weight: 300; }
         
+        .disabled-option label { text-decoration: line-through; opacity: 0.5; cursor: not-allowed; }
+        .disabled-option input { cursor: not-allowed; opacity: 0.5; }
+
         input[type="checkbox"] {
             appearance: none; -webkit-appearance: none; width: 18px; height: 18px; 
             border: 1px solid #d2d2d7; border-radius: 4px; cursor: pointer;
@@ -74,26 +87,30 @@
         svg { width: 100%; height: auto; }
 
         .side-panel {
-            flex: 1; display: flex; flex-direction: column; gap: 20px;
+            flex: 1.2; display: flex; flex-direction: column; gap: 20px;
             max-height: 100%; overflow-y: auto; padding-right: 10px;
         }
+
+        /* ZONA DE SÍMBOLOS ALINEADA */
+        .symbol-zone { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-width: 110px; }
+        .smufl { font-family: "Bravura", serif; font-size: 34px; line-height: 1; color: var(--text-main); width: 40px; text-align: center; }
+        .cents-badge { font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 4px; background: #f5f5f7; min-width: 35px; text-align: center; }
 
         .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .dot-sample { width: 10px; height: 10px; border-radius: 50%; }
 
         .info-box { font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
-        .info-line { margin-bottom: 6px; padding: 4px 0; border-bottom: 1px solid #f2f2f2; }
+        .info-line { margin-bottom: 6px; padding: 6px 0; border-bottom: 1px solid #f2f2f2; display: flex; align-items: center; justify-content: space-between; }
         .info-line b { color: var(--text-main); font-weight: 500; }
 
-        /* Estilos SVG */
         .cuerda { stroke: #efefef; stroke-width: 1.2; }
         .label-cuerda { font-size: 11px; text-anchor: end; fill: var(--text-main); }
         .label-romano { font-size: 10px; fill: #d2d2d7; text-anchor: middle; }
         .traste-metal { stroke: #f6f6f6; stroke-width: 1.5; }
         .cejuela { stroke: #1d1d1f; stroke-width: 3; }
         .nodo { stroke: white; stroke-width: 1.5; }
-        .guia-nodo { stroke-width: 0.5; stroke-dasharray: 2,2; opacity: 0.8; } /* Línea discontinua más sutil */
+        .guia-nodo { stroke-width: 0.5; stroke-dasharray: 2,2; opacity: 0.8; }
         .guia-90 { stroke-width: 0.8; stroke-dasharray: 3,3; stroke: var(--purple); opacity: 0.4; }
         .icono-mano { fill: none; stroke-width: 1.2; stroke-linecap: round; }
     </style>
@@ -102,7 +119,7 @@
 
     <div class="header">
         <h1>Tesauro <i>armónico</i> de la guitarra</h1>
-        <div class="subtitle">Juan del Pino · 2026 · v3.6</div>
+        <div class="subtitle">Juan del Pino · 2026 · v4.9</div>
     </div>
 
     <div class="top-controls">
@@ -110,9 +127,16 @@
             <label>Nota Objetivo</label>
             <input type="text" id="inputNota" value="B4" oninput="buscarNota()" spellcheck="false">
         </div>
-        <div class="check-group">
-            <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
-            <label for="checkArtificial">Armónicos Artificiales</label>
+        
+        <div class="checks-column">
+            <div class="check-group">
+                <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
+                <label for="checkArtificial">Armónicos Artificiales</label>
+            </div>
+            <div class="check-group disabled-option">
+                <input type="checkbox" id="checkMultifonicos" disabled>
+                <label for="checkMultifonicos">Multifónicos</label>
+            </div>
         </div>
     </div>
 
@@ -129,7 +153,7 @@
 
         <div class="side-panel">
             <div class="legend" id="leyenda"></div>
-            <div class="info-box" id="infoBox"></div>
+            <div id="infoBox" class="info-box"></div>
         </div>
     </div>
 
@@ -142,19 +166,26 @@
         { nota: "A2", y: 230, midi: 45 }, { nota: "E2", y: 270, midi: 40 }
     ];
 
+    // SERIE CON SÍMBOLOS CORREGIDOS SEGÚN SMUFL
     const SERIE = [
-        {p:2, s:12, c:'var(--color-p2)', n:'Octava'},
-        {p:3, s:19, c:'var(--color-p3)', n:'5ª Justa'},
-        {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava'},
-        {p:5, s:28, c:'var(--color-p5)', n:'3ª Mayor'},
-        {p:6, s:31, c:'var(--color-p3)', n:'2ª Oct. + 5ª'},
-        {p:7, s:34, c:'var(--color-p7)', n:'7ª Menor'},
-        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava'}
+        {p:2, s:12, c:'var(--color-p2)', n:'Octava', cents: 0, sym: "\uE261"}, 
+        {p:3, s:19, c:'var(--color-p3)', n:'5ª Justa', cents: 2, sym: "\uE282"}, // Natural Microtonal (C tachada)
+        {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava', cents: 0, sym: "\uE261"},
+        {p:5, s:28, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1"}, // Flecha abajo
+        {p:6, s:31, c:'var(--color-p3)', n:'2ª Oct. + 5ª', cents: 2, sym: "\uE282"}, // Natural Microtonal (C tachada)
+        {p:7, s:34, c:'var(--color-p7)', n:'7ª Menor', cents: -31, sym: "\uE281"}, // Doble flecha abajo
+        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava', cents: 0, sym: "\uE261"}
     ];
 
     function toRoman(n) {
         const rom = ["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
         return rom[n] || n;
+    }
+
+    function getCentsColor(cents) {
+        if (cents === 0 || cents === 2) return "#34c759";
+        if (cents < 0) return "#0071e3";
+        return "#ff9500";
     }
 
     function init() {
@@ -170,6 +201,7 @@
 
         const ley = document.getElementById('leyenda');
         const cats = [{t:'Octavas', c:'var(--color-p2)'}, {t:'Quintas', c:'var(--color-p3)'}, {t:'Terceras', c:'var(--color-p5)'}, {t:'7ª Menor', c:'var(--color-p7)'}];
+        ley.innerHTML = "";
         cats.forEach(cat => ley.innerHTML += `<div class="legend-item"><div class="dot-sample" style="background:${cat.c}"></div>${cat.t}</div>`);
 
         dibujarMastil();
@@ -187,6 +219,7 @@
 
     function dibujarMastil() {
         const trastero = document.getElementById('trastero');
+        trastero.innerHTML = "";
         for (let i = 0; i <= 22; i++) {
             let x = getX(i);
             let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -200,14 +233,16 @@
                 trastero.appendChild(t);
             }
         }
+        const cuerdasGroup = document.getElementById('cuerdas-group');
+        cuerdasGroup.innerHTML = "";
         CUERDAS_DATA.forEach(c => {
             let l = document.createElementNS("http://www.w3.org/2000/svg", "line");
             l.setAttribute("x1", OFFSET_X); l.setAttribute("y1", c.y); l.setAttribute("x2", OFFSET_X+LARGO_CUERDA); l.setAttribute("y2", c.y);
-            l.classList.add("cuerda"); document.getElementById('cuerdas-group').appendChild(l);
+            l.classList.add("cuerda"); cuerdasGroup.appendChild(l);
             let txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
             txt.setAttribute("x", OFFSET_X-15); txt.setAttribute("y", c.y+4);
             txt.textContent = c.nota; txt.classList.add("label-cuerda");
-            document.getElementById('cuerdas-group').appendChild(txt);
+            cuerdasGroup.appendChild(txt);
         });
     }
 
@@ -219,7 +254,7 @@
         capa.innerHTML = ""; info.innerHTML = "";
         if (!targetMidi) return;
 
-        let res = [];
+        let resHTML = [];
         let lineasUnicas = new Set();
 
         CUERDAS_DATA.forEach(cuerda => {
@@ -230,14 +265,21 @@
                         if (gcd(n, arm.p) === 1) {
                             let xPos = Math.round(getXRatio(n/arm.p));
                             if (!nodosDibujadosEnEstaCuerda.has(xPos)) {
-                                // Pasamos el número del parcial para decidir si dibujar la guía
                                 drawNode(xPos, cuerda.y, arm.c, arm.p); 
                                 nodosDibujadosEnEstaCuerda.add(xPos);
                                 
-                                let texto = `Cuerda <b>${cuerda.nota}</b>: Parcial ${arm.p} en 1/${arm.p}`;
-                                if (!lineasUnicas.has(texto)) {
-                                    lineasUnicas.add(texto);
-                                    res.push(texto);
+                                let idTexto = `${cuerda.nota}-${arm.p}`;
+                                if (!lineasUnicas.has(idTexto)) {
+                                    lineasUnicas.add(idTexto);
+                                    let centsColor = getCentsColor(arm.cents);
+                                    resHTML.push(`
+                                        <div class="info-line">
+                                            <span>Cuerda <b>${cuerda.nota}</b>: P${arm.p} (1/${arm.p})</span>
+                                            <div class="symbol-zone">
+                                                <span class="smufl">${arm.sym}</span>
+                                                <span class="cents-badge" style="color: ${centsColor}">${arm.cents > 0 ? '+' : ''}${arm.cents}¢</span>
+                                            </div>
+                                        </div>`);
                                 }
                             }
                         }
@@ -248,34 +290,23 @@
                 for (let tP = 1; tP <= 15; tP++) {
                     if (cuerda.midi + tP + 12 === targetMidi) {
                         drawArt(Math.round(getX(tP)), Math.round(getX(tP + 12)), cuerda.y);
-                        let textoArt = `Cuerda <b>${cuerda.nota}</b>: Artificial (Traste ${tP})`;
-                        if(!lineasUnicas.has(textoArt)){
-                            lineasUnicas.add(textoArt);
-                            res.push(textoArt);
-                        }
                     }
                 }
             }
         });
-        info.innerHTML = res.length ? res.map(h => `<div class="info-line">${h}</div>`).join("") : "No se detectan armónicos.";
+        info.innerHTML = resHTML.length ? resHTML.join("") : "No se detectan armónicos.";
     }
 
     function drawNode(x, y, c, numeroParcial) {
         const capa = document.getElementById('capa-nodos');
         const radioNodo = 7;
-        
-        // 1. Decidimos si dibujamos la guía visual (BUG: Solo en parciales 5 y 7)
         if (numeroParcial === 5 || numeroParcial === 7) {
             let guia = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            // La guía sobresale levemente (10px) del punto
             guia.setAttribute("x1", x); guia.setAttribute("y1", y - radioNodo - 10); 
             guia.setAttribute("x2", x); guia.setAttribute("y2", y + radioNodo + 10);
-            guia.setAttribute("stroke", c); 
-            guia.classList.add("guia-nodo");
+            guia.setAttribute("stroke", c); guia.classList.add("guia-nodo");
             capa.appendChild(guia);
         }
-
-        // 2. Dibujamos el círculo (nodo) encima
         let el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
         el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", radioNodo);
         el.setAttribute("fill", c); el.classList.add("nodo");
