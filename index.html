@@ -25,13 +25,12 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Cabecera minimalista original */
-        .header { text-align: center; padding: 40px 0 10px 0; flex-shrink: 0; }
+        .header { text-align: center; padding: 25px 0 10px 0; flex-shrink: 0; }
         h1 { font-weight: 200; font-size: 34px; margin: 0; color: var(--text-main); }
         h1 i { font-style: italic; font-weight: 200; }
         .subtitle { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 6px; }
 
-        .top-controls { display: flex; gap: 40px; align-items: flex-end; margin-bottom: 30px; flex-shrink: 0; }
+        .top-controls { display: flex; gap: 40px; align-items: flex-end; margin-bottom: 20px; flex-shrink: 0; }
         .input-group { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         .input-group label { font-size: 9px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
         
@@ -56,49 +55,45 @@
             clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
         }
 
-        /* Piano sutil */
-        .piano-container { display: flex; justify-content: center; margin-bottom: 40px; width: 100%; flex-shrink: 0; }
+        .piano-container { display: flex; justify-content: center; margin-bottom: 20px; width: 100%; flex-shrink: 0; }
         .keyboard-key {
-            min-width: 22px; height: 80px; background: white; border: 0.5px solid #f2f2f2;
+            min-width: 20px; height: 50px; background: white; border: 0.5px solid #f2f2f2;
             cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
             border-radius: 0 0 3px 3px;
         }
-        .keyboard-key.black { background: #1d1d1f; min-width: 14px; height: 50px; margin: 0 -7px; z-index: 2; border: none; }
+        .keyboard-key.black { background: #1d1d1f; min-width: 12px; height: 30px; margin: 0 -6px; z-index: 2; border: none; }
         .keyboard-key.active { background: #fafafa; border-bottom: 3px solid var(--accent); }
         .middle-c-dot { width: 4px; height: 4px; background-color: #ffd1dc; border-radius: 50%; margin-bottom: 8px; }
 
-        /* Dashboard Flotante (Sin recuadros) */
-        .dashboard {
-            display: grid; grid-template-columns: 200px 1fr; gap: 50px;
-            width: 85%; max-width: 1000px; margin-bottom: 20px;
-            flex-shrink: 0; min-height: 100px;
+        .main-layout {
+            display: flex; flex-direction: row; width: 95%; max-width: 1400px;
+            gap: 30px; align-items: flex-start; flex-grow: 1; overflow: hidden;
         }
 
-        .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: flex-start; }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 400; color: var(--text-secondary); }
-        .dot-sample { width: 12px; height: 12px; border-radius: 50%; }
+        #contenedor-svg { flex: 3; display: flex; align-items: center; justify-content: center; position: relative;}
+        svg { width: 100%; height: auto; }
 
-        .info-box { 
-            font-size: 12px; color: var(--text-secondary); 
-            line-height: 1.8; font-weight: 300;
+        .side-panel {
+            flex: 1; display: flex; flex-direction: column; gap: 20px;
+            max-height: 100%; overflow-y: auto; padding-right: 10px;
         }
-        .info-line { margin-bottom: 4px; }
+
+        .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
+        .dot-sample { width: 10px; height: 10px; border-radius: 50%; }
+
+        .info-box { font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
+        .info-line { margin-bottom: 6px; padding: 4px 0; border-bottom: 1px solid #f2f2f2; }
         .info-line b { color: var(--text-main); font-weight: 500; }
 
-        /* Mástil Proporcional */
-        #contenedor-svg { 
-            width: 100%; max-width: 1200px; flex-grow: 1; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        svg { width: 90%; height: auto; }
-
+        /* Estilos SVG */
         .cuerda { stroke: #efefef; stroke-width: 1.2; }
-        .label-cuerda { font-size: 11px; font-weight: 400; text-anchor: end; fill: var(--text-main); }
-        .label-romano { font-size: 10px; fill: #d2d2d7; text-anchor: middle; font-weight: 400; }
+        .label-cuerda { font-size: 11px; text-anchor: end; fill: var(--text-main); }
+        .label-romano { font-size: 10px; fill: #d2d2d7; text-anchor: middle; }
         .traste-metal { stroke: #f6f6f6; stroke-width: 1.5; }
         .cejuela { stroke: #1d1d1f; stroke-width: 3; }
-        
-        .nodo { stroke: rgba(255,255,255,1); stroke-width: 1.5; }
+        .nodo { stroke: white; stroke-width: 1.5; }
+        .guia-nodo { stroke-width: 0.5; stroke-dasharray: 2,2; opacity: 0.8; } /* Línea discontinua más sutil */
         .guia-90 { stroke-width: 0.8; stroke-dasharray: 3,3; stroke: var(--purple); opacity: 0.4; }
         .icono-mano { fill: none; stroke-width: 1.2; stroke-linecap: round; }
     </style>
@@ -123,17 +118,19 @@
 
     <div class="piano-container" id="piano"></div>
 
-    <div class="dashboard">
-        <div class="legend" id="leyenda"></div>
-        <div class="info-box" id="infoBox"></div>
-    </div>
+    <div class="main-layout">
+        <div id="contenedor-svg">
+            <svg id="mastil" viewBox="0 0 1000 360">
+                <g id="trastero"></g>
+                <g id="cuerdas-group"></g>
+                <g id="capa-nodos"></g>
+            </svg>
+        </div>
 
-    <div id="contenedor-svg">
-        <svg id="mastil" viewBox="0 0 1000 360">
-            <g id="trastero"></g>
-            <g id="cuerdas-group"></g>
-            <g id="capa-nodos"></g>
-        </svg>
+        <div class="side-panel">
+            <div class="legend" id="leyenda"></div>
+            <div class="info-box" id="infoBox"></div>
+        </div>
     </div>
 
 <script>
@@ -223,17 +220,25 @@
         if (!targetMidi) return;
 
         let res = [];
+        let lineasUnicas = new Set();
+
         CUERDAS_DATA.forEach(cuerda => {
-            let usados = new Set();
+            let nodosDibujadosEnEstaCuerda = new Set();
             SERIE.forEach(arm => {
                 if (cuerda.midi + arm.s === targetMidi) {
                     for (let n = 1; n < arm.p; n++) {
                         if (gcd(n, arm.p) === 1) {
                             let xPos = Math.round(getXRatio(n/arm.p));
-                            if (!usados.has(xPos)) {
-                                drawNode(xPos, cuerda.y, arm.c);
-                                usados.add(xPos);
-                                res.push(`Cuerda <b>${cuerda.nota}</b>: Parcial ${arm.p} en 1/${arm.p}`);
+                            if (!nodosDibujadosEnEstaCuerda.has(xPos)) {
+                                // Pasamos el número del parcial para decidir si dibujar la guía
+                                drawNode(xPos, cuerda.y, arm.c, arm.p); 
+                                nodosDibujadosEnEstaCuerda.add(xPos);
+                                
+                                let texto = `Cuerda <b>${cuerda.nota}</b>: Parcial ${arm.p} en 1/${arm.p}`;
+                                if (!lineasUnicas.has(texto)) {
+                                    lineasUnicas.add(texto);
+                                    res.push(texto);
+                                }
                             }
                         }
                     }
@@ -243,7 +248,11 @@
                 for (let tP = 1; tP <= 15; tP++) {
                     if (cuerda.midi + tP + 12 === targetMidi) {
                         drawArt(Math.round(getX(tP)), Math.round(getX(tP + 12)), cuerda.y);
-                        res.push(`Cuerda <b>${cuerda.nota}</b>: Artificial (Traste ${tP})`);
+                        let textoArt = `Cuerda <b>${cuerda.nota}</b>: Artificial (Traste ${tP})`;
+                        if(!lineasUnicas.has(textoArt)){
+                            lineasUnicas.add(textoArt);
+                            res.push(textoArt);
+                        }
                     }
                 }
             }
@@ -251,11 +260,26 @@
         info.innerHTML = res.length ? res.map(h => `<div class="info-line">${h}</div>`).join("") : "No se detectan armónicos.";
     }
 
-    function drawNode(x, y, c) {
+    function drawNode(x, y, c, numeroParcial) {
+        const capa = document.getElementById('capa-nodos');
+        const radioNodo = 7;
+        
+        // 1. Decidimos si dibujamos la guía visual (BUG: Solo en parciales 5 y 7)
+        if (numeroParcial === 5 || numeroParcial === 7) {
+            let guia = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            // La guía sobresale levemente (10px) del punto
+            guia.setAttribute("x1", x); guia.setAttribute("y1", y - radioNodo - 10); 
+            guia.setAttribute("x2", x); guia.setAttribute("y2", y + radioNodo + 10);
+            guia.setAttribute("stroke", c); 
+            guia.classList.add("guia-nodo");
+            capa.appendChild(guia);
+        }
+
+        // 2. Dibujamos el círculo (nodo) encima
         let el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", 7);
+        el.setAttribute("cx", x); el.setAttribute("cy", y); el.setAttribute("r", radioNodo);
         el.setAttribute("fill", c); el.classList.add("nodo");
-        document.getElementById('capa-nodos').appendChild(el);
+        capa.appendChild(el);
     }
 
     function drawArt(xI, xD, y) {
