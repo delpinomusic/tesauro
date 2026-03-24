@@ -24,6 +24,7 @@
             --color-p3: #ffcc00; 
             --color-p5: #ff9500; 
             --color-p7: #007aff; 
+            --color-px: #636366; /* Color para parciales altos */
         }
 
         html, body { 
@@ -50,6 +51,7 @@
         }
         input[type="text"]:focus { border-bottom-color: var(--accent); }
 
+        .checks-container { display: flex; gap: 30px; }
         .checks-column { display: flex; flex-direction: column; gap: 8px; }
         .check-group { display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
         .check-group label { font-size: 13px; color: var(--text-secondary); cursor: pointer; font-weight: 300; }
@@ -68,14 +70,14 @@
             clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
         }
 
-        .piano-container { display: flex; justify-content: center; margin-bottom: 20px; width: 100%; flex-shrink: 0; }
+        .piano-container { display: flex; justify-content: center; margin-bottom: 20px; width: 100%; flex-shrink: 0; overflow-x: auto; padding: 10px 0; }
         .keyboard-key {
-            min-width: 20px; height: 50px; background: white; border: 0.5px solid #f2f2f2;
+            min-width: 18px; height: 50px; background: white; border: 0.5px solid #f2f2f2;
             cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-            border-radius: 0 0 3px 3px;
+            border-radius: 0 0 3px 3px; position: relative;
         }
-        .keyboard-key.black { background: #1d1d1f; min-width: 12px; height: 30px; margin: 0 -6px; z-index: 2; border: none; }
-        .keyboard-key.active { background: #fafafa; border-bottom: 3px solid var(--accent); }
+        .keyboard-key.black { background: #1d1d1f; min-width: 11px; height: 30px; margin: 0 -5.5px; z-index: 2; border: none; }
+        .keyboard-key.active { background: #f2f2f7; border-bottom: 3px solid var(--accent); }
         .middle-c-dot { width: 4px; height: 4px; background-color: #ffd1dc; border-radius: 50%; margin-bottom: 8px; }
 
         .main-layout {
@@ -91,7 +93,6 @@
             max-height: 100%; overflow-y: auto; padding-right: 10px;
         }
 
-        /* ZONA DE SÍMBOLOS ALINEADA */
         .symbol-zone { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-width: 110px; }
         .smufl { font-family: "Bravura", serif; font-size: 34px; line-height: 1; color: var(--text-main); width: 40px; text-align: center; }
         .cents-badge { font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 4px; background: #f5f5f7; min-width: 35px; text-align: center; }
@@ -125,17 +126,25 @@
     <div class="top-controls">
         <div class="input-group">
             <label>Nota Objetivo</label>
-            <input type="text" id="inputNota" value="B4" oninput="buscarNota()" spellcheck="false">
+            <input type="text" id="inputNota" value="B4" oninput="actualizarDesdeInput()" spellcheck="false">
         </div>
         
-        <div class="checks-column">
-            <div class="check-group">
-                <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
-                <label for="checkArtificial">Armónicos Artificiales</label>
+        <div class="checks-container">
+            <div class="checks-column">
+                <div class="check-group">
+                    <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
+                    <label for="checkArtificial">Armónicos Artificiales</label>
+                </div>
+                <div class="check-group">
+                    <input type="checkbox" id="checkSuperiores" onchange="buscarNota()">
+                    <label for="checkSuperiores">Parciales Superiores (8-12)</label>
+                </div>
             </div>
-            <div class="check-group disabled-option">
-                <input type="checkbox" id="checkMultifonicos" disabled>
-                <label for="checkMultifonicos">Multifónicos</label>
+            <div class="checks-column">
+                <div class="check-group disabled-option">
+                    <input type="checkbox" id="checkMultifonicos" disabled>
+                    <label for="checkMultifonicos">Multifónicos</label>
+                </div>
             </div>
         </div>
     </div>
@@ -166,15 +175,18 @@
         { nota: "A2", y: 230, midi: 45 }, { nota: "E2", y: 270, midi: 40 }
     ];
 
-    // SERIE CON SÍMBOLOS CORREGIDOS SEGÚN SMUFL
     const SERIE = [
         {p:2, s:12, c:'var(--color-p2)', n:'Octava', cents: 0, sym: "\uE261"}, 
-        {p:3, s:19, c:'var(--color-p3)', n:'5ª Justa', cents: 2, sym: "\uE282"}, // Natural Microtonal (C tachada)
+        {p:3, s:19, c:'var(--color-p3)', n:'5ª Justa', cents: 2, sym: "\uE282"},
         {p:4, s:24, c:'var(--color-p2)', n:'2ª Octava', cents: 0, sym: "\uE261"},
-        {p:5, s:28, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1"}, // Flecha abajo
-        {p:6, s:31, c:'var(--color-p3)', n:'2ª Oct. + 5ª', cents: 2, sym: "\uE282"}, // Natural Microtonal (C tachada)
-        {p:7, s:34, c:'var(--color-p7)', n:'7ª Menor', cents: -31, sym: "\uE281"}, // Doble flecha abajo
-        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava', cents: 0, sym: "\uE261"}
+        {p:5, s:28, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1"},
+        {p:6, s:31, c:'var(--color-p3)', n:'2ª Oct. + 5ª', cents: 2, sym: "\uE282"},
+        {p:7, s:34, c:'var(--color-p7)', n:'7ª Menor', cents: -31, sym: "\uE281"},
+        {p:8, s:36, c:'var(--color-p2)', n:'3ª Octava', cents: 0, sym: "\uE261"},
+        {p:9, s:38, c:'var(--color-px)', n:'2ª Mayor', cents: 4, sym: "\uE261"},
+        {p:10, s:40, c:'var(--color-p5)', n:'3ª Mayor', cents: -14, sym: "\uE2C1"},
+        {p:11, s:42, c:'var(--color-px)', n:'4ª Aumentada', cents: -49, sym: "\uE280"},
+        {p:12, s:43, c:'var(--color-p3)', n:'3ª Oct. + 5ª', cents: 2, sym: "\uE282"}
     ];
 
     function toRoman(n) {
@@ -183,34 +195,64 @@
     }
 
     function getCentsColor(cents) {
-        if (cents === 0 || cents === 2) return "#34c759";
+        if (cents === 0 || cents === 2 || cents === 4) return "#34c759";
         if (cents < 0) return "#0071e3";
         return "#ff9500";
     }
 
     function init() {
         const piano = document.getElementById('piano');
-        const notas = ["E3","F3","F#3","G3","G#3","A3","A#3","B3","C4","C#4","D4","D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6"];
+        const notas = [];
+        // Piano de E3 a C7
+        const nombres = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        for(let oct=3; oct<=7; oct++) {
+            for(let i=0; i<12; i++) {
+                let n = nombres[i] + oct;
+                if(oct === 3 && i < 4) continue; // Empieza en E3
+                if(oct === 7 && i > 0) break;    // Acaba en C7
+                notas.push(n);
+            }
+        }
+
         notas.forEach(n => {
             const k = document.createElement('div');
             k.className = `keyboard-key ${n.includes('#') ? 'black' : ''}`;
+            k.dataset.note = n;
             if (n === "C4") k.innerHTML = '<div class="middle-c-dot"></div>';
-            k.onclick = () => { document.getElementById('inputNota').value = n; buscarNota(); highlightKey(k); };
+            k.onclick = () => { 
+                document.getElementById('inputNota').value = n; 
+                buscarNota(); 
+                highlightKey(n); 
+            };
             piano.appendChild(k);
         });
 
         const ley = document.getElementById('leyenda');
-        const cats = [{t:'Octavas', c:'var(--color-p2)'}, {t:'Quintas', c:'var(--color-p3)'}, {t:'Terceras', c:'var(--color-p5)'}, {t:'7ª Menor', c:'var(--color-p7)'}];
+        const cats = [
+            {t:'Octavas', c:'var(--color-p2)'}, 
+            {t:'Quintas', c:'var(--color-p3)'}, 
+            {t:'Terceras', c:'var(--color-p5)'}, 
+            {t:'7ª Menor', c:'var(--color-p7)'},
+            {t:'Parciales Sup.', c:'var(--color-px)'}
+        ];
         ley.innerHTML = "";
         cats.forEach(cat => ley.innerHTML += `<div class="legend-item"><div class="dot-sample" style="background:${cat.c}"></div>${cat.t}</div>`);
 
         dibujarMastil();
         buscarNota();
+        highlightKey("B4");
     }
 
-    function highlightKey(activeKey) {
-        document.querySelectorAll('.keyboard-key').forEach(k => k.classList.remove('active'));
-        activeKey.classList.add('active');
+    function highlightKey(noteName) {
+        document.querySelectorAll('.keyboard-key').forEach(k => {
+            k.classList.toggle('active', k.dataset.note === noteName.toUpperCase());
+        });
+    }
+
+    function actualizarDesdeInput() {
+        const val = document.getElementById('inputNota').value.trim().toUpperCase();
+        buscarNota();
+        highlightKey(val);
     }
 
     function getX(t) { return OFFSET_X + (LARGO_CUERDA - (LARGO_CUERDA / Math.pow(2, t / 12))); }
@@ -251,6 +293,7 @@
         const targetMidi = notaToMidi(input);
         const capa = document.getElementById('capa-nodos');
         const info = document.getElementById('infoBox');
+        const showHigh = document.getElementById('checkSuperiores').checked;
         capa.innerHTML = ""; info.innerHTML = "";
         if (!targetMidi) return;
 
@@ -260,6 +303,8 @@
         CUERDAS_DATA.forEach(cuerda => {
             let nodosDibujadosEnEstaCuerda = new Set();
             SERIE.forEach(arm => {
+                if (arm.p > 7 && !showHigh) return;
+
                 if (cuerda.midi + arm.s === targetMidi) {
                     for (let n = 1; n < arm.p; n++) {
                         if (gcd(n, arm.p) === 1) {
@@ -300,7 +345,7 @@
     function drawNode(x, y, c, numeroParcial) {
         const capa = document.getElementById('capa-nodos');
         const radioNodo = 7;
-        if (numeroParcial === 5 || numeroParcial === 7) {
+        if (numeroParcial === 5 || numeroParcial === 7 || numeroParcial === 11) {
             let guia = document.createElementNS("http://www.w3.org/2000/svg", "line");
             guia.setAttribute("x1", x); guia.setAttribute("y1", y - radioNodo - 10); 
             guia.setAttribute("x2", x); guia.setAttribute("y2", y + radioNodo + 10);
