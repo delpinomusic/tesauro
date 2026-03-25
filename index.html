@@ -89,7 +89,7 @@ html, body {
   display: flex;
   align-items: center;
   gap: 20px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
@@ -197,6 +197,20 @@ html, body {
   opacity: 0.4;
   margin-bottom: 5px;
   flex-shrink: 0;
+}
+
+/* Estilos Visor */
+.visor-container {
+  width: 120px;
+  height: 54px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 /* Checks */
@@ -494,6 +508,18 @@ html, body {
 
     <div class="divider"></div>
 
+    <div class="visor-container">
+      <svg id="svg-visor" width="120" height="64" viewBox="0 0 120 54" font-family="Bravura">
+        <g stroke="#e4e2dc" stroke-width="0.8">
+          <path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/>
+        </g>
+        <text x="8" y="38" font-size="22pt" fill="#1c1b18">&#xE050;</text>
+        <g id="note-group-visor"></g>
+      </svg>
+    </div>
+
+    <div class="divider"></div>
+
     <div class="checks-wrap">
       <label class="check-pill">
         <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
@@ -550,7 +576,7 @@ const CUERDAS_DATA = [
 ];
 
 const SERIE = [
-  {p:2,  s:12,    c:'var(--c-p2)', n:'Octava',          cents:0,   sym:"\uE261", frac:"1/2"},
+  {p:2,  s:12,    c:'var(--c-p2)', n:'Octava',        cents:0,   sym:"\uE261", frac:"1/2"},
   {p:3,  s:19.02, c:'var(--c-p3)', n:'5.ª Justa',       cents:2,   sym:"\uE282", frac:"1/3"},
   {p:4,  s:24,    c:'var(--c-p2)', n:'2.ª Octava',      cents:0,   sym:"\uE261", frac:"1/4"},
   {p:5,  s:27.86, c:'var(--c-p5)', n:'3.ª Mayor',       cents:-14, sym:"\uE2C1", frac:"1/5"},
@@ -566,7 +592,21 @@ const SERIE = [
 let congelados = [];
 let resultadosActuales = [];
 
+// Para lógica de enarmonía del visor
+let lastMidiVisor = 71; 
+let direccionVisor = "subiendo";
+
 const snowSVG = `<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>`;
+
+// Mapeo Visor
+const VISOR_DATA = {
+  0: { n: "C",  s: 0, alt: "" }, 1: { n: "C#", s: 0, alt: "\uE262", en: "Db", enS: 1, enAlt: "\uE260" },
+  2: { n: "D",  s: 1, alt: "" }, 3: { n: "D#", s: 1, alt: "\uE262", en: "Eb", enS: 2, enAlt: "\uE260" },
+  4: { n: "E",  s: 2, alt: "" }, 5: { n: "F",  s: 3, alt: "" },
+  6: { n: "F#", s: 3, alt: "\uE262", en: "Gb", enS: 4, enAlt: "\uE260" }, 7: { n: "G",  s: 4, alt: "" },
+  8: { n: "G#", s: 4, alt: "\uE262", en: "Ab", enS: 5, enAlt: "\uE260" }, 9: { n: "A",  s: 5, alt: "" },
+  10:{ n: "A#", s: 5, alt: "\uE262", en: "Bb", enS: 6, enAlt: "\uE260" }, 11:{ n: "B",  s: 6, alt: "" }
+};
 
 function toRoman(n) {
   const r=["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
@@ -600,11 +640,10 @@ function buildPiano(){
   const piano=document.getElementById('piano');
   const nombres=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
   const notas=[];
-  // E3 to B6
-  for(let o=3;o<=6;o++){
+  for(let o=3;o<=7;o++){
     for(let i=0;i<12;i++){
       let n=nombres[i]+o;
-      if(o===3&&i<4) continue; // E3 is index 4 in nombres
+      if(o===3&&i<4) continue;
       notas.push(n);
     }
   }
@@ -615,7 +654,15 @@ function buildPiano(){
     k.className=`key ${n.includes('#')?'black':'white'}`;
     k.dataset.note=n;
     if(n==="C4"){const d=document.createElement('div');d.className='middle-c-dot';k.appendChild(d);}
-    k.onclick=()=>{document.getElementById('inputNota').value=n;buscarNota();highlightKey(n);};
+    k.onclick=()=>{
+      document.getElementById('inputNota').value=n;
+      let m = notaToMidi(n);
+      if(m > lastMidiVisor) direccionVisor = "subiendo";
+      if(m < lastMidiVisor) direccionVisor = "bajando";
+      lastMidiVisor = m;
+      buscarNota();
+      highlightKey(n);
+    };
     wrap.appendChild(k);
   });
   piano.appendChild(wrap);
@@ -627,6 +674,12 @@ function highlightKey(note){
 
 function actualizarDesdeInput(){
   const val=document.getElementById('inputNota').value.trim().toUpperCase();
+  let m = notaToMidi(val);
+  if(m){
+    if(m > lastMidiVisor) direccionVisor = "subiendo";
+    if(m < lastMidiVisor) direccionVisor = "bajando";
+    lastMidiVisor = m;
+  }
   buscarNota();
   highlightKey(val);
 }
@@ -634,7 +687,6 @@ function actualizarDesdeInput(){
 function dibujarMastil(){
   const trastero=document.getElementById('trastero');
   trastero.innerHTML="";
-
   for(let i=0;i<=22;i++){
     let x=getX(i);
     let l=document.createElementNS("http://www.w3.org/2000/svg","line");
@@ -648,8 +700,6 @@ function dibujarMastil(){
       trastero.appendChild(t);
     }
   }
-
-  // Fret position dots
   [3,5,7,9,12,15,17,19,21].forEach(f=>{
     const cx=(getX(f-1)+getX(f))/2;
     if(f===12){
@@ -664,7 +714,6 @@ function dibujarMastil(){
       c.setAttribute("fill","var(--border-strong)");trastero.appendChild(c);
     }
   });
-
   const cg=document.getElementById('cuerdas-group');
   cg.innerHTML="";
   const widths=[0.8,1.0,1.2,1.45,1.7,2.0];
@@ -681,6 +730,56 @@ function dibujarMastil(){
   });
 }
 
+function renderVisor(midi) {
+  const group = document.getElementById('note-group-visor');
+  group.innerHTML = "";
+  if (!midi) return;
+  const d = VISOR_DATA[midi % 12];
+  const oct = Math.floor(midi / 12) - 1;
+  const yBase = 28.5;
+
+  let mainStep = (oct * 7 + d.s) - (4 * 7 + 6);
+  let mainAlt = d.alt;
+  let enStep = d.en ? (oct * 7 + d.enS) - (4 * 7 + 6) : null;
+  let enAlt = d.enAlt;
+
+  if (direccionVisor === "bajando" && d.en) {
+    [mainStep, enStep] = [enStep, mainStep];
+    [mainAlt, enAlt] = [enAlt, mainAlt];
+  }
+
+  drawVisorNote(50, yBase - (mainStep * 4), mainAlt, false, mainStep);
+  if (enStep !== null) drawVisorNote(80, yBase - (enStep * 4), enAlt, true, enStep);
+}
+
+function drawVisorNote(x, y, alt, grey, step) {
+  const g = document.getElementById('note-group-visor');
+  const c = grey ? "#999" : "#1c1b18";
+  
+  if (alt) {
+    const a = document.createElementNS("http://www.w3.org/2000/svg","text");
+    a.setAttribute("x", x-12); a.setAttribute("y", y); a.setAttribute("font-size", "18pt");
+    a.setAttribute("fill", c); a.textContent = alt; g.appendChild(a);
+  }
+  const n = document.createElementNS("http://www.w3.org/2000/svg","text");
+  n.setAttribute("x", x); n.setAttribute("y", y); n.setAttribute("font-size", "22pt");
+  n.setAttribute("fill", c); n.textContent = "\uE0A4"; g.appendChild(n);
+
+  if (step <= -6) {
+    for (let s = -6; s >= step; s--) if (Math.abs(s) % 2 === 0) visorLedger(x+7, 28.5 - (s*4), c);
+  }
+  if (step >= 6) {
+    for (let s = 6; s <= step; s++) if (Math.abs(s) % 2 === 0) visorLedger(x+7, 28.5 - (s*4), c);
+  }
+}
+
+function visorLedger(x, y, c) {
+  const l = document.createElementNS("http://www.w3.org/2000/svg","line");
+  l.setAttribute("x1", x-10); l.setAttribute("x2", x+5); l.setAttribute("y1", y); l.setAttribute("y2", y);
+  l.setAttribute("stroke", c); l.setAttribute("stroke-width", "1");
+  document.getElementById('note-group-visor').appendChild(l);
+}
+
 function buscarNota(){
   const input=document.getElementById('inputNota').value.trim().toUpperCase();
   const targetMidi=notaToMidi(input);
@@ -694,6 +793,7 @@ function buscarNota(){
   resultadosActuales=[];
 
   if(targetMidi){
+    renderVisor(targetMidi);
     const TOL=useTol?0.5:0.05;
     CUERDAS_DATA.forEach(cuerda=>{
       SERIE.forEach(arm=>{
@@ -822,10 +922,7 @@ function buildRow(r,frozen){
   const fc=frozen?' frozen':'';
   const ba=frozen?' on':'';
   const tag=frozen?`<span class="frozen-tag">${r.notaObjetivo}</span> `:'';
-
-  const diffHTML=r.dificultad>0
-    ?`<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(r.dificultad)}</div>`
-    :'';
+  const diffHTML=r.dificultad>0?`<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(r.dificultad)}</div>`:'';
 
   if(r.type==='nat'){
     const cc=frozen?'var(--freeze)':getCentsColor(r.desv);
@@ -858,6 +955,24 @@ function buildRow(r,frozen){
     </div>`;
   }
 }
+
+// Navegación con flechas
+window.addEventListener("keydown", (e)=>{
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        e.preventDefault();
+        let input = document.getElementById('inputNota');
+        let m = notaToMidi(input.value.trim());
+        if(!m) return;
+        if(e.key === "ArrowUp") { m++; direccionVisor = "subiendo"; }
+        else { m--; direccionVisor = "bajando"; }
+        const nNames=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+        let nueva = nNames[m%12] + (Math.floor(m/12)-1);
+        input.value = nueva;
+        lastMidiVisor = m;
+        buscarNota();
+        highlightKey(nueva);
+    }
+});
 
 init();
 </script>
