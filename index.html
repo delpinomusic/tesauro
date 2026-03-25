@@ -293,6 +293,37 @@ html, body {
   min-height: 0;
 }
 
+@media (max-width: 600px) {
+  .main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr; /* Dividimos la pantalla en dos */
+  }
+
+  .fretboard-wrap {
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #mastil {
+    /* Rotamos y ajustamos el tamaño para que el largo sea el alto del contenedor */
+    transform: rotate(90deg);
+    width: 280px; /* El ancho del mástil original ahora es su "grosor" vertical */
+    height: 900px; /* El largo total del mástil */
+    max-height: none;
+    flex-shrink: 0;
+  }
+
+  /* Ajustamos el panel de resultados para que no se coma toda la pantalla */
+  .side-panel {
+    border-top: 1px solid var(--border);
+    height: 100%;
+  }
+}
+
 @media (max-width: 860px) {
   .main { grid-template-columns: 1fr; grid-template-rows: 1fr 200px; }
   .side-panel { border-left: none; border-top: 1px solid var(--border); }
