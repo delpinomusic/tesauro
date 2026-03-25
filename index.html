@@ -309,13 +309,12 @@ html, body {
   }
 
   #mastil {
-    /* Rotamos y ajustamos el tamaño para que el largo sea el alto del contenedor */
-    transform: rotate(90deg);
-    width: 280px; /* El ancho del mástil original ahora es su "grosor" vertical */
-    height: 900px; /* El largo total del mástil */
-    max-height: none;
-    flex-shrink: 0;
-  }
+      transform: rotate(90deg) translateY(-100%); /* Añadimos el translate */
+      transform-origin: top left; /* Fijamos el eje de rotación */
+      width: 100vh; /* El largo del mástil ahora es el alto de la pantalla */
+      height: 100vw;
+      margin-left: 100%; 
+    }
 
   /* Ajustamos el panel de resultados para que no se coma toda la pantalla */
   .side-panel {
