@@ -321,15 +321,19 @@ html, body {
 
   #mastil {
     position: absolute;
+    /* El estado base será centrado */
     top: 50%;
     left: 50%;
-
     width: 310px;
     height: 1000px;
-
+  
     transform-origin: center;
-    transform: translate(-50%, -50%) rotate(-90deg);
-
+    /* Usamos variables CSS para que el movimiento sea fluido y no rompa la rotación */
+    transform: translate(calc(-50% + var(--pan-x, 0px)), calc(-50% + var(--pan-y, 0px))) 
+               rotate(-90deg) 
+               scale(var(--zoom, 1));
+             
+    transition: transform 0.05s ease-out; /* Suavidad extra */
     display: block;
   }
 
@@ -402,6 +406,7 @@ html, body {
   padding: 16px 20px;
   overflow: hidden;
   background: var(--bg);
+  touch-action: pan-y;
 }
 
 #mastil { width: 100%; height: auto; max-height: 100%; }
@@ -718,11 +723,57 @@ function notaToMidi(n){
   return(parseInt(m[2])+1)*12+idx;
 }
 
+let zoomLevel = 1;
+let panX = 0;
+let panY = 0;
+let isDragging = false;
+let startX, startY;
+
+function setupCamera() {
+  const wrap = document.querySelector('.fretboard-wrap');
+  const mastil = document.getElementById('mastil');
+
+  // ZOOM con rueda del ratón
+  wrap.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    zoomLevel = Math.min(Math.max(0.5, zoomLevel + delta), 3); // Límite entre 0.5x y 3x
+    mastil.style.setProperty('--zoom', zoomLevel);
+  }, { passive: false });
+
+  // INICIO DEL ARRASTRE
+  wrap.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    startX = e.clientX - panX;
+    startY = e.clientY - panY;
+    wrap.style.cursor = 'grabbing';
+    wrap.setPointerCapture(e.pointerId);
+  });
+
+  // MOVIMIENTO
+  wrap.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    panX = e.clientX - startX;
+    panY = e.clientY - startY;
+    
+    // Aplicamos el movimiento a las variables CSS
+    mastil.style.setProperty('--pan-x', panX + 'px');
+    mastil.style.setProperty('--pan-y', panY + 'px');
+  });
+
+  // FIN DEL ARRASTRE
+  wrap.addEventListener('pointerup', () => {
+    isDragging = false;
+    wrap.style.cursor = 'grab';
+  });
+}
+
 function init(){
   buildPiano();
   dibujarMastil();
   buscarNota();
   highlightKey("B4");
+  setupCamera(); 
 }
 
 function buildPiano(){
