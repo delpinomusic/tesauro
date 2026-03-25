@@ -311,31 +311,17 @@ html, body {
   }
 
   .fretboard-wrap {
-    flex: 1;
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    background: var(--bg);
-    position: relative;
-  }
+      flex: 0 0 300px; /* Altura fija para el área del mástil */
+      width: 100%;
+      overflow: hidden; 
+      background: var(--bg);
+      position: relative;
+      touch-action: none; /* Importante para que el JS controle el movimiento */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-  #mastil {
-    position: absolute;
-    /* El estado base será centrado */
-    top: 50%;
-    left: 50%;
-    width: 310px;
-    height: 1000px;
-  
-    transform-origin: center;
-    /* Usamos variables CSS para que el movimiento sea fluido y no rompa la rotación */
-    transform: translate(calc(-50% + var(--pan-x, 0px)), calc(-50% + var(--pan-y, 0px))) 
-               rotate(-90deg) 
-               scale(var(--zoom, 1));
-             
-    transition: transform 0.05s ease-out; /* Suavidad extra */
-    display: block;
-  }
 
   /* ── CABECERA ── */
   .top-bar {
@@ -400,18 +386,31 @@ html, body {
 
 /* ── Fretboard ── */
 .fretboard-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px 20px;
-  overflow: hidden;
-  background: var(--bg);
-  touch-action: pan-y;
+  display: flex;      /* Activa el modo caja flexible */
+  align-items: center;    /* Centra el mástil verticalmente */
+  justify-content: center; /* Centra el mástil horizontalmente */
+  /* ... resto de tus estilos (overflow: hidden, etc) */
 }
 
-#mastil { width: 100%; height: auto; max-height: 100%; }
+/* --- Fretboard Modificado --- */
+#mastil { 
+  width: 1000px; /* Mantenemos el ancho real para que el SVG no se deforme */
+  height: auto; 
+  flex-shrink: 0;
+  transform-origin: center center;
+  
+  /* Solo usamos las variables de JS, sin el -50% del CSS */
+  transform: translate(var(--pan-x, 0px), var(--pan-y, 0px)) scale(var(--zoom, 1));
+  
+  transition: transform 0.05s ease-out;
+  display: block;
+}
 
-/* SVG classes */
+#mastil:active {
+  cursor: grabbing;
+}
+
+/* SVG classes (Estas se quedan igual) */
 .cuerda { stroke: var(--string); }
 .label-cuerda { font-size: 10.5px; text-anchor: end; fill: var(--text-2); font-weight: 600; font-family: 'Inter', sans-serif; }
 .label-romano { font-size: 9px; fill: var(--text-3); text-anchor: middle; font-weight: 500; font-family: 'Inter', sans-serif; }
@@ -723,7 +722,7 @@ function notaToMidi(n){
   return(parseInt(m[2])+1)*12+idx;
 }
 
-let zoomLevel = 1;
+let zoomLevel = window.innerWidth < 600 ? 0.35 : 1; 
 let panX = 0;
 let panY = 0;
 let isDragging = false;
@@ -733,16 +732,20 @@ function setupCamera() {
   const wrap = document.querySelector('.fretboard-wrap');
   const mastil = document.getElementById('mastil');
 
-  // ZOOM con rueda del ratón
+  // ZOOM (Rueda del ratón)
   wrap.addEventListener('wheel', (e) => {
     e.preventDefault();
-    const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    zoomLevel = Math.min(Math.max(0.5, zoomLevel + delta), 3); // Límite entre 0.5x y 3x
+    // El 0.001 es la clave para que no salte demasiado
+    const delta = -e.deltaY * 0.001; 
+    zoomLevel = Math.min(Math.max(0.4, zoomLevel + delta), 3);
     mastil.style.setProperty('--zoom', zoomLevel);
   }, { passive: false });
 
-  // INICIO DEL ARRASTRE
+  // ARRASTRE (Funciona igual para ratón y táctil gracias a 'pointer')
   wrap.addEventListener('pointerdown', (e) => {
+    // Solo arrastramos si hacemos click izquierdo
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    
     isDragging = true;
     startX = e.clientX - panX;
     startY = e.clientY - panY;
@@ -750,18 +753,15 @@ function setupCamera() {
     wrap.setPointerCapture(e.pointerId);
   });
 
-  // MOVIMIENTO
   wrap.addEventListener('pointermove', (e) => {
     if (!isDragging) return;
     panX = e.clientX - startX;
     panY = e.clientY - startY;
     
-    // Aplicamos el movimiento a las variables CSS
     mastil.style.setProperty('--pan-x', panX + 'px');
     mastil.style.setProperty('--pan-y', panY + 'px');
   });
 
-  // FIN DEL ARRASTRE
   wrap.addEventListener('pointerup', () => {
     isDragging = false;
     wrap.style.cursor = 'grab';
@@ -773,7 +773,9 @@ function init(){
   dibujarMastil();
   buscarNota();
   highlightKey("B4");
-  setupCamera(); 
+  setupCamera();
+  const mastil = document.getElementById('mastil');
+  mastil.style.setProperty('--zoom', zoomLevel); 
 }
 
 function buildPiano(){
