@@ -294,32 +294,91 @@ html, body {
 }
 
 @media (max-width: 600px) {
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
   .main {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr; /* Dividimos la pantalla en dos */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .fretboard-wrap {
-    padding: 0;
-    overflow: hidden;
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg);
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   #mastil {
-      transform: rotate(90deg) translateY(-100%); /* Añadimos el translate */
-      transform-origin: top left; /* Fijamos el eje de rotación */
-      width: 100vh; /* El largo del mástil ahora es el alto de la pantalla */
-      height: 100vw;
-      margin-left: 100%; 
-    }
+    position: absolute;
+    top: 50%;
+    left: 50%;
 
-  /* Ajustamos el panel de resultados para que no se coma toda la pantalla */
-  .side-panel {
+    width: 310px;
+    height: 1000px;
+
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotate(-90deg);
+
+    display: block;
+  }
+
+  /* ── CABECERA ── */
+  .top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 15px;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .nota-wrap { 
+    order: 1; 
+    width: 90px;     
+    margin-top: 0;
+  }
+
+  .visor-container { 
+    order: 2; 
+    width: 120px; 
+    margin-top: 5px; 
+  }
+
+  .piano-outer { 
+    order: 3; 
+    width: 100%;      
     border-top: 1px solid var(--border);
-    height: 100%;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0;
+    margin: 5px 0;
+  }
+
+  .checks-wrap { 
+    order: 4; 
+    width: 100%;      
+    justify-content: center;
+  }
+
+  .side-panel {
+    height: 280px;
+    flex-shrink: 0;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    z-index: 10;
+  }
+
+  .divider { 
+    display: none; 
   }
 }
 
