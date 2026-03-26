@@ -285,6 +285,21 @@ html, body {
 }
 .btn-clear:hover { border-color: var(--border-strong); color: var(--text-2); }
 
+.label-cuerda, .label-romano, .header, .panel-label, .key {
+  user-select: none;
+  -webkit-user-select: none; /* Para Safari/iOS */
+  cursor: default;
+}
+
+.label-cuerda { 
+  transition: fill 0.2s, font-size 0.2s;
+  cursor: pointer; 
+}
+.label-cuerda:hover { 
+  fill: var(--accent); 
+  font-weight: 800;
+}
+
 /* ── Main ── */
 .main {
   display: grid;
@@ -316,6 +331,7 @@ html, body {
       overflow: hidden; 
       background: var(--bg);
       position: relative;
+	  z-index: 1;
       touch-action: none; /* Importante para que el JS controle el movimiento */
       display: flex;
       align-items: center;
@@ -364,7 +380,7 @@ html, body {
     flex-shrink: 0;
     border-top: 1px solid var(--border);
     background: var(--surface);
-    z-index: 10;
+    z-index: 20;
   }
 
   .divider { 
@@ -423,6 +439,8 @@ html, body {
 
 /* ── Side panel ── */
 .side-panel {
+  position: relative;
+  z-index: 10;
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -579,6 +597,11 @@ html, body {
   text-align: center;
   flex-shrink: 0;
 }
+.label-cuerda.cuerda-fija {
+  fill: #00e5ff; /* Color cian brillante */
+  font-weight: bold;
+  filter: drop-shadow(0 0 2px #00e5ff);
+}
 </style>
 </head>
 <body>
@@ -620,7 +643,7 @@ html, body {
       </label>
       <label class="check-pill">
         <input type="checkbox" id="checkSuperiores" onchange="buscarNota()">
-        <label for="checkSuperiores">Parciales 8–12</label>
+        <label for="checkSuperiores">Parciales 8–16</label>
       </label>
       <label class="check-pill">
         <input type="checkbox" id="checkCercanos" onchange="buscarNota()">
@@ -656,6 +679,7 @@ html, body {
 </div>
 
 <script>
+let cuerdasFijas = new Set();
 const LARGO_CUERDA = 860;
 const OFFSET_X = 72;
 
@@ -669,17 +693,22 @@ const CUERDAS_DATA = [
 ];
 
 const SERIE = [
-  {p:2,  s:12,    c:'var(--c-p2)', n:'Octava',        cents:0,   sym:"\uE261", frac:"1/2"},
-  {p:3,  s:19.02, c:'var(--c-p3)', n:'5.ª Justa',       cents:2,   sym:"\uE282", frac:"1/3"},
-  {p:4,  s:24,    c:'var(--c-p2)', n:'2.ª Octava',      cents:0,   sym:"\uE261", frac:"1/4"},
-  {p:5,  s:27.86, c:'var(--c-p5)', n:'3.ª Mayor',       cents:-14, sym:"\uE2C1", frac:"1/5"},
-  {p:6,  s:31.02, c:'var(--c-p3)', n:'2.ª Oct. + 5.ª',  cents:2,   sym:"\uE282", frac:"1/6"},
-  {p:7,  s:33.69, c:'var(--c-p7)', n:'7.ª Menor',       cents:-31, sym:"\uE281", frac:"1/7"},
-  {p:8,  s:36,    c:'var(--c-p2)', n:'3.ª Octava',      cents:0,   sym:"\uE261", frac:"1/8"},
-  {p:9,  s:38.04, c:'var(--c-px)', n:'2.ª Mayor',       cents:4,   sym:"\uE261", frac:"1/9"},
-  {p:10, s:39.86, c:'var(--c-p5)', n:'3.ª Mayor',       cents:-14, sym:"\uE2C1", frac:"1/10"},
-  {p:11, s:41.51, c:'var(--c-px)', n:'4.ª Aumentada',   cents:-49, sym:"\uE280", frac:"1/11"},
-  {p:12, s:43.02, c:'var(--c-p3)', n:'3.ª Oct. + 5.ª',  cents:2,   sym:"\uE282", frac:"1/12"}
+  {p:2,  s:12,    c:'var(--c-p2)', n:'Octava',         cents:0,   sym:"\uE261", frac:"1/2"},
+  {p:3,  s:19.02, c:'var(--c-p3)', n:'5.ª Justa',      cents:2,   sym:"\uE282", frac:"1/3"},
+  {p:4,  s:24,    c:'var(--c-p2)', n:'2.ª Octava',     cents:0,   sym:"\uE261", frac:"1/4"},
+  {p:5,  s:27.86, c:'var(--c-p5)', n:'3.ª Mayor',      cents:-14, sym:"\uE2C1", frac:"1/5"},
+  {p:6,  s:31.02, c:'var(--c-p3)', n:'2.ª Oct. + 5.ª', cents:2,   sym:"\uE282", frac:"1/6"},
+  {p:7,  s:33.69, c:'var(--c-p7)', n:'7.ª Menor',      cents:-31, sym:"\uE281", frac:"1/7"},
+  {p:8,  s:36,    c:'var(--c-p2)', n:'3.ª Octava',     cents:0,   sym:"\uE261", frac:"1/8"},
+  {p:9,  s:38.04, c:'var(--c-px)', n:'2.ª Mayor',      cents:4,   sym:"\uE261", frac:"1/9"},
+  {p:10, s:39.86, c:'var(--c-p5)', n:'3.ª Mayor',      cents:-14, sym:"\uE2C1", frac:"1/10"},
+  {p:11, s:41.51, c:'var(--c-px)', n:'4.ª Aum.',       cents:-49, sym:"\uE280", frac:"1/11"},
+  {p:12, s:43.02, c:'var(--c-p3)', n:'3.ª Oct. + 5.ª', cents:2,   sym:"\uE282", frac:"1/12"},
+  // --- AMPLIACIÓN HASTA EL 16 ---
+  {p:13, s:44.41, c:'#9333ea',     n:'6.ª Menor',      cents:41,  sym:"\uE281", frac:"1/13"},
+  {p:14, s:45.69, c:'var(--c-p7)', n:'7.ª Menor',      cents:-31, sym:"\uE281", frac:"1/14"},
+  {p:15, s:46.88, c:'#db2777',     n:'7.ª Mayor',      cents:-12, sym:"\uE2C1", frac:"1/15"},
+  {p:16, s:48,    c:'var(--c-p2)', n:'4.ª Octava',     cents:0,   sym:"\uE261", frac:"1/16"}
 ];
 
 let congelados = [];
@@ -782,10 +811,11 @@ function buildPiano(){
   const piano=document.getElementById('piano');
   const nombres=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
   const notas=[];
-  for(let o=3;o<=7;o++){
+  for(let o=3;o<=8;o++){
     for(let i=0;i<12;i++){
       let n=nombres[i]+o;
       if(o===3&&i<4) continue;
+	  if(o===8&&i>4) break;
       notas.push(n);
     }
   }
@@ -860,16 +890,42 @@ function dibujarMastil(){
   cg.innerHTML="";
   const widths=[0.8,1.0,1.2,1.45,1.7,2.0];
   CUERDAS_DATA.forEach((c,i)=>{
-    let l=document.createElementNS("http://www.w3.org/2000/svg","line");
-    l.setAttribute("x1",OFFSET_X);l.setAttribute("y1",c.y);
-    l.setAttribute("x2",OFFSET_X+LARGO_CUERDA);l.setAttribute("y2",c.y);
-    l.classList.add("cuerda");l.style.strokeWidth=widths[i];
-    cg.appendChild(l);
-    let t=document.createElementNS("http://www.w3.org/2000/svg","text");
-    t.setAttribute("x",OFFSET_X-8);t.setAttribute("y",c.y+4);
-    t.textContent=c.nota;t.classList.add("label-cuerda");
-    cg.appendChild(t);
-  });
+      let l=document.createElementNS("http://www.w3.org/2000/svg","line");
+      l.setAttribute("x1",OFFSET_X);l.setAttribute("y1",c.y);
+      l.setAttribute("x2",OFFSET_X+LARGO_CUERDA);l.setAttribute("y2",c.y);
+      l.classList.add("cuerda");l.style.strokeWidth=widths[i];
+      cg.appendChild(l);
+
+      let t=document.createElementNS("http://www.w3.org/2000/svg","text");
+      t.setAttribute("x",OFFSET_X-8);t.setAttribute("y",c.y+4);
+      t.textContent=c.nota;
+      t.classList.add("label-cuerda");
+      
+      // --- INTERACCIÓN ACTUALIZADA ---
+      t.style.cursor = "pointer"; 
+      
+      // Al hacer CLIC, fijamos o liberamos la cuerda
+      t.onclick = () => {
+        if (cuerdasFijas.has(c.nota)) {
+          cuerdasFijas.delete(c.nota);
+          t.classList.remove("cuerda-fija");
+        } else {
+          cuerdasFijas.add(c.nota);
+          t.classList.add("cuerda-fija");
+        }
+        buscarNota(); // Redibuja para mostrar los cambios
+      };
+
+      t.onmouseenter = () => {
+        // Solo mostramos temporal si no está ya fija
+        if(!cuerdasFijas.has(c.nota)) mostrarSoloCuerda(c.nota);
+      };
+      
+      t.onmouseleave = () => buscarNota(); 
+      // ---------------------------------
+
+      cg.appendChild(t);
+    });
 }
 
 function renderVisor(midi) {
@@ -922,44 +978,107 @@ function visorLedger(x, y, c) {
   document.getElementById('note-group-visor').appendChild(l);
 }
 
-function buscarNota(){
-  const input=document.getElementById('inputNota').value.trim().toUpperCase();
-  const targetMidi=notaToMidi(input);
-  const capa=document.getElementById('capa-nodos');
-  const showHigh=document.getElementById('checkSuperiores').checked;
-  const useTol=document.getElementById('checkCercanos').checked;
-  const checkArt=document.getElementById('checkArtificial').checked;
+function mostrarSoloCuerda(nombreCuerda) {
+  const capa = document.getElementById('capa-nodos');
+  const showHigh = document.getElementById('checkSuperiores').checked;
+  
+  capa.innerHTML = ""; // Limpiamos lo que haya (notas buscadas)
 
-  capa.innerHTML="";
-  const idsC=new Set(congelados.map(c=>c.id));
-  resultadosActuales=[];
+  const cuerda = CUERDAS_DATA.find(c => c.nota === nombreCuerda);
+  if (!cuerda) return;
 
-  if(targetMidi){
+  SERIE.forEach(arm => {
+    if (arm.p > 7 && !showHigh) return;
+
+    // Dibujamos cada armónico de la serie en esa cuerda
+    dibujarArmonico({
+      type: 'nat',
+      cuerda: cuerda,
+      arm: arm
+    }, false);
+  });
+}
+
+function buscarNota() {
+  const capa = document.getElementById('capa-nodos');
+  if (!capa) return;
+  capa.innerHTML = ""; 
+
+  const input = document.getElementById('inputNota').value.trim().toUpperCase();
+  const targetMidi = notaToMidi(input);
+  const showHigh = document.getElementById('checkSuperiores').checked;
+  const useTol = document.getElementById('checkCercanos').checked;
+  const checkArt = document.getElementById('checkArtificial').checked;
+
+  // 1. DIBUJAR CUERDAS FIJAS (Cian)
+  cuerdasFijas.forEach(notaCuerda => {
+    const cuerdaObj = CUERDAS_DATA.find(cd => cd.nota === notaCuerda);
+    if (cuerdaObj) {
+      SERIE.forEach(arm => {
+        if (arm.p > 7 && !showHigh) return;
+        const xRatio = 1 / arm.p;
+        const px = Math.round(getXRatio(xRatio));
+        
+        dibujarArmonico({ 
+          type: 'nat', 
+          cuerda: cuerdaObj, 
+          arm: arm,
+          id: `fija-${cuerdaObj.nota}-${arm.p}`,
+          dificultad: calcDif(arm.p, px)
+        }, true);
+      });
+    }
+  });
+
+  // 2. BÚSQUEDA POR NOTA
+  resultadosActuales = [];
+  const idsC = new Set(congelados.map(c => c.id));
+
+  if (targetMidi) {
     renderVisor(targetMidi);
-    const TOL=useTol?0.5:0.05;
-    CUERDAS_DATA.forEach(cuerda=>{
-      SERIE.forEach(arm=>{
-        if(arm.p>7&&!showHigh) return;
-        const diff=(cuerda.midi+arm.s)-targetMidi;
-        if(Math.abs(diff)<=TOL){
-          const desv=Math.round(diff*100);
-          const px=Math.round(getXRatio(1/arm.p));
-          resultadosActuales.push({cuerda,arm,desv,absDesv:Math.abs(desv),type:'nat',dificultad:calcDif(arm.p,px)});
+    const TOL = useTol ? 0.5 : 0.05;
+
+    CUERDAS_DATA.forEach(cuerda => {
+      SERIE.forEach(arm => {
+        if (arm.p > 7 && !showHigh) return;
+        const diff = (cuerda.midi + arm.s) - targetMidi;
+        if (Math.abs(diff) <= TOL) {
+          const xRatio = 1 / arm.p;
+          const px = Math.round(getXRatio(xRatio));
+          
+          resultadosActuales.push({ 
+            cuerda, 
+            arm, 
+            desv: Math.round(diff * 100), 
+            type: 'nat', 
+            id: generarID({type:'nat', cuerda, arm}),
+            dificultad: calcDif(arm.p, px)
+          });
         }
       });
-      if(checkArt){
-        for(let tP=1;tP<=15;tP++){
-          if(tP+12>22) continue;
-          if(Math.abs((cuerda.midi+tP+12)-targetMidi)<=0.05)
-            resultadosActuales.push({cuerda,traste:tP,type:'art',dificultad:0});
+      
+      if (checkArt) {
+        for (let tP = 1; tP <= 15; tP++) {
+          if (tP + 12 > 22) continue;
+          if (Math.abs((cuerda.midi + tP + 12) - targetMidi) <= 0.05) {
+            resultadosActuales.push({ 
+              cuerda, traste: tP, type: 'art', 
+              id: generarID({type:'art', cuerda, traste: tP}),
+              dificultad: 0 
+            });
+          }
         }
       }
     });
   }
 
-  congelados.forEach(c=>dibujarArmonico(c,true));
-  resultadosActuales.forEach(r=>{if(!idsC.has(generarID(r))) dibujarArmonico(r,false);});
-  resultadosActuales.sort((a,b)=>(a.absDesv||0)-(b.absDesv||0));
+  // 3. DIBUJAR RESULTADOS Y CONGELADOS
+  congelados.forEach(c => dibujarArmonico(c, true));
+  resultadosActuales.forEach(r => {
+    if (!idsC.has(r.id)) dibujarArmonico(r, false);
+  });
+
+  resultadosActuales.sort((a, b) => Math.abs(a.desv || 0) - Math.abs(b.desv || 0));
   renderTabla();
 }
 
@@ -1020,14 +1139,25 @@ function drawHand(x,y,t,color){
   g.appendChild(p);return g;
 }
 
-function calcDif(parcial,x){
-  const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
-  const esExacto=Math.abs(tt-Math.round(tt))<0.1;
-  if(esExacto&&parcial<=4) return 0;
-  let n=1;
-  if(tt>13||parcial>8) n=2;
-  if(tt>17&&parcial>9) n=3;
-  return n;
+function calcDif(parcial, x) {
+  // 1. Calculamos posición teórica para los armónicos fáciles
+  const tt = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
+  const esExacto = Math.abs(tt - Math.round(tt)) < 0.1;
+
+  // 2. NIVEL 0: Los básicos que "salen solos" (Octava, Quinta, 2ª Octava en trastes fijos)
+  if (esExacto && parcial <= 4) return 0;
+
+  // 3. NIVEL 3 (Máxima dificultad): 
+  // Si el parcial es muy elevado (9 o más), es difícil en CUALQUIER traste.
+  // O si estamos en una zona extremadamente aguda del puente (>15).
+  if (parcial > 9 || tt > 15) return 3;
+
+  // 4. NIVEL 2 (Dificultad intermedia):
+  // Parciales medios (5 al 8) o zona del mástil a partir del traste 12.
+  if (parcial > 4 || tt > 12) return 2;
+
+  // 5. NIVEL 1: El resto (naturales estándar)
+  return 1;
 }
 
 function toggleFreeze(id){
@@ -1064,7 +1194,9 @@ function buildRow(r,frozen){
   const fc=frozen?' frozen':'';
   const ba=frozen?' on':'';
   const tag=frozen?`<span class="frozen-tag">${r.notaObjetivo}</span> `:'';
-  const diffHTML=r.dificultad>0?`<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(r.dificultad)}</div>`:'';
+  const diffHTML = (r.dificultad > 0) 
+  ? `<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(Math.min(r.dificultad, 3))}</div>` 
+  : '';
 
   if(r.type==='nat'){
     const cc=frozen?'var(--freeze)':getCentsColor(r.desv);
