@@ -2,614 +2,593 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Tesauro Armónico · Guitarra</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f9f8f5;
-  --surface: #ffffff;
-  --surface-2: #f2f1ee;
-  --border: #e4e2dc;
-  --border-strong: #ccc9c0;
-  --text: #1c1b18;
-  --text-2: #6b6860;
-  --text-3: #9e9b94;
-  --accent: #2563eb;
-  --accent-subtle: #eff4ff;
-  --purple-art: #7c3aed;
-  --freeze: #0891b2;
-  --freeze-bg: #ecfeff;
-
-  --c-p2: #16a34a;
-  --c-p3: #ca8a04;
-  --c-p5: #ea580c;
-  --c-p7: #2563eb;
-  --c-px: #71717a;
-  --c-alert: #dc2626;
-
-  --fret: #c4bfb5;
-  --string: #d1ccc0;
-  --nut: #57534e;
-
-  --r: 8px;
-  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --bg: #f9f8f5; --surface: #ffffff; --surface-2: #f2f1ee;
+  --border: #e4e2dc; --border-strong: #ccc9c0;
+  --text: #1c1b18; --text-2: #6b6860; --text-3: #9e9b94;
+  --accent: #2563eb; --accent-subtle: #eff4ff;
+  --purple-art: #7c3aed; --freeze: #0891b2; --freeze-bg: #ecfeff;
+  --c-p2: #16a34a; --c-p3: #ca8a04; --c-p5: #ea580c;
+  --c-p7: #2563eb; --c-px: #71717a; --c-alert: #dc2626;
+  --c-oct: #16a34a;   /* Octavas          */
+  --c-5th: #ca8a04;   /* Quintas          */
+  --c-3M:  #ea580c;   /* 3.ª Mayor         */
+  --c-7m:  #2563eb;   /* 7.ª menor sept.   */
+  --c-6m:  #9333ea;   /* 6.ª menor tridec. */
+  --c-7M:  #db2777;   /* 7.ª Mayor         */
+  --c-2M:  #71717a;   /* 2.ª Mayor / 9.ª    */
+  --c-4a:  #0e7490;   /* 4.ª aum. undec.   */
+  --c-2m:  #b45309;   /* 2.ª menor / sch.  */
+  --c-3m:  #15803d;   /* 3.ª menor 19-lím. */
+  --fret: #c4bfb5; --string: #d1ccc0; --nut: #57534e;
+  --node-grey: #c8c6c0;
 }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow: hidden; }
+@font-face { font-family: 'Bravura'; src: url('fonts/Bravura.woff2') format('woff2'); font-weight: normal; font-style: normal; font-display: block; }
 
-html, body {
-  height: 100%;
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
-
-.app {
-  height: 100vh;
-  display: grid;
-  grid-template-rows: auto auto 1fr;
-  overflow: hidden;
-}
+/* ── Layout ── */
+.app { height: 100vh; display: grid; grid-template-rows: auto auto 1fr; overflow: hidden; }
 
 /* ── Header ── */
-.header {
-  padding: 16px 28px 0;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  flex-shrink: 0;
-}
-.header h1 {
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 20px;
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-.header h1 em {
-  font-style: italic;
-  font-weight: 300;
-  color: var(--text-2);
-}
-.header-version {
-  font-size: 9px;
-  color: var(--text-3);
-  letter-spacing: 0.06em;
-  font-weight: 400;
-}
+.header { padding: 12px 28px 0; display: flex; align-items: center; gap: 12px; flex-shrink: 0; user-select: none; }
+.header h1 { font-family: 'Inter Tight', sans-serif; font-size: 20px; font-weight: 400; letter-spacing: -0.03em; }
+.header h1 em { font-style: italic; font-weight: 300; color: var(--text-2); }
+.header-version { font-size: 9px; color: var(--text-3); letter-spacing: 0.06em; }
 
 /* ── Top bar ── */
-.top-bar {
-  padding: 12px 28px 14px;
+.top-bar { padding: 12px 28px 14px; display: flex; align-items: center; gap: 20px; flex-wrap: nowrap; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.nota-wrap { position: relative; margin-top: 14px; }
+.nota-label { position: absolute; top: -14px; left: 0; font-size: 10px; font-weight: 500; color: var(--text-3); letter-spacing: 0.07em; text-transform: uppercase; }
+#inputNota { font-family: 'Inter Tight', sans-serif; font-size: 30px; font-weight: 300; letter-spacing: -0.02em; color: var(--text); background: transparent; border: none; border-bottom: 2px solid var(--border-strong); width: 90px; padding: 2px 4px 3px; outline: none; transition: border-color .15s; text-align: center; }
+#inputNota:focus { border-bottom-color: var(--accent); }
+.divider { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+
+/* Piano */
+.piano-outer { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; }
+.piano-outer::-webkit-scrollbar { display: none; }
+.piano-keys { display: flex; align-items: flex-start; height: 40px; padding: 0 2px; }
+.key { flex-shrink: 0; cursor: pointer; transition: background .1s; user-select: none; position: relative; }
+.key.white { width: 18px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 3px 3px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; }
+.key.white:hover { background: #f0efea; }
+.key.white.active { background: var(--accent-subtle); border-color: var(--accent); }
+.key.white.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2.5px; background: var(--accent); border-radius: 0 0 2px 2px; }
+.key.black { width: 11px; height: 24px; background: var(--text); border-radius: 0 0 2px 2px; margin: 0 -5.5px; z-index: 2; }
+.key.black:hover { background: #3a3a3a; }
+.key.black.active { background: var(--accent); }
+.middle-c-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--accent); opacity: .4; margin-bottom: 5px; }
+
+/* Visor miniatura */
+.visor-container { width: 120px; height: 80px; background: white; border: 1px solid var(--border); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: visible; }
+
+/* Checks */
+.checks-wrap { display: grid; grid-template-columns: repeat(3, auto); gap: 5px; flex-shrink: 0; align-items: center; }
+.check-pill { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 5px 10px; border: 1px solid var(--border); border-radius: 20px; transition: all .15s; user-select: none; white-space: nowrap; background: var(--surface); }
+.check-pill:hover { border-color: var(--border-strong); }
+.check-pill:has(input:checked) { background: var(--accent-subtle); border-color: var(--accent); color: var(--accent); }
+.check-pill input[type="checkbox"] { appearance: none; width: 13px; height: 13px; border: 1.5px solid var(--border-strong); border-radius: 3px; cursor: pointer; display: grid; place-content: center; flex-shrink: 0; transition: all .15s; background: white; }
+.check-pill:has(input:checked) input[type="checkbox"] { background: var(--accent); border-color: var(--accent); }
+.check-pill:has(input:checked) input[type="checkbox"]::before { content: ''; width: 7px; height: 7px; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); background: white; }
+.check-pill label { font-size: 12px; font-weight: 500; cursor: pointer; pointer-events: none; }
+.btn-clear { font-size: 11px; font-weight: 500; color: var(--text-3); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
+.btn-clear:hover { border-color: var(--border-strong); color: var(--text-2); }
+.btn-disabled { opacity: 0.38; pointer-events: none; }
+.btn-reset {
+  width: 28px; height: 28px; background: none;
+  border: 1.5px solid var(--border); border-radius: 5px;
+  cursor: pointer; display: inline-flex; align-items: center;
+  justify-content: center; color: var(--text-3);
+  transition: all .15s; padding: 0; flex-shrink: 0;
+  vertical-align: middle;
+}
+.btn-reset:hover { border-color: var(--border-strong); color: var(--text-2); }
+
+/* ── Main ── */
+.main { display: grid; grid-template-columns: 1fr 290px; overflow: visible; min-height: 0; position: relative; }
+
+/* ── Fretboard ── */
+.fretboard-wrap { display: flex; flex-direction: column; overflow: visible; background: var(--bg); position: relative; }
+.fretboard-svg-area { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; min-height: 0; }
+#mastil { width: 1000px; height: auto; flex-shrink: 0; transform-origin: center center; transform: translate(var(--pan-x,0px),var(--pan-y,0px)) scale(var(--zoom,1)); transition: transform .05s ease-out; display: block; }
+
+/* ══════════════════════════════════════════
+   FOOTER DE GLOBOS — invisible hasta que hay selección
+   Sin borde, sin background, solo los globos flotando
+══════════════════════════════════════════ */
+#globos-footer {
+  height: 0;
+  overflow: visible;
+  position: relative;
+  flex-shrink: 0;
+  transition: height .35s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+  z-index: 20;
+}
+#globos-footer.active {
+  height: 210px;
+  pointer-events: all;
+}
+#globos-scroll {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;  /* se ajusta dinámicamente via JS en desktop */
+  height: 210px;
+  z-index: 50;
   display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 0 20px 16px;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  scroll-behavior: smooth;
+}
+#globos-scroll::-webkit-scrollbar { height: 4px; }
+#globos-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Flechas de scroll del footer */
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 28px;
+  height: 48px;
+  background: rgba(255,255,255,0.92);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-2);
+  cursor: pointer;
+  display: none;
   align-items: center;
-  gap: 20px;
-  flex-wrap: nowrap;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  transition: opacity .2s, color .15s;
+  padding: 0;
+}
+.scroll-arrow:hover { color: var(--text); }
+.scroll-arrow.visible { display: flex; }
+.scroll-arrow-left  { left: 4px; }
+.scroll-arrow-right { right: 4px; }
+
+/* ── Tarjeta de globo individual ── */
+.globo-card {
+  flex-shrink: 0;
+  width: 193px;
+  height: 193px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  cursor: default;
+  position: relative;
+}
+.globo-card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
+}
+.globo-card.focused {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.15), 0 6px 20px rgba(0,0,0,.12);
+}
+
+/* Cabecera del globo */
+.globo-head {
+  display: flex;
+  height: 26px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
-
-/* Note input */
-.nota-wrap { position: relative; margin-top: 14px; }
-.nota-label {
-  position: absolute;
-  top: -14px; left: 0;
-  font-size: 10px;
+.globo-head-frac {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 13px;
   font-weight: 500;
+  color: var(--text);
+  background: #fafaf9;
+  border-right: 1px solid var(--border);
+}
+.globo-head-dist {
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
   color: var(--text-3);
-  letter-spacing: 0.07em;
+  background: #fafaf9;
+  gap: 2px;
+}
+.globo-head-dist b { color: var(--text-2); font-weight: 600; font-size: 11px; }
+
+/* Botones del globo */
+.globo-actions {
+  display: flex;
+  height: 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.globo-btn {
+  flex: 1;
+  background: white;
+  border: none;
+  font-size: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: all .15s;
+}
+.globo-btn + .globo-btn { border-left: 1px solid var(--border); }
+.globo-btn:hover { background: var(--surface-2); color: var(--text-2); }
+.globo-btn.active { background: var(--surface-2); color: var(--text); font-weight: 600; }
+
+/* Cuerpo del globo */
+.globo-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+.globo-notation svg {
+  overflow: visible !important;
+}
+
+/* Face: notación SVG */
+.globo-notation {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  transition: opacity .2s;
+  overflow: visible;
+}
+.globo-notation svg { width: 100%; height: 100%; overflow: visible; }
+
+/* Face: detalles */
+.globo-details {
+  position: absolute;
+  inset: 0;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+  background: #fafaf9;
+}
+.globo-details.visible { opacity: 1; pointer-events: all; }
+.globo-notation.hidden { opacity: 0; pointer-events: none; }
+
+/* Barra de cents */
+.cents-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.cents-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: .05em;
   text-transform: uppercase;
 }
-#inputNota {
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 30px;
-  font-weight: 300;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--border-strong);
-  width: 90px;
-  padding: 2px 4px 3px;
-  outline: none;
-  transition: border-color 0.15s;
-  text-align: center;
-}
-#inputNota:focus { border-bottom-color: var(--accent); }
-
-/* Divider */
-.divider {
-  width: 1px;
-  height: 36px;
-  background: var(--border);
-  flex-shrink: 0;
-}
-
-/* Piano */
-.piano-outer {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  flex: 1;
-  min-width: 0;
-}
-.piano-outer::-webkit-scrollbar { display: none; }
-
-.piano-keys {
-  display: flex;
-  align-items: flex-start;
-  height: 40px;
-  padding: 0 2px;
-}
-
-.key {
-  flex-shrink: 0;
-  cursor: pointer;
-  transition: background 0.1s;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  position: relative;
-}
-.key.white {
-  width: 18px;
-  height: 40px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: none;
-  border-radius: 0 0 3px 3px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: 3px;
-}
-.key.white:hover { background: #f0efea; }
-.key.white.active {
-  background: var(--accent-subtle);
-  border-color: var(--accent);
-}
-.key.white.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2.5px;
-  background: var(--accent);
-  border-radius: 0 0 2px 2px;
-}
-.key.black {
-  width: 11px;
-  height: 24px;
-  background: var(--text);
-  border-radius: 0 0 2px 2px;
-  margin: 0 -5.5px;
-  z-index: 2;
-}
-.key.black:hover { background: #3a3a3a; }
-.key.black.active { background: var(--accent); }
-.middle-c-dot {
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0.4;
-  margin-bottom: 5px;
-  flex-shrink: 0;
-}
-
-/* Estilos Visor */
-.visor-container {
-  width: 120px;
-  height: 54px;
-  background: white;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* Checks */
-.checks-wrap {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-
-.check-pill {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  padding: 5px 10px;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  transition: all 0.15s;
-  user-select: none;
-  white-space: nowrap;
-  background: var(--surface);
-}
-.check-pill:hover { border-color: var(--border-strong); }
-.check-pill:has(input:checked) {
-  background: var(--accent-subtle);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.check-pill input[type="checkbox"] {
-  appearance: none;
-  width: 13px; height: 13px;
-  border: 1.5px solid var(--border-strong);
-  border-radius: 3px;
-  cursor: pointer;
-  display: grid;
-  place-content: center;
-  flex-shrink: 0;
-  transition: all 0.15s;
-  background: white;
-}
-.check-pill:has(input:checked) input[type="checkbox"] {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-.check-pill:has(input:checked) input[type="checkbox"]::before {
-  content: '';
-  width: 7px; height: 7px;
-  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
-  background: white;
-}
-.check-pill label {
+.cents-val {
   font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  pointer-events: none;
+  font-weight: 700;
+  letter-spacing: -.01em;
 }
-
-.btn-clear {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--text-3);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 5px 12px;
-  cursor: pointer;
-  transition: all 0.15s;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
-}
-.btn-clear:hover { border-color: var(--border-strong); color: var(--text-2); }
-
-.label-cuerda, .label-romano, .header, .panel-label, .key {
-  user-select: none;
-  -webkit-user-select: none; /* Para Safari/iOS */
-  cursor: default;
-}
-
-.label-cuerda { 
-  transition: fill 0.2s, font-size 0.2s;
-  cursor: pointer; 
-}
-.label-cuerda:hover { 
-  fill: var(--accent); 
-  font-weight: 800;
-}
-
-/* ── Main ── */
-.main {
-  display: grid;
-  grid-template-columns: 1fr 290px;
+.cents-val.neg { color: var(--c-p7); }
+.cents-val.pos { color: var(--c-p5); }
+.cents-val.zero { color: var(--c-p2); }
+.cents-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  position: relative;
   overflow: hidden;
-  min-height: 0;
+}
+.cents-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+.cents-fill.neg { background: var(--c-p7); right: 50%; }
+.cents-fill.pos { background: var(--c-p5); left: 50%; }
+.cents-center-mark {
+  position: absolute;
+  left: 50%;
+  top: -1px;
+  width: 1px;
+  height: calc(100% + 2px);
+  background: var(--border-strong);
+  transform: translateX(-50%);
 }
 
-@media (max-width: 600px) {
+/* Distancias en details */
+.dist-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 2px;
+}
+.dist-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+}
+.dist-row-label { color: var(--text-3); font-size: 9px; }
+.dist-row-val { font-weight: 600; color: var(--text); font-family: 'Inter', monospace; font-size: 11px; }
+.dist-row-unit { color: var(--text-3); font-size: 9px; }
 
-  .app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-  }
-
-  .main {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .fretboard-wrap {
-      flex: 0 0 300px; /* Altura fija para el área del mástil */
-      width: 100%;
-      overflow: hidden; 
-      background: var(--bg);
-      position: relative;
-	  z-index: 1;
-      touch-action: none; /* Importante para que el JS controle el movimiento */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-
-  /* ── CABECERA ── */
-  .top-bar {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 10px 15px;
-    gap: 10px;
-    justify-content: center;
-  }
-
-  .nota-wrap { 
-    order: 1; 
-    width: 90px;     
-    margin-top: 0;
-  }
-
-  .visor-container { 
-    order: 2; 
-    width: 120px; 
-    margin-top: 5px; 
-  }
-
-  .piano-outer { 
-    order: 3; 
-    width: 100%;      
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 0;
-    margin: 5px 0;
-  }
-
-  .checks-wrap { 
-    order: 4; 
-    width: 100%;      
-    justify-content: center;
-  }
-
-  .side-panel {
-    height: 280px;
-    flex-shrink: 0;
-    border-top: 1px solid var(--border);
-    background: var(--surface);
-    z-index: 20;
-  }
-
-  .divider { 
-    display: none; 
-  }
+/* Nota sonante pequeña */
+.globo-sounding {
+  font-size: 9px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 2px;
 }
 
-@media (max-width: 860px) {
-  .main { grid-template-columns: 1fr; grid-template-rows: 1fr 200px; }
-  .side-panel { border-left: none; border-top: 1px solid var(--border); }
-}
-@media (min-width: 1280px) {
-  .main { grid-template-columns: 1fr 320px; }
-}
-@media (min-width: 1600px) {
-  .main { grid-template-columns: 1fr 380px; }
-  #inputNota { font-size: 34px; width: 100px; }
-}
-
-/* ── Fretboard ── */
-.fretboard-wrap {
-  display: flex;      /* Activa el modo caja flexible */
-  align-items: center;    /* Centra el mástil verticalmente */
-  justify-content: center; /* Centra el mástil horizontalmente */
-  /* ... resto de tus estilos (overflow: hidden, etc) */
-}
-
-/* --- Fretboard Modificado --- */
-#mastil { 
-  width: 1000px; /* Mantenemos el ancho real para que el SVG no se deforme */
-  height: auto; 
-  flex-shrink: 0;
-  transform-origin: center center;
-  
-  /* Solo usamos las variables de JS, sin el -50% del CSS */
-  transform: translate(var(--pan-x, 0px), var(--pan-y, 0px)) scale(var(--zoom, 1));
-  
-  transition: transform 0.05s ease-out;
-  display: block;
-}
-
-#mastil:active {
-  cursor: grabbing;
-}
-
-/* SVG classes (Estas se quedan igual) */
+/* ── SVG classes ── */
 .cuerda { stroke: var(--string); }
-.label-cuerda { font-size: 10.5px; text-anchor: end; fill: var(--text-2); font-weight: 600; font-family: 'Inter', sans-serif; }
+.label-cuerda { font-size: 10.5px; text-anchor: end; fill: var(--text-2); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; user-select: none; transition: fill .15s; }
+.label-cuerda:hover { fill: var(--accent); }
+.label-cuerda.cuerda-fija { fill: #00e5ff; font-weight: bold; filter: drop-shadow(0 0 2px #00e5ff); }
 .label-romano { font-size: 9px; fill: var(--text-3); text-anchor: middle; font-weight: 500; font-family: 'Inter', sans-serif; }
 .traste-metal { stroke: var(--fret); stroke-width: 1.5; }
 .cejuela { stroke: var(--nut); stroke-width: 3; }
-.nodo { stroke: white; stroke-width: 1.5; }
-.guia-vertical { stroke-width: 1; stroke-dasharray: 3,2; opacity: 0.85; }
-.guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: 0.6; }
+.nodo { stroke: white; stroke-width: 1.5; cursor: pointer; }
+.nodo.greyed { fill: var(--node-grey) !important; stroke: white; }
+.nodo.pulsing { animation: nodoPulse .6s ease-out; }
+.guia-vertical { stroke-width: 1; stroke-dasharray: 3,2; opacity: .85; }
+.guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: .6; }
 .icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
 
+@keyframes nodoPulse {
+  0%   { r: 7; opacity: 1; }
+  40%  { r: 13; opacity: .5; }
+  100% { r: 7; opacity: 1; }
+}
+
 /* ── Side panel ── */
-.side-panel {
-  position: relative;
-  z-index: 10;
-  border-left: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.panel-top {
-  padding: 12px 14px 10px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.panel-label {
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--text-3);
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-}
-
-.legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 10px;
-}
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: var(--text-2);
-  font-weight: 400;
-}
-.dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* Results */
-.results-list {
-  overflow-y: auto;
-  flex: 1;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
+.side-panel { position: relative; z-index: 10; border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; background: var(--surface); }
+.panel-top { padding: 12px 14px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.panel-label { font-size: 10px; font-weight: 600; color: var(--text-3); letter-spacing: .07em; text-transform: uppercase; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-2); }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.results-list { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 .results-list::-webkit-scrollbar { width: 4px; }
 .results-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  gap: 6px;
-  color: var(--text-3);
-  font-size: 13px;
-  padding: 20px;
-  text-align: center;
-}
-
-.result-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s;
-}
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 6px; color: var(--text-3); font-size: 13px; padding: 20px; text-align: center; }
+.result-row { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-bottom: 1px solid var(--border); transition: background .1s; cursor: pointer; }
 .result-row:last-child { border-bottom: none; }
 .result-row:hover { background: var(--surface-2); }
 .result-row.frozen { background: var(--freeze-bg); }
-.result-row.frozen:hover { background: #e0f9fc; }
-
-.freeze-btn {
-  width: 20px; height: 20px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  padding: 0;
-  border-radius: 3px;
-  display: grid;
-  place-content: center;
-  flex-shrink: 0;
-  color: var(--text-3);
-  transition: all 0.12s;
-}
+.result-row.selected { background: #fffbeb; border-left: 2px solid #ca8a04; }
+.freeze-btn { width: 20px; height: 20px; border: none; background: none; cursor: pointer; padding: 0; border-radius: 3px; display: grid; place-content: center; flex-shrink: 0; color: var(--text-3); transition: all .12s; }
 .freeze-btn:hover { color: var(--freeze); background: var(--freeze-bg); }
 .freeze-btn.on { color: var(--freeze); }
 .freeze-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
-
 .row-body { flex: 1; min-width: 0; }
-.row-main {
-  font-size: 12.5px;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.row-main { font-size: 12.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row-main b { font-weight: 600; }
-.row-sub { font-size: 11px; color: var(--text-3); margin-top: 0.5px; }
-
-.row-right {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-}
-
+.row-sub { font-size: 11px; color: var(--text-3); margin-top: .5px; }
+.row-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .diff-dots { display: flex; gap: 2px; }
-.diff-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--c-alert); opacity: 0.45; }
+.diff-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--c-alert); opacity: .45; }
+.cents-badge { font-family: 'Inter', monospace; font-size: 11px; font-weight: 600; padding: 2px 5px; border-radius: 4px; background: var(--surface-2); min-width: 34px; text-align: center; }
+.frozen-tag { font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--freeze); background: #cffafe; padding: 1px 4px; border-radius: 3px; }
+.sym { font-family: 'Bravura', serif; font-size: 24px; line-height: 1; width: 24px; text-align: center; flex-shrink: 0; }
 
-.cents {
-  font-family: 'Inter', monospace;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 5px;
-  border-radius: 4px;
-  background: var(--surface-2);
-  min-width: 34px;
-  text-align: center;
-  letter-spacing: -0.01em;
-}
+@media (min-width: 1280px) { .main { grid-template-columns: 1fr 320px; } }
 
-.frozen-tag {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--freeze);
-  background: #cffafe;
-  padding: 1px 4px;
-  border-radius: 3px;
-  flex-shrink: 0;
+/* ── Tablet (≤860px) ── */
+@media (max-width: 860px) {
+  .main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
+  .side-panel { border-left: none; border-top: 1px solid var(--border); max-height: 220px; }
+  .divider { display: none; }
 }
 
-/* Bravura font for SMuFL symbols */
-@font-face {
-  font-family: 'Bravura';
-  src: url('fonts/Bravura.woff2') format('woff2');
-  font-weight: normal; font-style: normal; font-display: block;
+/* ── Móvil (≤600px) ── */
+@media (max-width: 600px) {
+  /* Layout general */
+  .app { grid-template-rows: auto auto 1fr auto; height: 100dvh; }
+  html, body { overflow: hidden; }
+
+  /* Header compacto */
+  .header { padding: 8px 14px 0; }
+  .header h1 { font-size: 15px; }
+  .header-version { display: none; }
+
+  /* Top bar en columna */
+  .top-bar {
+    padding: 8px 14px 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  /* Nota input más pequeño para no hacer zoom en iOS */
+  #inputNota { font-size: 22px; width: 70px; }
+  .nota-label { font-size: 9px; }
+
+  /* Piano ocupa toda la anchura */
+  .piano-outer { order: 3; width: 100%; flex: none; }
+
+  /* Visor más pequeño */
+  .visor-container { width: 90px; height: 60px; order: 2; }
+  #svg-visor { width: 90px; height: 60px; }
+
+  /* Checks en 2 columnas */
+  .checks-wrap {
+    order: 4;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+  .check-pill { padding: 4px 6px; justify-content: center; }
+  .check-pill label { font-size: 10px; }
+
+  /* Fretboard */
+  .fretboard-svg-area { min-height: 0; }
+
+  /* Sidebar bajo el fretboard, más compacto */
+  .main { grid-template-rows: 1fr auto; }
+  .side-panel {
+    max-height: 180px;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+  .panel-top { padding: 8px 12px; }
+  .legend { gap: 4px 8px; }
+  .legend-item { font-size: 10px; }
+
+  /* Globos más pequeños en móvil */
+  .globo-card { width: 160px; height: 160px; }
+  #globos-footer.active { height: 175px; }
+  #globos-scroll { height: 175px; padding: 0 12px 12px; gap: 8px; }
+
+  /* Config panel ocupa toda la pantalla en móvil */
+  #config-panel {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 200;
+    transform: translateX(100%);
+  }
+  #config-panel.open { transform: translateX(0); }
+
+  /* Dividers ocultos */
+  .divider { display: none; }
 }
-.sym {
-  font-family: 'Bravura', serif;
-  font-size: 24px;
-  line-height: 1;
-  width: 24px;
-  text-align: center;
-  flex-shrink: 0;
+
+/* ── Config panel ─────────────────────────────────── */
+.btn-menu {
+  background: none; border: none; cursor: pointer;
+  padding: 5px 8px; color: var(--text-2);
+  font-size: 18px; line-height: 1; border-radius: 6px;
+  transition: background .15s;
 }
-.label-cuerda.cuerda-fija {
-  fill: #00e5ff; /* Color cian brillante */
-  font-weight: bold;
-  filter: drop-shadow(0 0 2px #00e5ff);
+.btn-menu:hover { background: var(--surface-2); }
+
+#config-panel {
+  position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+  background: var(--surface);
+  z-index: 100; transform: translateX(100%);
+  transition: transform .25s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column;
+  box-shadow: none; border: none;
 }
+#config-panel.open { transform: translateX(0); }
+.config-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 10px; border-bottom: 1px solid var(--border);
+}
+.config-header h3 { font-size: 13px; font-weight: 600; color: var(--text); margin:0; }
+.config-close {
+  background: none; border: none; cursor: pointer; font-size: 16px;
+  color: var(--text-3); padding: 2px 6px; border-radius: 4px;
+}
+.config-close:hover { background: var(--surface-2); }
+.config-body { padding: 16px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+.config-section { display: flex; flex-direction: column; gap: 8px; }
+.config-label {
+  font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text-3);
+}
+.config-options { display: flex; gap: 6px; }
+.config-opt {
+  flex: 1; padding: 7px 10px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--surface); cursor: pointer;
+  font-size: 12px; font-weight: 500; color: var(--text-2);
+  text-align: center; transition: all .15s;
+}
+.config-opt:hover { border-color: var(--border-strong); color: var(--text); }
+.config-opt.active {
+  background: var(--accent); color: white;
+  border-color: var(--accent); font-weight: 600;
+}
+.config-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px; border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer;
+}
+.config-toggle span { font-size: 12px; color: var(--text-2); }
+.toggle-switch {
+  width: 36px; height: 20px; background: var(--border);
+  border-radius: 10px; position: relative; transition: background .2s;
+}
+.toggle-switch.on { background: var(--accent); }
+.toggle-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: white; transition: left .2s;
+}
+.toggle-switch.on::after { left: 18px; }
+
+/* Timple title */
+.timple-title { display: inline; }
+.timple-t { color: #FFD700; }
+.timple-i { color: #FFD700; }
+.timple-m { color: #003087; }
+.timple-p { color: #003087; }
+.timple-l { color: #FFD700; }
+.timple-e { color: #FFD700; }
+
+/* ── Modo nocturno ─────────────────────────────────── */
+body.dark {
+  --bg: #1a1a1e;
+  --surface: #25252b;
+  --surface-2: #2e2e36;
+  --border: #3a3a44;
+  --border-strong: #55555f;
+  --text: #e8e8f0;
+  --text-2: #a8a8b8;
+  --text-3: #68687a;
+  --freeze: #4a6fa5;
+}
+body.dark .globo-card { background: var(--surface); }
+body.dark .globo-btn { background: var(--surface); color: var(--text-3); }
+body.dark .globo-btn.active { background: var(--surface-2); color: var(--text); }
+body.dark #config-panel { background: var(--surface); }
+
 </style>
 </head>
 <body>
 <div class="app">
-
   <div class="header">
-    <h1>Tesauro <em>armónico</em> de la guitarra</h1>
-    <span class="header-version">Juan del Pino · v5.2.1</span>
+    <h1 id="titulo-app">Tesauro <em>armónico</em> de la <span id="titulo-instrumento">guitarra</span></h1>
+    <span class="header-version">Juan del Pino · v7.0</span>
+    <button class="btn-menu" id="btn-menu" onclick="toggleConfig()" title="Configuración" style="margin-left:auto;padding:6px 12px;display:flex;flex-direction:column;gap:3px;justify-content:center;align-items:center;width:36px;height:34px;">
+      <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
+      <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
+      <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
+      <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
+      <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
+    </button>
   </div>
 
   <div class="top-bar">
@@ -617,59 +596,119 @@ html, body {
       <span class="nota-label">Nota</span>
       <input type="text" id="inputNota" value="B4" oninput="actualizarDesdeInput()" spellcheck="false" autocomplete="off">
     </div>
-
     <div class="divider"></div>
-
     <div class="piano-outer" id="piano"></div>
-
     <div class="divider"></div>
-
     <div class="visor-container">
-      <svg id="svg-visor" width="120" height="64" viewBox="0 0 120 54" font-family="Bravura">
-        <g stroke="#e4e2dc" stroke-width="0.8">
-          <path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/>
-        </g>
+      <svg id="svg-visor" width="120" height="64" viewBox="0 -30 120 110" font-family="Bravura">
+        <g stroke="#e4e2dc" stroke-width="0.8"><path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/></g>
         <text x="8" y="38" font-size="22pt" fill="#1c1b18">&#xE050;</text>
         <g id="note-group-visor"></g>
       </svg>
     </div>
-
     <div class="divider"></div>
-
     <div class="checks-wrap">
-      <label class="check-pill">
-        <input type="checkbox" id="checkArtificial" onchange="buscarNota()">
-        <label for="checkArtificial">Art. 8.ª</label>
-      </label>
-      <label class="check-pill">
-        <input type="checkbox" id="checkSuperiores" onchange="buscarNota()">
-        <label for="checkSuperiores">Parciales 8–16</label>
-      </label>
-      <label class="check-pill">
-        <input type="checkbox" id="checkCercanos" onchange="buscarNota()">
-        <label for="checkCercanos">~50¢</label>
-      </label>
-      <button class="btn-clear" onclick="borrarCongelados()">Borrar ❄</button>
+      <label class="check-pill"><input type="checkbox" id="checkArtificial" onchange="buscarNota()"><label for="checkArtificial">Artificiales</label></label>
+      <label class="check-pill"><input type="checkbox" id="checkSuperiores" onchange="buscarNota()"><label for="checkSuperiores">Parciales 8–22</label></label>
+      <label class="check-pill"><input type="checkbox" id="checkCercanos" onchange="buscarNota()"><label for="checkCercanos">Cercanos</label></label>
+      <label class="check-pill btn-disabled"><input type="checkbox" disabled><label>Multifónicos</label></label>
+      <label class="check-pill btn-disabled"><input type="checkbox" disabled><label>Composer</label></label>
+      <button class="btn-reset" onclick="resetTodo()" title="Restablecer todo">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="1" y="1" width="10" height="10" rx="1.5"/>
+          <line x1="3.5" y1="3.5" x2="8.5" y2="8.5"/>
+          <line x1="8.5" y1="3.5" x2="3.5" y2="8.5"/>
+        </svg>
+      </button>
     </div>
   </div>
 
   <div class="main">
     <div class="fretboard-wrap">
-      <svg id="mastil" viewBox="0 0 1000 310">
-        <g id="trastero"></g>
-        <g id="cuerdas-group"></g>
-        <g id="capa-nodos"></g>
-      </svg>
+      <div class="fretboard-svg-area">
+        <svg id="mastil" viewBox="0 0 1000 310">
+          <g id="trastero"></g>
+          <g id="cuerdas-group"></g>
+          <g id="capa-nodos"></g>
+        </svg>
+      </div>
+      <!-- Footer invisible: solo los globos flotan aquí -->
+      <div id="globos-footer">
+        <button class="scroll-arrow scroll-arrow-left" id="arrow-left" onclick="scrollGlobos(-1)">‹</button>
+        <div id="globos-scroll"></div>
+        <button class="scroll-arrow scroll-arrow-right" id="arrow-right" onclick="scrollGlobos(1)">›</button>
+      </div>
     </div>
 
-    <div class="side-panel">
+    <div class="side-panel" style="position:relative;overflow:hidden;">
+      <div id="config-panel">
+        <div class="config-header">
+          <h3 id="config-title">Configuración</h3>
+          <button class="config-close" onclick="toggleConfig()">✕</button>
+        </div>
+        <div class="config-body">
+
+          <div class="config-section">
+            <div class="config-label" id="cfg-lang-label">Idioma</div>
+            <div class="config-options">
+              <button class="config-opt active" id="opt-es" onclick="setLang('es')">Español</button>
+              <button class="config-opt" id="opt-en" onclick="setLang('en')">English</button>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <div class="config-label" id="cfg-theme-label">Apariencia</div>
+            <div class="config-toggle" onclick="toggleDark()">
+              <span id="cfg-dark-label">Modo nocturno</span>
+              <div class="toggle-switch" id="dark-toggle"></div>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <div class="config-label" id="cfg-art-label">Artificiales</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);cursor:pointer;">
+                <input type="checkbox" id="artOctava" checked onchange="buscarNota()" style="accent-color:var(--accent)">
+                <span>Octava (1/2)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);cursor:pointer;">
+                <input type="checkbox" id="artQuinta" onchange="buscarNota()" style="accent-color:var(--accent)">
+                <span>5.ª justa (1/3)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);cursor:pointer;">
+                <input type="checkbox" id="artDblOct" onchange="buscarNota()" style="accent-color:var(--accent)">
+                <span>Doble octava (1/4)</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);cursor:pointer;">
+                <input type="checkbox" id="artTercera" onchange="buscarNota()" style="accent-color:var(--accent)">
+                <span>3.ª Mayor (1/5)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="config-section">
+            <div class="config-label" id="cfg-inst-label">Instrumento</div>
+            <div class="config-options">
+              <button class="config-opt active" id="opt-guitar" onclick="setInstrumento('guitar')">Guitarra</button>
+              <button class="config-opt" id="opt-timple" onclick="setInstrumento('timple')">Timple</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
       <div class="panel-top">
-        <span class="panel-label">Armónicos</span>
+        
         <div class="legend">
-          <div class="legend-item"><div class="dot" style="background:var(--c-p2)"></div>Oct.</div>
-          <div class="legend-item"><div class="dot" style="background:var(--c-p3)"></div>5.ª</div>
-          <div class="legend-item"><div class="dot" style="background:var(--c-p5)"></div>3.ª</div>
-          <div class="legend-item"><div class="dot" style="background:var(--c-p7)"></div>7.ª m</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-oct)"></div>Oct.</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-5th)"></div>5.ª</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-3M)"></div>3.ª M</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-3m)"></div>3.ª m</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-7m)"></div>7.ª m</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-7M)"></div>7.ª M</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-6m)"></div>6.ª m</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-4a)"></div>4.ª aum.</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-2M)"></div>2.ª M</div>
+          <div class="legend-item"><div class="dot" style="background:var(--c-2m)"></div>2.ª m</div>
           <div class="legend-item"><div class="dot" style="background:var(--freeze)"></div>❄</div>
         </div>
       </div>
@@ -679,406 +718,875 @@ html, body {
 </div>
 
 <script>
-let cuerdasFijas = new Set();
+'use strict';
+
+// ══════════════════════════════════════════════════════════════
+// MOTOR EXTENDED HELMHOLTZ-ELLIS
+// ══════════════════════════════════════════════════════════════
+const HARMONICS_HE = {
+  1:{name:'Unísono',         cents:0,   limit:1},
+  2:{name:'Octava',          cents:0,   limit:2},
+  3:{name:'5.ª justa',       cents:2,   limit:3},
+  4:{name:'2.ª octava',      cents:0,   limit:2},
+  5:{name:'3.ª mayor',       cents:-14, limit:5},
+  6:{name:'5.ª 2.ª oct.',     cents:2,   limit:3},
+  7:{name:'7.ª men. sept.',  cents:-31, limit:7},
+  8:{name:'3.ª octava',      cents:0,   limit:2},
+  9:{name:'9.ª (2.ª may.)',   cents:4,   limit:3},
+ 10:{name:'3.ª mayor oct+',  cents:-14, limit:5},
+ 11:{name:'4.ª aum. undec.', cents:-49, limit:11},
+ 12:{name:'5.ª oct+',        cents:2,   limit:3},
+ 13:{name:'6.ª men. tridec.',cents:41,  limit:13},
+ 14:{name:'7.ª men. sept.',  cents:-31, limit:7},
+ 15:{name:'7.ª mayor',       cents:-12, limit:5},
+ 16:{name:'4.ª octava',      cents:0,   limit:2},
+ 17:{name:'2.ª men. 17-lím.', cents:5,   limit:17},
+ 18:{name:'9.ª (2.ª may.)',   cents:4,   limit:3},
+ 19:{name:'3.ª men. 19-lím.', cents:-2,  limit:19},
+ 20:{name:'3.ª mayor oct+',   cents:-14, limit:5},
+ 21:{name:'7.ª men. sept.',   cents:-29, limit:7},
+ 22:{name:'4.ª aum. undec.',  cents:-49, limit:11},
+};
+
+const NPC = { // nota → pitch class
+  'C':0,'C#':1,'DB':1,'D':2,'D#':3,'EB':3,'E':4,
+  'F':5,'F#':6,'GB':6,'G':7,'G#':8,'AB':8,
+  'A':9,'A#':10,'BB':10,'B':11,
+  'DO':0,'DO#':1,'REB':1,'RE':2,'RE#':3,'MIB':3,'MI':4,
+  'FA':5,'FA#':6,'SOLB':6,'SOL':7,'SOL#':8,'LAB':8,
+  'LA':9,'LA#':10,'SIB':10,'SI':11
+};
+const STEP_SH = [0,0,1,1,2,3,3,4,4,5,5,6];
+const STEP_FL = [0,1,1,2,2,3,4,4,5,5,6,6];
+const NAME_SH = ['Do','Do♯','Re','Re♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+const NAME_FL = ['Do','Re♭','Re','Mi♭','Mi','Fa','Sol♭','Sol','La♭','La','Si♭','Si'];
+const ACC_PCS = new Set([1,3,6,8,10]);
+
+// Glifos 5-límite (ya incluyen accidental cromático)
+const G5D  = {dblflat:'\uE2C0',flat:'\uE2C1',nat:'\uE2C2',sharp:'\uE2C3',dblsharp:'\uE2C4'};
+const G5U  = {dblflat:'\uE2C5',flat:'\uE2C6',nat:'\uE2C7',sharp:'\uE2C8',dblsharp:'\uE2C9'};
+const G5D2 = {dblflat:'\uE2CA',flat:'\uE2CB',nat:'\uE2CC',sharp:'\uE2CD',dblsharp:'\uE2CE'};
+const G5U2 = {dblflat:'\uE2CF',flat:'\uE2D0',nat:'\uE2D1',sharp:'\uE2D2',dblsharp:'\uE2D3'};
+
+function getHESpec(pc, cents, limit, preferFlat) {
+  const isAcc = ACC_PCS.has(pc);
+  const dir   = cents < 0 ? 'down' : cents > 0 ? 'up' : null;
+  const abs   = Math.abs(cents);
+  const bKey  = isAcc ? (preferFlat ? 'flat' : 'sharp') : 'nat';
+  const bChar = isAcc ? (preferFlat ? '\uE260' : '\uE262') : null;
+  if (!dir) return {heChar:null, baseChar:bChar};
+  if (limit===5 && abs>=11 && abs<=22) return {heChar:(dir==='down'?G5D:G5U)[bKey], baseChar:null};
+  if (limit===5 && abs>=28 && abs<=50) return {heChar:(dir==='down'?G5D2:G5U2)[bKey], baseChar:null};
+  if (limit===7 && abs>=27 && abs<=35) return {heChar:dir==='down'?'\uE2DE':'\uE2DF', baseChar:bChar};
+  if (limit===7 && abs>=55 && abs<=70) return {heChar:dir==='down'?'\uE2E0':'\uE2E1', baseChar:bChar};
+  if (limit===11&& abs>=40 && abs<=55) return {heChar:dir==='down'?'\uE2E2':'\uE2E3', baseChar:bChar};
+  if (limit===13&& abs>=35 && abs<=48) return {heChar:dir==='down'?'\uE2E4':'\uE2E5', baseChar:bChar};
+  if (limit===17&& abs>=2  && abs<=9 ) return {heChar:dir==='down'?'\uE2E6':'\uE2E7', baseChar:bChar};
+  if (limit===19&& abs>=1  && abs<=4 ) return {heChar:dir==='down'?'\uE2E8':'\uE2E9', baseChar:bChar};
+  return {heChar:null, baseChar:bChar};
+}
+
+function normNote(name) {
+  // Eliminar el número de octava al final (ej: "E2" → "E", "Bb4" → "BB")
+  const s = name.toUpperCase()
+    .replace(/IS$/,'#').replace(/ES$/,'B')
+    .replace('♯','#').replace('♭','B');
+  // Quitar dígito final si lo hay (octava)
+  return s.replace(/\d+$/, '');
+}
+
+// Calcula spec HE y nombre de nota para fund+parcial.
+// Recibe midiCuerda (MIDI real de la cuerda abierta) para calcular la octava real.
+function calcHE(fundName, parcial, midiCuerda) {
+  const norm  = normNote(fundName);
+  // 'B' sola = Si natural (inglés), no bemol. Bemol solo si hay nota antes: DB, EB, GB, AB, BB.
+  const pref  = /[A-Z]B$/.test(norm) && !norm.includes('#');
+  const pc0   = NPC[norm];
+  if (pc0 === undefined) return null;
+
+  // Si tenemos el MIDI real de la cuerda, usarlo; si no, inferir desde el nombre
+  let midiF;
+  if (midiCuerda !== undefined) {
+    midiF = midiCuerda;
+  } else {
+    // Inferir: buscar el pc0 en la octava más cercana a 4
+    midiF = pc0 + 5*12;
+  }
+
+  const midiR = Math.round(12*Math.log2(440*Math.pow(2,(midiF-69)/12)*parcial/440)+69);
+  const pcR   = midiR % 12;
+  const oct   = Math.floor(midiR/12)-1;
+  const hd    = HARMONICS_HE[parcial] || {cents:0,limit:1};
+  const spec  = getHESpec(pcR, hd.cents, hd.limit, pref);
+  const name  = (pref ? NAME_FL : NAME_SH)[pcR] + oct;
+  return {spec, pcRes:pcR, midi:midiR, name, pref, cents:hd.cents};
+}
+
+// renderHESVG — dibuja nota HE en el grupo gEl.
+// useMidiDirect=true → usa el MIDI real sin normalizar octava (para Altura)
+// useMidiDirect=false → normaliza a rango [-1,5], octavas superiores con 8va
+function renderHESVG(gEl, midi, spec, preferFlat, stringGlyph, fretNum, showCents, centsVal, useMidiDirect) {
+  if (!gEl) return;
+  while (gEl.firstChild) gEl.removeChild(gEl.firstChild);
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const YBASE = 80;   // y de Mi4 (1ª línea)
+  const SPX   = 5;    // px por paso diatónico
+  const MI4DS = 4*7+2;
+
+  const pc        = ((midi % 12) + 12) % 12;
+  const stepInOct = preferFlat ? STEP_FL[pc] : STEP_SH[pc];
+
+  let fromE4, needsOttava = false;
+
+  if (useMidiDirect) {
+    // ALTURA: usar octava real, bajando todas las que hagan falta hasta fromE4 <= 12 (Do6)
+    // Do6 = fromE4=12 = última nota antes de ledger line excesiva
+    // Si se baja alguna octava, se muestra glifo 8va
+    let midiToUse = midi;
+    while (true) {
+      const octTry = Math.floor(midiToUse/12)-1;
+      const fTry = octTry*7 + stepInOct - MI4DS;
+      if (fTry <= 12) { fromE4 = fTry; break; }
+      midiToUse -= 12;
+      needsOttava = true;
+    }
+    // Subir octavas si está muy baja (fromE4 < -1)
+    // Subir solo si completamente fuera del viewBox (y>120)
+    while (fromE4 < -8) { fromE4 += 7; }
+  } else {
+    // NOTACIÓN: usar MIDI real (midiPisado), bajar octavas si supera Do5 (fromE4=5)
+    // Límite superior: fromE4=5 (Do5, 2 líneas adicionales arriba del pentagrama)
+    // Si supera → bajar octava y mostrar glifo 8va
+    let midiToUse = midi;
+    while (true) {
+      const octTry = Math.floor(midiToUse/12)-1;
+      const fTry = octTry*7 + stepInOct - MI4DS;
+      if (fTry <= 12) { fromE4 = fTry; break; }
+      midiToUse -= 12;
+      needsOttava = true;
+    }
+    // Subir solo si completamente fuera del viewBox
+    while (fromE4 < -8) { fromE4 += 7; }
+  }
+
+  const y  = YBASE - fromE4 * SPX;
+  const nx = 60;
+
+  function bTxt(x, ch, fill, sz) {
+    const t = document.createElementNS(svgNS, 'text');
+    t.setAttribute('x', String(x)); t.setAttribute('y', String(y));
+    t.setAttribute('font-family', 'Bravura,serif');
+    t.setAttribute('font-size', sz || '20px');
+    t.setAttribute('fill', fill);
+    t.textContent = ch;
+    return t;
+  }
+  function bLine(x1, x2, ly) {
+    const l = document.createElementNS(svgNS, 'line');
+    l.setAttribute('x1',String(x1)); l.setAttribute('x2',String(x2));
+    l.setAttribute('y1',String(ly)); l.setAttribute('y2',String(ly));
+    l.setAttribute('stroke','#aaa'); l.setAttribute('stroke-width','0.8');
+    return l;
+  }
+
+  // Ledger lines
+  if (fromE4 >= 10) for (let s=10; s<=fromE4; s+=2) gEl.appendChild(bLine(nx-6,nx+14,YBASE-s*SPX));
+  if (fromE4 <=-2) for (let s=-2; s>=fromE4; s-=2) gEl.appendChild(bLine(nx-6,nx+14,YBASE-s*SPX));
+
+  // Glifo 8va encima de la nota
+  if (needsOttava) {
+    const ov = document.createElementNS(svgNS,'text');
+    ov.setAttribute('x', String(nx-6));
+    ov.setAttribute('y', String(y - 26));
+    ov.setAttribute('font-family','Bravura,serif');
+    ov.setAttribute('font-size','14px');
+    ov.setAttribute('fill','#111');
+    ov.textContent = '\uE511';
+    gEl.appendChild(ov);
+  }
+
+  // Accidentales HE: [glifo HE] [cromático] [nota]
+  const hasHE   = !!(spec && spec.heChar);
+  const hasBase = !!(spec && spec.baseChar);
+  const baseX   = nx - 12;
+  const heX     = hasBase ? baseX - 15 : baseX;
+  if (hasHE)   gEl.appendChild(bTxt(heX,   spec.heChar,   '#c8502a', '40px'));
+  if (hasBase) gEl.appendChild(bTxt(baseX, spec.baseChar, '#444',    '40px'));
+
+  // Plica: fromE4 <= 4 → stemUp () a la derecha; >= 5 → stemDown () a la izquierda
+  const stemUp   = fromE4 <= 4;
+  const stemGlyph = stemUp ? '\uE93E' : '\uE93F';
+  const stemX = stemUp ? (showCents ? nx + 10.45 : nx + 9.2) : nx - 0;
+  const st = document.createElementNS(svgNS,'text');
+  st.setAttribute('x',String(stemX)); st.setAttribute('y',String(y));
+  st.setAttribute('font-family','Bravura,serif'); st.setAttribute('font-size','40px');
+  st.setAttribute('fill','#111'); st.textContent = stemGlyph;
+  gEl.appendChild(st);
+
+  // Cabeza de nota
+  const headGlyph = showCents ? '\uE0A4' : '\uE0DD';  // Altura: normal; Notación: abierta
+  gEl.appendChild(bTxt(nx, headGlyph, '#111', '40px'));
+
+  // Glifo armónico : solo en Notación (stringGlyph presente = notación)
+  // Si plica arriba →  debajo de la nota (fuera pentagrama)
+  // Si plica abajo  →  encima de la nota (fuera pentagrama)
+  if (stringGlyph !== undefined && stringGlyph !== null) {
+    // Es face Notación
+    const harmX = nx + 2.6;
+    let harmY;
+    if (stemUp) {
+      // plica arriba → glifo armónico abajo (debajo línea 1 o debajo de la nota si está baja)
+      harmY = Math.max(YBASE + 10, y + 12);
+    } else {
+      // plica abajo → glifo armónico arriba
+      harmY = Math.min(YBASE - 8*SPX - 16, y - 12);
+    }
+    const hg = document.createElementNS(svgNS,'text');
+    hg.setAttribute('x',String(harmX)); hg.setAttribute('y',String(harmY));
+    hg.setAttribute('font-family','Bravura,serif'); hg.setAttribute('font-size','22px');
+    hg.setAttribute('fill','#555'); hg.textContent = '\uE614';
+    gEl.appendChild(hg);
+  }
+
+  // Cents en Altura
+  if (showCents && centsVal !== undefined && centsVal !== 0) {
+    const centsStr = (centsVal > 0 ? '+' : '') + centsVal + '¢';
+    const ct = document.createElementNS(svgNS,'text');
+    ct.setAttribute('x', String(nx + 16)); ct.setAttribute('y', String(y - 4));
+    ct.setAttribute('font-family','Inter,sans-serif'); ct.setAttribute('font-size','7px');
+    ct.setAttribute('fill', centsVal < 0 ? '#2563eb' : '#ea580c');
+    ct.setAttribute('font-weight','600'); ct.textContent = centsStr;
+    gEl.appendChild(ct);
+  }
+
+  // Glifo de cuerda — solo en Notación (stringGlyph presente)
+  if (stringGlyph) {
+    const stringY = fromE4 < 0
+      ? YBASE - fromE4 * SPX + 28
+      : YBASE + 26;
+    const sg = document.createElementNS(svgNS,'text');
+    sg.setAttribute('x',String(nx)); sg.setAttribute('y',String(stringY));
+    sg.setAttribute('font-family','Bravura,serif'); sg.setAttribute('font-size','18px');
+    sg.setAttribute('fill','#888'); sg.setAttribute('text-anchor','middle');
+    sg.textContent = stringGlyph;
+    gEl.appendChild(sg);
+  }
+
+  // Número romano — solo en Notación
+  if (stringGlyph !== undefined && stringGlyph !== null && fretNum && fretNum > 0) {
+    const ROMANS = ['','I','II','III','IV','V','VI','VII','VIII','IX','X',
+                    'XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII'];
+    const romanStr = (fretNum >= 1 && fretNum <= 22) ? ROMANS[fretNum] : null;
+    if (romanStr) {
+      const romanY = fromE4 > 5
+        ? y - 8
+        : YBASE - 6*SPX - 14;
+      const rt = document.createElementNS(svgNS,'text');
+      rt.setAttribute('x',String(nx-20)); rt.setAttribute('y',String(romanY));
+      rt.setAttribute('font-family','Inter,sans-serif'); rt.setAttribute('font-size','12px');
+      rt.setAttribute('fill','#aaa'); rt.setAttribute('text-anchor','middle');
+      rt.textContent = romanStr;
+      gEl.appendChild(rt);
+    }
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// PROGRAMA MADRE
+// ══════════════════════════════════════════════════════════════
 const LARGO_CUERDA = 860;
-const OFFSET_X = 72;
+const ESCALA_MM    = 650;
+function getEscalaMM() { return window.ESCALA_MM_ACTUAL || ESCALA_MM; }
+const OFFSET_X     = 72;
 
 const CUERDAS_DATA = [
-  { nota:"E4", y:56,  midi:64 },
-  { nota:"B3", y:98,  midi:59 },
-  { nota:"G3", y:140, midi:55 },
-  { nota:"D3", y:182, midi:50 },
-  { nota:"A2", y:224, midi:45 },
-  { nota:"E2", y:266, midi:40 }
+  {nota:'E4',y:56, midi:64},{nota:'B3',y:98, midi:59},
+  {nota:'G3',y:140,midi:55},{nota:'D3',y:182,midi:50},
+  {nota:'A2',y:224,midi:45},{nota:'E2',y:266,midi:40}
 ];
 
 const SERIE = [
-  {p:2,  s:12,    c:'var(--c-p2)', n:'Octava',         cents:0,   sym:"\uE261", frac:"1/2"},
-  {p:3,  s:19.02, c:'var(--c-p3)', n:'5.ª Justa',      cents:2,   sym:"\uE282", frac:"1/3"},
-  {p:4,  s:24,    c:'var(--c-p2)', n:'2.ª Octava',     cents:0,   sym:"\uE261", frac:"1/4"},
-  {p:5,  s:27.86, c:'var(--c-p5)', n:'3.ª Mayor',      cents:-14, sym:"\uE2C1", frac:"1/5"},
-  {p:6,  s:31.02, c:'var(--c-p3)', n:'2.ª Oct. + 5.ª', cents:2,   sym:"\uE282", frac:"1/6"},
-  {p:7,  s:33.69, c:'var(--c-p7)', n:'7.ª Menor',      cents:-31, sym:"\uE281", frac:"1/7"},
-  {p:8,  s:36,    c:'var(--c-p2)', n:'3.ª Octava',     cents:0,   sym:"\uE261", frac:"1/8"},
-  {p:9,  s:38.04, c:'var(--c-px)', n:'2.ª Mayor',      cents:4,   sym:"\uE261", frac:"1/9"},
-  {p:10, s:39.86, c:'var(--c-p5)', n:'3.ª Mayor',      cents:-14, sym:"\uE2C1", frac:"1/10"},
-  {p:11, s:41.51, c:'var(--c-px)', n:'4.ª Aum.',       cents:-49, sym:"\uE280", frac:"1/11"},
-  {p:12, s:43.02, c:'var(--c-p3)', n:'3.ª Oct. + 5.ª', cents:2,   sym:"\uE282", frac:"1/12"},
-  // --- AMPLIACIÓN HASTA EL 16 ---
-  {p:13, s:44.41, c:'#9333ea',     n:'6.ª Menor',      cents:41,  sym:"\uE281", frac:"1/13"},
-  {p:14, s:45.69, c:'var(--c-p7)', n:'7.ª Menor',      cents:-31, sym:"\uE281", frac:"1/14"},
-  {p:15, s:46.88, c:'#db2777',     n:'7.ª Mayor',      cents:-12, sym:"\uE2C1", frac:"1/15"},
-  {p:16, s:48,    c:'var(--c-p2)', n:'4.ª Octava',     cents:0,   sym:"\uE261", frac:"1/16"}
+  {p:2, s:12,    c:'var(--c-oct)',n:'Octava',          cents:0,   sym:'\uE261',frac:'1/2'},
+  {p:3, s:19.02, c:'var(--c-5th)',n:'5.ª Justa',        cents:2,   sym:'\uE282',frac:'1/3'},
+  {p:4, s:24,    c:'var(--c-oct)',n:'2.ª Octava',       cents:0,   sym:'\uE261',frac:'1/4'},
+  {p:5, s:27.86, c:'var(--c-3M)', n:'3.ª Mayor',        cents:-14, sym:'\uE2C2',frac:'1/5'},
+  {p:6, s:31.02, c:'var(--c-5th)',n:'2.ª Oct. + 5.ª',   cents:2,   sym:'\uE282',frac:'1/6'},
+  {p:7, s:33.69, c:'var(--c-7m)', n:'7.ª Menor',        cents:-31, sym:'\uE2DE',frac:'1/7'},
+  {p:8, s:36,    c:'var(--c-oct)',n:'3.ª Octava',       cents:0,   sym:'\uE261',frac:'1/8'},
+  {p:9, s:38.04, c:'var(--c-2M)', n:'2.ª Mayor',        cents:4,   sym:'\uE261',frac:'1/9'},
+  {p:10,s:39.86, c:'var(--c-3M)', n:'3.ª Mayor',        cents:-14, sym:'\uE2C2',frac:'1/10'},
+  {p:11,s:41.51, c:'var(--c-4a)', n:'4.ª Aum.',         cents:-49, sym:'\uE2E2',frac:'1/11'},
+  {p:12,s:43.02, c:'var(--c-5th)',n:'3.ª Oct. + 5.ª',   cents:2,   sym:'\uE282',frac:'1/12'},
+  {p:13,s:44.41, c:'var(--c-6m)', n:'6.ª Menor',        cents:41,  sym:'\uE2E5',frac:'1/13'},
+  {p:14,s:45.69, c:'var(--c-7m)', n:'7.ª Menor',        cents:-31, sym:'\uE2DE',frac:'1/14'},
+  {p:15,s:46.88, c:'var(--c-7M)', n:'7.ª Mayor',        cents:-12, sym:'\uE2C2',frac:'1/15'},
+  {p:16,s:48,    c:'var(--c-oct)',n:'4.ª Octava',       cents:0,   sym:'\uE261',frac:'1/16'},
+  {p:17,s:49.05, c:'var(--c-2m)', n:'2.ª men. 17-lím.', cents:5,   sym:'\uE2E7',frac:'1/17'},
+  {p:18,s:50.04, c:'var(--c-2M)', n:'9.ª (2.ª may.)',    cents:4,   sym:'\uE282',frac:'1/18'},
+  {p:19,s:50.98, c:'var(--c-3m)', n:'3.ª men. 19-lím.', cents:-2,  sym:'\uE2E8',frac:'1/19'},
+  {p:20,s:51.86, c:'var(--c-3M)', n:'3.ª Mayor',        cents:-14, sym:'\uE2C2',frac:'1/20'},
+  {p:21,s:52.71, c:'var(--c-7m)', n:'7.ª sept.',        cents:-29, sym:'\uE2DE',frac:'1/21'},
+  {p:22,s:53.51, c:'var(--c-4a)', n:'4.ª Aum. undec.',  cents:-49, sym:'\uE2E2',frac:'1/22'}
 ];
 
-let congelados = [];
-let resultadosActuales = [];
+const VISOR_DATA = {
+  0:{n:'C',s:0,alt:''}, 1:{n:'C#',s:0,alt:'\uE262',en:'Db',enS:1,enAlt:'\uE260'},
+  2:{n:'D',s:1,alt:''}, 3:{n:'D#',s:1,alt:'\uE262',en:'Eb',enS:2,enAlt:'\uE260'},
+  4:{n:'E',s:2,alt:''}, 5:{n:'F',s:3,alt:''},
+  6:{n:'F#',s:3,alt:'\uE262',en:'Gb',enS:4,enAlt:'\uE260'}, 7:{n:'G',s:4,alt:''},
+  8:{n:'G#',s:4,alt:'\uE262',en:'Ab',enS:5,enAlt:'\uE260'}, 9:{n:'A',s:5,alt:''},
+  10:{n:'A#',s:5,alt:'\uE262',en:'Bb',enS:6,enAlt:'\uE260'}, 11:{n:'B',s:6,alt:''}
+};
 
-// Para lógica de enarmonía del visor
-let lastMidiVisor = 71; 
-let direccionVisor = "subiendo";
+let congelados = [], resultadosActuales = [];
+let cuerdasFijas = new Set();
+let lastMidiVisor = 71, direccionVisor = 'subiendo';
+let selectedRowId = null;
+let activeNodeKey = null; // 'cuerda.nota-arm.p-n/p'
 
 const snowSVG = `<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>`;
 
-// Mapeo Visor
-const VISOR_DATA = {
-  0: { n: "C",  s: 0, alt: "" }, 1: { n: "C#", s: 0, alt: "\uE262", en: "Db", enS: 1, enAlt: "\uE260" },
-  2: { n: "D",  s: 1, alt: "" }, 3: { n: "D#", s: 1, alt: "\uE262", en: "Eb", enS: 2, enAlt: "\uE260" },
-  4: { n: "E",  s: 2, alt: "" }, 5: { n: "F",  s: 3, alt: "" },
-  6: { n: "F#", s: 3, alt: "\uE262", en: "Gb", enS: 4, enAlt: "\uE260" }, 7: { n: "G",  s: 4, alt: "" },
-  8: { n: "G#", s: 4, alt: "\uE262", en: "Ab", enS: 5, enAlt: "\uE260" }, 9: { n: "A",  s: 5, alt: "" },
-  10:{ n: "A#", s: 5, alt: "\uE262", en: "Bb", enS: 6, enAlt: "\uE260" }, 11:{ n: "B",  s: 6, alt: "" }
-};
-
-function toRoman(n) {
-  const r=["","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI","XXII"];
-  return r[n]||n;
-}
+function toRoman(n){const r=['','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII'];return r[n]||n;}
 function gcd(a,b){return b?gcd(b,a%b):a;}
 function getX(t){return OFFSET_X+(LARGO_CUERDA-(LARGO_CUERDA/Math.pow(2,t/12)));}
 function getXRatio(r){return OFFSET_X+(LARGO_CUERDA*r);}
 function generarID(r){return r.type==='nat'?`nat-${r.cuerda.nota}-${r.arm.p}`:`art-${r.cuerda.nota}-${r.traste}`;}
-function getCentsColor(c){
-  if(Math.abs(c)<=5) return "var(--c-p2)";
-  if(c<0) return "var(--c-p7)";
-  return "var(--c-p5)";
-}
-function notaToMidi(n){
-  const m=n.match(/([A-G]#?)(\d)/);
-  if(!m) return null;
-  const idx=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"].indexOf(m[1]);
-  if(idx===-1) return null;
-  return(parseInt(m[2])+1)*12+idx;
-}
+function getCentsColor(c){if(Math.abs(c)<=5)return'var(--c-p2)';if(c<0)return'var(--c-p7)';return'var(--c-p5)';}
+function notaToMidi(n){const m=n.match(/([A-G]#?)(\d)/);if(!m)return null;const idx=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].indexOf(m[1]);if(idx===-1)return null;return(parseInt(m[2])+1)*12+idx;}
 
-let zoomLevel = window.innerWidth < 600 ? 0.35 : 1; 
-let panX = 0;
-let panY = 0;
-let isDragging = false;
-let startX, startY;
+let zoomLevel = window.innerWidth < 600 ? 0.35 : 1;
+let panX=0,panY=0,isDragging=false,startX,startY;
 
-function setupCamera() {
-  const wrap = document.querySelector('.fretboard-wrap');
-  const mastil = document.getElementById('mastil');
+function setupCamera(){
+  const wrap = document.querySelector('.fretboard-svg-area');
+  const m = document.getElementById('mastil');
+  let dragMoved = false;
 
-  // ZOOM (Rueda del ratón)
-  wrap.addEventListener('wheel', (e) => {
+  wrap.addEventListener('wheel',e=>{
     e.preventDefault();
-    // El 0.001 es la clave para que no salte demasiado
-    const delta = -e.deltaY * 0.001; 
-    zoomLevel = Math.min(Math.max(0.4, zoomLevel + delta), 3);
-    mastil.style.setProperty('--zoom', zoomLevel);
-  }, { passive: false });
+    zoomLevel=Math.min(Math.max(.4,zoomLevel-e.deltaY*.001),3);
+    m.style.setProperty('--zoom',zoomLevel);
+  },{passive:false});
 
-  // ARRASTRE (Funciona igual para ratón y táctil gracias a 'pointer')
-  wrap.addEventListener('pointerdown', (e) => {
-    // Solo arrastramos si hacemos click izquierdo
-    if (e.button !== 0 && e.pointerType === 'mouse') return;
-    
+  wrap.addEventListener('pointerdown',e=>{
+    // Solo arrastrar con botón izquierdo/táctil; NO capturar el puntero
+    // (setPointerCapture robaría los eventos de los nodos SVG)
+    if(e.button!==0&&e.pointerType==='mouse') return;
+    // Si el target es un nodo SVG, no iniciar drag
+    if(e.target.classList.contains('nodo')) return;
     isDragging = true;
+    dragMoved  = false;
     startX = e.clientX - panX;
     startY = e.clientY - panY;
     wrap.style.cursor = 'grabbing';
-    wrap.setPointerCapture(e.pointerId);
   });
 
-  wrap.addEventListener('pointermove', (e) => {
-    if (!isDragging) return;
+  wrap.addEventListener('pointermove',e=>{
+    if(!isDragging) return;
+    const dx = e.clientX - startX - panX;
+    const dy = e.clientY - startY - panY;
+    if(Math.abs(dx)>3 || Math.abs(dy)>3) dragMoved = true;
     panX = e.clientX - startX;
     panY = e.clientY - startY;
-    
-    mastil.style.setProperty('--pan-x', panX + 'px');
-    mastil.style.setProperty('--pan-y', panY + 'px');
+    m.style.setProperty('--pan-x',panX+'px');
+    m.style.setProperty('--pan-y',panY+'px');
   });
 
-  wrap.addEventListener('pointerup', () => {
+  wrap.addEventListener('pointerup',e=>{
+    const wasDragging = isDragging && dragMoved;
     isDragging = false;
+    dragMoved  = false;
     wrap.style.cursor = 'grab';
+    // Si no hubo movimiento real, es un clic en el fondo → cerrar globos
+    if(!wasDragging && !e.target.classList.contains('nodo')){
+      cerrarGlobos();
+    }
   });
+
+  // ── Pinch-to-zoom táctil ─────────────────────────────
+  let lastPinchDist = null;
+  wrap.addEventListener('touchstart', e => {
+    if(e.touches.length === 2) {
+      lastPinchDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    }
+  }, {passive: true});
+  wrap.addEventListener('touchmove', e => {
+    if(e.touches.length === 2 && lastPinchDist) {
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      zoomLevel = Math.min(Math.max(.4, zoomLevel + (dist - lastPinchDist) * 0.005), 3);
+      m.style.setProperty('--zoom', zoomLevel);
+      lastPinchDist = dist;
+    }
+  }, {passive: false});
+  wrap.addEventListener('touchend', () => { lastPinchDist = null; }, {passive: true});
 }
 
-function init(){
-  buildPiano();
-  dibujarMastil();
-  buscarNota();
-  highlightKey("B4");
-  setupCamera();
-  const mastil = document.getElementById('mastil');
-  mastil.style.setProperty('--zoom', zoomLevel); 
-}
+function init(){buildPiano();dibujarMastil();buscarNota();highlightKey('B4');setupCamera();document.getElementById('mastil').style.setProperty('--zoom',zoomLevel);}
 
 function buildPiano(){
   const piano=document.getElementById('piano');
-  const nombres=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+  const nombres=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   const notas=[];
-  for(let o=3;o<=8;o++){
-    for(let i=0;i<12;i++){
-      let n=nombres[i]+o;
-      if(o===3&&i<4) continue;
-	  if(o===8&&i>4) break;
-      notas.push(n);
-    }
-  }
-  const wrap=document.createElement('div');
-  wrap.className='piano-keys';
+  for(let o=3;o<=8;o++){for(let i=0;i<12;i++){let n=nombres[i]+o;if(o===3&&i<4)continue;if(o===8&&i>7)break;notas.push(n);}}
+  const wrap=document.createElement('div');wrap.className='piano-keys';
   notas.forEach(n=>{
-    const k=document.createElement('div');
-    k.className=`key ${n.includes('#')?'black':'white'}`;
-    k.dataset.note=n;
-    if(n==="C4"){const d=document.createElement('div');d.className='middle-c-dot';k.appendChild(d);}
-    k.onclick=()=>{
-      document.getElementById('inputNota').value=n;
-      let m = notaToMidi(n);
-      if(m > lastMidiVisor) direccionVisor = "subiendo";
-      if(m < lastMidiVisor) direccionVisor = "bajando";
-      lastMidiVisor = m;
-      buscarNota();
-      highlightKey(n);
-    };
+    const k=document.createElement('div');k.className=`key ${n.includes('#')?'black':'white'}`;k.dataset.note=n;
+    if(n==='C4'){const d=document.createElement('div');d.className='middle-c-dot';k.appendChild(d);}
+    k.onclick=()=>{document.getElementById('inputNota').value=n;let m=notaToMidi(n);if(m>lastMidiVisor)direccionVisor='subiendo';if(m<lastMidiVisor)direccionVisor='bajando';lastMidiVisor=m;buscarNota();highlightKey(n);};
     wrap.appendChild(k);
   });
   piano.appendChild(wrap);
 }
-
-function highlightKey(note){
-  document.querySelectorAll('.key').forEach(k=>k.classList.toggle('active',k.dataset.note===note.toUpperCase()));
-}
-
-function actualizarDesdeInput(){
-  const val=document.getElementById('inputNota').value.trim().toUpperCase();
-  let m = notaToMidi(val);
-  if(m){
-    if(m > lastMidiVisor) direccionVisor = "subiendo";
-    if(m < lastMidiVisor) direccionVisor = "bajando";
-    lastMidiVisor = m;
-  }
-  buscarNota();
-  highlightKey(val);
-}
+function highlightKey(note){document.querySelectorAll('.key').forEach(k=>k.classList.toggle('active',k.dataset.note===note.toUpperCase()));}
+function actualizarDesdeInput(){const val=document.getElementById('inputNota').value.trim().toUpperCase();let m=notaToMidi(val);if(m){if(m>lastMidiVisor)direccionVisor='subiendo';if(m<lastMidiVisor)direccionVisor='bajando';lastMidiVisor=m;}buscarNota();highlightKey(val);}
 
 function dibujarMastil(){
-  const trastero=document.getElementById('trastero');
-  trastero.innerHTML="";
-  for(let i=0;i<=22;i++){
-    let x=getX(i);
-    let l=document.createElementNS("http://www.w3.org/2000/svg","line");
-    l.setAttribute("x1",x);l.setAttribute("y1",36);l.setAttribute("x2",x);l.setAttribute("y2",280);
-    l.classList.add(i===0?"cejuela":"traste-metal");
-    trastero.appendChild(l);
-    if(i>0&&(i<=16||i%2===0)){
-      let t=document.createElementNS("http://www.w3.org/2000/svg","text");
-      t.setAttribute("x",x);t.setAttribute("y",28);
-      t.textContent=toRoman(i);t.classList.add("label-romano");
-      trastero.appendChild(t);
+  const tr=document.getElementById('trastero');tr.innerHTML='';
+  const maxTrastes = window.TRASTES_MAX || 22;
+  for(let i=0;i<=maxTrastes;i++){
+    let x=getX(i),l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',x);l.setAttribute('y1',36);l.setAttribute('x2',x);l.setAttribute('y2',280);
+    l.classList.add(i===0?'cejuela':'traste-metal');tr.appendChild(l);
+    if(i>0&&(i<=Math.min(16,maxTrastes)||i%2===0)&&i<=maxTrastes){
+      // Centrar el número romano en el espacio ENTRE traste i-1 y traste i
+      const xCenter = (getX(i-1) + x) / 2;
+      let t=document.createElementNS('http://www.w3.org/2000/svg','text');
+      t.setAttribute('x',xCenter);t.setAttribute('y',28);
+      t.textContent=toRoman(i);t.classList.add('label-romano');tr.appendChild(t);
     }
   }
   [3,5,7,9,12,15,17,19,21].forEach(f=>{
     const cx=(getX(f-1)+getX(f))/2;
-    if(f===12){
-      [290,298].forEach(cy=>{
-        const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
-        c.setAttribute("cx",cx);c.setAttribute("cy",cy);c.setAttribute("r",2.5);
-        c.setAttribute("fill","var(--border-strong)");trastero.appendChild(c);
-      });
-    } else {
-      const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
-      c.setAttribute("cx",cx);c.setAttribute("cy",294);c.setAttribute("r",2.5);
-      c.setAttribute("fill","var(--border-strong)");trastero.appendChild(c);
-    }
+    if(f===12){[290,298].forEach(cy=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',2.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);});}
+    else{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',294);c.setAttribute('r',2.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);}
   });
-  const cg=document.getElementById('cuerdas-group');
-  cg.innerHTML="";
+  const cg=document.getElementById('cuerdas-group');cg.innerHTML='';
   const widths=[0.8,1.0,1.2,1.45,1.7,2.0];
   CUERDAS_DATA.forEach((c,i)=>{
-      let l=document.createElementNS("http://www.w3.org/2000/svg","line");
-      l.setAttribute("x1",OFFSET_X);l.setAttribute("y1",c.y);
-      l.setAttribute("x2",OFFSET_X+LARGO_CUERDA);l.setAttribute("y2",c.y);
-      l.classList.add("cuerda");l.style.strokeWidth=widths[i];
-      cg.appendChild(l);
+    let l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',OFFSET_X);l.setAttribute('y1',c.y);l.setAttribute('x2',OFFSET_X+LARGO_CUERDA);l.setAttribute('y2',c.y);
+    l.classList.add('cuerda');l.style.strokeWidth=widths[i];cg.appendChild(l);
+    let t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',OFFSET_X-8);t.setAttribute('y',c.y+4);t.textContent=c.nota;t.classList.add('label-cuerda');
+    t.onclick=()=>{if(cuerdasFijas.has(c.nota)){cuerdasFijas.delete(c.nota);t.classList.remove('cuerda-fija');}else{cuerdasFijas.add(c.nota);t.classList.add('cuerda-fija');}buscarNota();};
+    t.onmouseenter=()=>{if(!cuerdasFijas.has(c.nota))mostrarSoloCuerda(c.nota);};
+    t.onmouseleave=()=>buscarNota();
+    cg.appendChild(t);
+  });
+}
 
-      let t=document.createElementNS("http://www.w3.org/2000/svg","text");
-      t.setAttribute("x",OFFSET_X-8);t.setAttribute("y",c.y+4);
-      t.textContent=c.nota;
-      t.classList.add("label-cuerda");
-      
-      // --- INTERACCIÓN ACTUALIZADA ---
-      t.style.cursor = "pointer"; 
-      
-      // Al hacer CLIC, fijamos o liberamos la cuerda
-      t.onclick = () => {
-        if (cuerdasFijas.has(c.nota)) {
-          cuerdasFijas.delete(c.nota);
-          t.classList.remove("cuerda-fija");
-        } else {
-          cuerdasFijas.add(c.nota);
-          t.classList.add("cuerda-fija");
-        }
-        buscarNota(); // Redibuja para mostrar los cambios
-      };
+// Visor miniatura
+function renderVisor(midi){
+  const g=document.getElementById('note-group-visor');g.innerHTML='';
+  if(!midi)return;
+  const d=VISOR_DATA[midi%12],oct=Math.floor(midi/12)-1,yBase=28.5;
+  let ms=(oct*7+d.s)-(4*7+6),ma=d.alt,es=d.en?(oct*7+d.enS)-(4*7+6):null,ea=d.enAlt;
+  if(direccionVisor==='bajando'&&d.en){[ms,es]=[es,ms];[ma,ea]=[ea,ma];}
+  let msD=ms,esD=es,ottGlyph=null,ottLeft=false;
+  if(ms>=24){msD=ms-14;ottGlyph='';ottLeft=true;}   // E8+: 15ma a la izquierda
+  else if(ms>=17){msD=ms-14;ottGlyph='';}            // E7-D8: 15ma arriba
+  else if(ms>=10){msD=ms-7; ottGlyph='';}            // E6-D7: 8va arriba
+  if(esD!==null){
+    if(esD>=17)esD-=14;
+    else if(esD>=10)esD-=7;
+  }
+  dvNote(50,yBase-(msD*4),ma,false,msD,ottGlyph,ottLeft);
+  if(esD!==null)dvNote(80,yBase-(esD*4),ea,true,esD,null,false);
+}
+function dvNote(x,y,alt,grey,step,ottGlyph,ottLeft){
+  const g=document.getElementById('note-group-visor'),c=grey?'#999':'#1c1b18';
+  if(alt){const a=document.createElementNS('http://www.w3.org/2000/svg','text');a.setAttribute('x',x-12);a.setAttribute('y',y);a.setAttribute('font-size','18pt');a.setAttribute('fill',c);a.textContent=alt;g.appendChild(a);}
+  const n=document.createElementNS('http://www.w3.org/2000/svg','text');n.setAttribute('x',x);n.setAttribute('y',y);n.setAttribute('font-size','22pt');n.setAttribute('fill',c);n.textContent='\uE0A4';g.appendChild(n);
+  if(step<=-6)for(let s=-6;s>=step;s--)if(Math.abs(s)%2===0)dvLedger(x+7,28.5-(s*4),c);
+  if(step>=6)for(let s=6;s<=step;s++)if(Math.abs(s)%2===0)dvLedger(x+7,28.5-(s*4),c);
+  if(ottGlyph){const ov=document.createElementNS('http://www.w3.org/2000/svg','text');ov.setAttribute('x',ottLeft?String(x-35):String(x-4));ov.setAttribute('y',ottLeft?String(y):String(y-12));ov.setAttribute('font-size','11pt');ov.setAttribute('font-family','Bravura,serif');ov.setAttribute('fill',c);ov.textContent=ottGlyph;document.getElementById('note-group-visor').appendChild(ov);}
+}
+function dvLedger(x,y,c){const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',x-10);l.setAttribute('x2',x+5);l.setAttribute('y1',y);l.setAttribute('y2',y);l.setAttribute('stroke',c);l.setAttribute('stroke-width','1');document.getElementById('note-group-visor').appendChild(l);}
 
-      t.onmouseenter = () => {
-        // Solo mostramos temporal si no está ya fija
-        if(!cuerdasFijas.has(c.nota)) mostrarSoloCuerda(c.nota);
-      };
-      
-      t.onmouseleave = () => buscarNota(); 
-      // ---------------------------------
+// ══════════════════════════════════════════════════════════════
+// GLOBOS — creación y gestión
+// ══════════════════════════════════════════════════════════════
+const STRING_GLYPH = {
+  'E4': '', 'B3': '', 'G3': '',
+  'D3': '', 'A2': '', 'E2': ''
+};
 
-      cg.appendChild(t);
+function crearGlobo(cuerda, arm, n_num, n_den, focusKey) {
+  const ratio       = n_num / n_den;
+  const distBelowMM = ratio * getEscalaMM();
+  const distAboveMM = getEscalaMM() - distBelowMM;
+  const freqSounding= 440 * Math.pow(2,(cuerda.midi + arm.s - 69)/12);
+  const he          = calcHE(cuerda.nota, arm.p, cuerda.midi);
+  const noteName    = he ? he.name : '—';
+  const cents       = arm.cents;
+  const nodeKey     = `${cuerda.nota}-${arm.p}-${n_num}/${n_den}`;
+  const isFocused   = nodeKey === focusKey;
+
+  // Traste del nodo
+  const _fretExact = 12 * Math.log2(1 / (1 - n_num / n_den));
+  const _fretRound = Math.round(_fretExact);
+  const fretNum    = (Math.abs(_fretExact - _fretRound) < 0.02) ? _fretRound : Math.ceil(_fretExact);
+
+  // Nota pisada transpositora: cuerda.midi + fretNum + 12
+  const midiPisado  = cuerda.midi + fretNum + 12;  // +12 porque la clave  es transpositora: escribimos una 8ª arriba
+  const pcPisado    = ((midiPisado % 12) + 12) % 12;
+  const prefPisado  = /[A-Z]B$/.test(normNote(cuerda.nota)) && !cuerda.nota.includes('#');
+  const specPisado  = getHESpec(pcPisado, 0, 1, prefPisado);
+
+  const card = document.createElement('div');
+  card.className = 'globo-card' + (isFocused ? ' focused' : '');
+  card.dataset.nodeKey = nodeKey;
+
+  // Cabecera
+  const head = document.createElement('div');
+  head.className = 'globo-head';
+  head.innerHTML = `<div class="globo-head-frac">${n_num}/${n_den}</div>
+    <div class="globo-head-dist"><b>${distBelowMM.toFixed(0)}</b><span>mm</span></div>`;
+  card.appendChild(head);
+
+  // Botones
+  const acts = document.createElement('div');
+  acts.className = 'globo-actions';
+  const btnN = document.createElement('button');
+  btnN.className = 'globo-btn active'; btnN.textContent = 'Notación';
+  const btnA = document.createElement('button');
+  btnA.className = 'globo-btn'; btnA.textContent = 'Altura';
+  const btnD = document.createElement('button');
+  btnD.className = 'globo-btn'; btnD.textContent = 'Detalles';
+  acts.appendChild(btnN); acts.appendChild(btnA); acts.appendChild(btnD);
+  card.appendChild(acts);
+
+  // Cuerpo
+  const body = document.createElement('div');
+  body.className = 'globo-body';
+
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  function makeSVG(clefGlyph) {
+    const s = document.createElementNS(svgNS,'svg');
+    s.setAttribute('viewBox','0 0 95 120');
+    s.setAttribute('preserveAspectRatio','xMidYMid meet');
+    s.style.overflow = 'visible';
+    const sg = document.createElementNS(svgNS,'g');
+    sg.setAttribute('stroke','#c5c5c5'); sg.setAttribute('stroke-width','0.5');
+    [40,50,60,70,80].forEach(yy => {
+      const l = document.createElementNS(svgNS,'line');
+      l.setAttribute('x1','5'); l.setAttribute('x2','90');
+      l.setAttribute('y1',yy); l.setAttribute('y2',yy);
+      sg.appendChild(l);
     });
-}
-
-function renderVisor(midi) {
-  const group = document.getElementById('note-group-visor');
-  group.innerHTML = "";
-  if (!midi) return;
-  const d = VISOR_DATA[midi % 12];
-  const oct = Math.floor(midi / 12) - 1;
-  const yBase = 28.5;
-
-  let mainStep = (oct * 7 + d.s) - (4 * 7 + 6);
-  let mainAlt = d.alt;
-  let enStep = d.en ? (oct * 7 + d.enS) - (4 * 7 + 6) : null;
-  let enAlt = d.enAlt;
-
-  if (direccionVisor === "bajando" && d.en) {
-    [mainStep, enStep] = [enStep, mainStep];
-    [mainAlt, enAlt] = [enAlt, mainAlt];
+    s.appendChild(sg);
+    const cl = document.createElementNS(svgNS,'text');
+    cl.setAttribute('x','5'); cl.setAttribute('y','70.1');
+    cl.setAttribute('font-size','38.4px'); cl.setAttribute('font-family','Bravura,serif');
+    cl.setAttribute('fill','#222'); cl.textContent = clefGlyph;
+    s.appendChild(cl);
+    return s;
   }
 
-  drawVisorNote(50, yBase - (mainStep * 4), mainAlt, false, mainStep);
-  if (enStep !== null) drawVisorNote(80, yBase - (enStep * 4), enAlt, true, enStep);
+  // Face NOTACIÓN
+  const faceN = document.createElement('div');
+  faceN.className = 'globo-notation';
+  const svgN = makeSVG('');
+  const heGN = document.createElementNS(svgNS,'g');
+  heGN.setAttribute('class','he-note-group');
+  svgN.appendChild(heGN);
+  faceN.appendChild(svgN);
+  body.appendChild(faceN);
+
+  // Face ALTURA
+  const faceA = document.createElement('div');
+  faceA.className = 'globo-notation hidden';
+  const svgA = makeSVG('');
+  const heGA = document.createElementNS(svgNS,'g');
+  heGA.setAttribute('class','he-note-group');
+  svgA.appendChild(heGA);
+  faceA.appendChild(svgA);
+  body.appendChild(faceA);
+
+  // Face DETALLES
+  const centsAbs   = Math.abs(cents);
+  const centsClass = cents < -5 ? 'neg' : cents > 5 ? 'pos' : 'zero';
+  const centsLabel = (cents > 0 ? '+' : '') + cents + '¢';
+  const barPct     = Math.min(100, centsAbs / 55 * 100);
+  const faceD = document.createElement('div');
+  faceD.className = 'globo-details';
+  faceD.innerHTML = `
+    <div class="cents-bar-wrap">
+      <div class="cents-label"><span>DESVIAC.</span><span class="cents-val ${centsClass}">${centsLabel}</span></div>
+      <div class="cents-track">
+        <div class="cents-center-mark"></div>
+        <div class="cents-fill ${centsClass}" style="width:${barPct/2}%"></div>
+      </div>
+    </div>
+    <div class="dist-rows">
+      <div class="dist-row"><span class="dist-row-label">Nut →</span>
+        <span class="dist-row-val">${distBelowMM.toFixed(1)} <span class="dist-row-unit">mm</span></span></div>
+      <div class="dist-row"><span class="dist-row-label">Bridge →</span>
+        <span class="dist-row-val">${distAboveMM.toFixed(1)} <span class="dist-row-unit">mm</span></span></div>
+    </div>
+    <div class="globo-sounding">${noteName} · ${freqSounding.toFixed(1)} Hz</div>`;
+  body.appendChild(faceD);
+  card.appendChild(body);
+
+  // Toggle pestañas
+  function activarFace(cual) {
+    faceN.classList.add('hidden');    faceA.classList.add('hidden');
+    faceD.classList.remove('visible');
+    btnN.classList.remove('active');  btnA.classList.remove('active'); btnD.classList.remove('active');
+    if (cual === 'N') { faceN.classList.remove('hidden'); btnN.classList.add('active'); }
+    else if (cual === 'A') { faceA.classList.remove('hidden'); btnA.classList.add('active'); }
+    else { faceD.classList.add('visible'); btnD.classList.add('active'); }
+  }
+  btnN.addEventListener('click', () => activarFace('N'));
+  btnA.addEventListener('click', () => activarFace('A'));
+  btnD.addEventListener('click', () => activarFace('D'));
+
+  // Guardar para render posterior
+  const strGlyph = STRING_GLYPH[cuerda.nota] || null;
+  card._heData = he ? {
+    gN: heGN, midiN: midiPisado, specN: specPisado, prefN: prefPisado,
+    strGlyph, fretNum,
+    gA: heGA, midi: he.midi, spec: he.spec, pref: he.pref,
+    cents
+  } : null;
+
+  return card;
 }
 
-function drawVisorNote(x, y, alt, grey, step) {
-  const g = document.getElementById('note-group-visor');
-  const c = grey ? "#999" : "#1c1b18";
-  
-  if (alt) {
-    const a = document.createElementNS("http://www.w3.org/2000/svg","text");
-    a.setAttribute("x", x-12); a.setAttribute("y", y); a.setAttribute("font-size", "18pt");
-    a.setAttribute("fill", c); a.textContent = alt; g.appendChild(a);
-  }
-  const n = document.createElementNS("http://www.w3.org/2000/svg","text");
-  n.setAttribute("x", x); n.setAttribute("y", y); n.setAttribute("font-size", "22pt");
-  n.setAttribute("fill", c); n.textContent = "\uE0A4"; g.appendChild(n);
+// Mostrar todos los globos de una fila
+function mostrarGlobos(cuerda, arm, focusKey) {
+  const footer = document.getElementById('globos-footer');
+  const scroll = document.getElementById('globos-scroll');
+  scroll.innerHTML = '';
 
-  if (step <= -6) {
-    for (let s = -6; s >= step; s--) if (Math.abs(s) % 2 === 0) visorLedger(x+7, 28.5 - (s*4), c);
+  // Solo nodos coprimos
+  const nodos = [];
+  for (let n=1; n<arm.p; n++) {
+    if (gcd(n, arm.p) === 1) nodos.push(n);
   }
-  if (step >= 6) {
-    for (let s = 6; s <= step; s++) if (Math.abs(s) % 2 === 0) visorLedger(x+7, 28.5 - (s*4), c);
+
+  if (nodos.length === 0) { footer.classList.remove('active'); return; }
+
+  const cards = [];
+  nodos.forEach(n => {
+    const card = crearGlobo(cuerda, arm, n, arm.p, focusKey);
+    scroll.appendChild(card);
+    cards.push(card);
+  });
+
+  footer.classList.add('active');
+  // Ajustar right del scroll al ancho real del sidebar (solo en desktop)
+  const sidePanel = document.querySelector('.side-panel');
+  const isMobile = window.innerWidth <= 600;
+  const sideW = (!isMobile && sidePanel) ? sidePanel.offsetWidth : 0;
+  document.getElementById('globos-scroll').style.right = sideW + 'px';
+
+  // Inicializar flechas de scroll
+  requestAnimationFrame(() => {
+    const sc = document.getElementById('globos-scroll');
+    sc.removeEventListener('scroll', updateScrollArrows);
+    sc.addEventListener('scroll', updateScrollArrows);
+    updateScrollArrows();
+  });
+
+  // Render HE tras DOM
+  setTimeout(() => {
+    cards.forEach(card => {
+      const d = card._heData;
+      if (!d) return;
+      // Face Notación: nota pisada transpuesta, con cuerda+romano, normalizada
+      renderHESVG(d.gN, d.midiN, d.specN, d.prefN, d.strGlyph, d.fretNum, false, 0,       false);
+      // Face Altura: MIDI real sin normalizar, con cents, sin cuerda ni romano
+      renderHESVG(d.gA, d.midi,  d.spec,  d.pref,  null,       null,      true,  d.cents, true);
+    });
+  }, 0);
+
+  // Scroll al globo enfocado — tras el render
+  if (focusKey) {
+    setTimeout(() => {
+      const focused = scroll.querySelector('.globo-card.focused');
+      if (focused) {
+        focused.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+        // Quitar el borde enfocado tras 2s
+        setTimeout(() => focused.classList.remove('focused'), 2000);
+      }
+    }, 50);
   }
 }
 
-function visorLedger(x, y, c) {
-  const l = document.createElementNS("http://www.w3.org/2000/svg","line");
-  l.setAttribute("x1", x-10); l.setAttribute("x2", x+5); l.setAttribute("y1", y); l.setAttribute("y2", y);
-  l.setAttribute("stroke", c); l.setAttribute("stroke-width", "1");
-  document.getElementById('note-group-visor').appendChild(l);
+function scrollGlobos(dir) {
+  const sc = document.getElementById('globos-scroll');
+  sc.scrollBy({left: dir * 200, behavior: 'smooth'});
 }
 
-function mostrarSoloCuerda(nombreCuerda) {
-  const capa = document.getElementById('capa-nodos');
-  const showHigh = document.getElementById('checkSuperiores').checked;
-  
-  capa.innerHTML = ""; // Limpiamos lo que haya (notas buscadas)
+function updateScrollArrows() {
+  const sc = document.getElementById('globos-scroll');
+  const al = document.getElementById('arrow-left');
+  const ar = document.getElementById('arrow-right');
+  if (!al || !ar) return;
+  al.classList.toggle('visible', sc.scrollLeft > 10);
+  ar.classList.toggle('visible', sc.scrollLeft < sc.scrollWidth - sc.clientWidth - 10);
+}
 
-  const cuerda = CUERDAS_DATA.find(c => c.nota === nombreCuerda);
-  if (!cuerda) return;
+function cerrarGlobos() {
+  document.getElementById('globos-footer').classList.remove('active');
+  document.getElementById('globos-scroll').innerHTML = '';
+  selectedRowId = null;
+  activeNodeKey = null;
+  document.querySelectorAll('.result-row').forEach(r=>r.classList.remove('selected'));
+  resetNodeColors();
+}
 
-  SERIE.forEach(arm => {
-    if (arm.p > 7 && !showHigh) return;
+// ── Colores de nodos ──────────────────────────────────────
+// selectedArm: {cuerda, arm} o null
+let activeSelection = null; // {cuerda, arm}
 
-    // Dibujamos cada armónico de la serie en esa cuerda
-    dibujarArmonico({
-      type: 'nat',
-      cuerda: cuerda,
-      arm: arm
-    }, false);
+function applyNodeGreying(selCuerda, selArm) {
+  // Poner todos los nodos en gris excepto los de la cuerda+parcial activos
+  document.querySelectorAll('#capa-nodos .nodo').forEach(el => {
+    const key = el.dataset.nodeKey || '';
+    const belongsToSel = selCuerda && selArm
+      ? key.startsWith(`${selCuerda.nota}-${selArm.p}`)
+      : false;
+    el.classList.toggle('greyed', !belongsToSel);
   });
 }
 
-function buscarNota() {
-  const capa = document.getElementById('capa-nodos');
-  if (!capa) return;
-  capa.innerHTML = ""; 
+function resetNodeColors() {
+  document.querySelectorAll('#capa-nodos .nodo').forEach(el => {
+    el.classList.remove('greyed','pulsing');
+  });
+  activeSelection = null;
+}
 
-  const input = document.getElementById('inputNota').value.trim().toUpperCase();
-  const targetMidi = notaToMidi(input);
-  const showHigh = document.getElementById('checkSuperiores').checked;
-  const useTol = document.getElementById('checkCercanos').checked;
-  const checkArt = document.getElementById('checkArtificial').checked;
+// ── Selección desde sidebar ───────────────────────────────
+function selectRow(id, rowData, e) {
+  if (e) e.stopPropagation();
 
-  // 1. DIBUJAR CUERDAS FIJAS (Cian)
-  cuerdasFijas.forEach(notaCuerda => {
-    const cuerdaObj = CUERDAS_DATA.find(cd => cd.nota === notaCuerda);
-    if (cuerdaObj) {
-      SERIE.forEach(arm => {
-        if (arm.p > 7 && !showHigh) return;
-        const xRatio = 1 / arm.p;
-        const px = Math.round(getXRatio(xRatio));
-        
-        dibujarArmonico({ 
-          type: 'nat', 
-          cuerda: cuerdaObj, 
-          arm: arm,
-          id: `fija-${cuerdaObj.nota}-${arm.p}`,
-          dificultad: calcDif(arm.p, px)
-        }, true);
-      });
-    }
+  if (selectedRowId === id) {
+    cerrarGlobos();
+    return;
+  }
+  selectedRowId = id;
+  activeNodeKey = null;
+
+  document.querySelectorAll('.result-row').forEach(r=>r.classList.remove('selected'));
+  const el = document.querySelector(`.result-row[data-id="${id}"]`);
+  if (el) el.classList.add('selected');
+
+  if (rowData && rowData.type === 'nat') {
+    activeSelection = {cuerda: rowData.cuerda, arm: rowData.arm};
+    applyNodeGreying(rowData.cuerda, rowData.arm);
+    mostrarGlobos(rowData.cuerda, rowData.arm, null);
+  }
+}
+
+// ── Selección desde nodo del diapasón ────────────────────
+function selectNode(cuerda, arm, n_num, n_den, nodeEl) {
+  // Pulso visual
+  nodeEl.classList.remove('pulsing');
+  void nodeEl.offsetWidth; // reflow para reiniciar animación
+  nodeEl.classList.add('pulsing');
+
+  const nodeKey = `${cuerda.nota}-${arm.p}-${n_num}/${n_den}`;
+  activeNodeKey = nodeKey;
+  activeSelection = {cuerda, arm};
+  applyNodeGreying(cuerda, arm);
+
+  // Highlight fila del sidebar
+  const rowId = `nat-${cuerda.nota}-${arm.p}`;
+  document.querySelectorAll('.result-row').forEach(r=>r.classList.remove('selected'));
+  const sideRow = document.querySelector(`.result-row[data-id="${rowId}"]`);
+  if (sideRow) sideRow.classList.add('selected');
+  selectedRowId = rowId;
+
+  mostrarGlobos(cuerda, arm, nodeKey);
+}
+
+// ══════════════════════════════════════════════════════════════
+// DIBUJO EN EL DIAPASÓN
+// ══════════════════════════════════════════════════════════════
+function mostrarSoloCuerda(nombreCuerda){
+  const capa=document.getElementById('capa-nodos');
+  const showHigh=document.getElementById('checkSuperiores').checked;
+  capa.innerHTML='';
+  const cuerda=CUERDAS_DATA.find(c=>c.nota===nombreCuerda);
+  if(!cuerda)return;
+  SERIE.forEach(arm=>{if(arm.p>7&&!showHigh)return;dibujarArmonico({type:'nat',cuerda,arm},false);});
+}
+
+function buscarNota(){
+  const capa=document.getElementById('capa-nodos');if(!capa)return;capa.innerHTML='';
+  const input=document.getElementById('inputNota').value.trim().toUpperCase();
+  const targetMidi=notaToMidi(input);
+  const showHigh=document.getElementById('checkSuperiores').checked;
+  const useTol=document.getElementById('checkCercanos').checked;
+  const checkArt=document.getElementById('checkArtificial').checked;
+
+  cuerdasFijas.forEach(nc=>{
+    const co=CUERDAS_DATA.find(cd=>cd.nota===nc);
+    if(co)SERIE.forEach(arm=>{if(arm.p>7&&!showHigh)return;dibujarArmonico({type:'nat',cuerda:co,arm},true);});
   });
 
-  // 2. BÚSQUEDA POR NOTA
-  resultadosActuales = [];
-  const idsC = new Set(congelados.map(c => c.id));
+  resultadosActuales=[];
+  const idsC=new Set(congelados.map(c=>c.id));
 
-  if (targetMidi) {
+  if(targetMidi){
     renderVisor(targetMidi);
-    const TOL = useTol ? 0.5 : 0.05;
-
-    CUERDAS_DATA.forEach(cuerda => {
-      SERIE.forEach(arm => {
-        if (arm.p > 7 && !showHigh) return;
-        const diff = (cuerda.midi + arm.s) - targetMidi;
-        if (Math.abs(diff) <= TOL) {
-          const xRatio = 1 / arm.p;
-          const px = Math.round(getXRatio(xRatio));
-          
-          resultadosActuales.push({ 
-            cuerda, 
-            arm, 
-            desv: Math.round(diff * 100), 
-            type: 'nat', 
-            id: generarID({type:'nat', cuerda, arm}),
-            dificultad: calcDif(arm.p, px)
-          });
+    const TOL=useTol?0.5:0.05;
+    CUERDAS_DATA.forEach(cuerda=>{
+      SERIE.forEach(arm=>{
+        if(arm.p>7&&!showHigh)return;
+        const diff=(cuerda.midi+arm.s)-targetMidi;
+        if(Math.abs(diff)<=TOL){
+          const px=Math.round(getXRatio(1/arm.p));
+          resultadosActuales.push({cuerda,arm,desv:Math.round(diff*100),type:'nat',id:generarID({type:'nat',cuerda,arm}),dificultad:calcDif(arm.p,px)});
         }
       });
-      
-      if (checkArt) {
-        for (let tP = 1; tP <= 15; tP++) {
-          if (tP + 12 > 22) continue;
-          if (Math.abs((cuerda.midi + tP + 12) - targetMidi) <= 0.05) {
-            resultadosActuales.push({ 
-              cuerda, traste: tP, type: 'art', 
-              id: generarID({type:'art', cuerda, traste: tP}),
-              dificultad: 0 
-            });
-          }
+      if(checkArt){
+        // Tipos según config — octava siempre activa por defecto
+        const doOct  = document.getElementById('artOctava')  ? document.getElementById('artOctava').checked  : true;
+        const do5th  = document.getElementById('artQuinta')  ? document.getElementById('artQuinta').checked  : false;
+        const do2oct = document.getElementById('artDblOct')  ? document.getElementById('artDblOct').checked  : false;
+        const do3M   = document.getElementById('artTercera') ? document.getElementById('artTercera').checked : false;
+        // {semis: semitones sobre la nota pisada, frac: posición del nodo, label}
+        const artModes = [];
+        if(doOct)  artModes.push({semis:12,   label:'oct'});
+        if(do5th)  artModes.push({semis:19,   label:'5th'});  // redondeo a 19st
+        if(do2oct) artModes.push({semis:24,   label:'2oct'});
+        if(do3M)   artModes.push({semis:28,   label:'3M'});   // 27.86 redondeado
+        for(let tP=1;tP<=17;tP++){
+          artModes.forEach(am=>{
+            const notaResult = cuerda.midi + tP + am.semis;
+            if(Math.abs(notaResult - targetMidi) <= 0.5){
+              const id = `art-${cuerda.nota}-${tP}-${am.label}`;
+              if(!resultadosActuales.find(r=>r.id===id))
+                resultadosActuales.push({cuerda,traste:tP,type:'art',artType:am.label,
+                  id,dificultad:0,desv:notaResult-targetMidi});
+            }
+          });
         }
       }
     });
   }
 
-  // 3. DIBUJAR RESULTADOS Y CONGELADOS
-  congelados.forEach(c => dibujarArmonico(c, true));
-  resultadosActuales.forEach(r => {
-    if (!idsC.has(r.id)) dibujarArmonico(r, false);
-  });
+  congelados.forEach(c=>dibujarArmonico(c,true));
+  resultadosActuales.forEach(r=>{if(!idsC.has(r.id))dibujarArmonico(r,false);});
+  resultadosActuales.sort((a,b)=>Math.abs(a.desv||0)-Math.abs(b.desv||0));
 
-  resultadosActuales.sort((a, b) => Math.abs(a.desv || 0) - Math.abs(b.desv || 0));
+  // Mantener greying si hay selección activa
+  if (activeSelection) applyNodeGreying(activeSelection.cuerda, activeSelection.arm);
+
   renderTabla();
 }
 
@@ -1089,7 +1597,10 @@ function dibujarArmonico(r,isFrozen){
     for(let n=1;n<r.arm.p;n++){
       if(gcd(n,r.arm.p)===1){
         const xPos=Math.round(getXRatio(n/r.arm.p));
-        if(!drawn.has(xPos)){drawNode(xPos,r.cuerda.y,color);drawn.add(xPos);}
+        if(!drawn.has(xPos)){
+          drawNode(xPos,r.cuerda.y,color,r.cuerda,r.arm,n,r.arm.p);
+          drawn.add(xPos);
+        }
       }
     }
   } else {
@@ -1097,83 +1608,66 @@ function dibujarArmonico(r,isFrozen){
   }
 }
 
-function drawNode(x,y,c){
+function drawNode(x,y,c,cuerda,arm,n_num,n_den){
   const capa=document.getElementById('capa-nodos');
   const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
   const esExacto=Math.abs(tt-Math.round(tt))<0.1;
   if(!esExacto){
-    const bar=document.createElementNS("http://www.w3.org/2000/svg","line");
-    bar.setAttribute("x1",x);bar.setAttribute("y1",y-13);bar.setAttribute("x2",x);bar.setAttribute("y2",y+13);
-    bar.setAttribute("stroke",c);bar.classList.add("guia-vertical");
-    capa.appendChild(bar);
+    const bar=document.createElementNS('http://www.w3.org/2000/svg','line');
+    bar.setAttribute('x1',x);bar.setAttribute('y1',y-13);bar.setAttribute('x2',x);bar.setAttribute('y2',y+13);
+    bar.setAttribute('stroke',c);bar.classList.add('guia-vertical');capa.appendChild(bar);
   }
-  const el=document.createElementNS("http://www.w3.org/2000/svg","circle");
-  el.setAttribute("cx",x);el.setAttribute("cy",y);el.setAttribute("r",7);
-  el.setAttribute("fill",c);el.classList.add("nodo");
+  const el=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  el.setAttribute('cx',x);el.setAttribute('cy',y);el.setAttribute('r',7);
+  el.setAttribute('fill',c);el.classList.add('nodo');
+
+  if (cuerda && arm) {
+    const nodeKey = `${cuerda.nota}-${arm.p}-${n_num}/${n_den}`;
+    el.dataset.nodeKey = nodeKey;
+
+    // Clic en nodo: seleccionar y mostrar globos
+    el.addEventListener('click', e => {
+      e.stopPropagation();
+      selectNode(cuerda, arm, n_num, n_den, el);
+    });
+  }
+
   capa.appendChild(el);
 }
 
 function drawArt(xI,xD,y,color){
   const capa=document.getElementById('capa-nodos');
   capa.appendChild(drawHand(xI,y+22,'L',color));
-  const p=document.createElementNS("http://www.w3.org/2000/svg","circle");
-  p.setAttribute("cx",xI);p.setAttribute("cy",y);p.setAttribute("r",4);
-  p.setAttribute("fill","none");p.setAttribute("stroke",color);p.setAttribute("stroke-width","2");
-  capa.appendChild(p);
+  const p=document.createElementNS('http://www.w3.org/2000/svg','circle');p.setAttribute('cx',xI);p.setAttribute('cy',y);p.setAttribute('r',4);p.setAttribute('fill','none');p.setAttribute('stroke',color);p.setAttribute('stroke-width','2');capa.appendChild(p);
   capa.appendChild(drawHand(xD,y+22,'R',color));
-  const l=document.createElementNS("http://www.w3.org/2000/svg","line");
-  l.setAttribute("x1",xD);l.setAttribute("y1",y-12);l.setAttribute("x2",xD);l.setAttribute("y2",y+12);
-  l.classList.add("guia-90");l.style.stroke=color;
-  capa.appendChild(l);
-  const ci=document.createElementNS("http://www.w3.org/2000/svg","circle");
-  ci.setAttribute("cx",xD);ci.setAttribute("cy",y);ci.setAttribute("r",7);
-  ci.setAttribute("fill",color);ci.classList.add("nodo");
-  capa.appendChild(ci);
+  const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',xD);l.setAttribute('y1',y-12);l.setAttribute('x2',xD);l.setAttribute('y2',y+12);l.classList.add('guia-90');l.style.stroke=color;capa.appendChild(l);
+  const ci=document.createElementNS('http://www.w3.org/2000/svg','circle');ci.setAttribute('cx',xD);ci.setAttribute('cy',y);ci.setAttribute('r',7);ci.setAttribute('fill',color);ci.classList.add('nodo');capa.appendChild(ci);
 }
 
 function drawHand(x,y,t,color){
-  const g=document.createElementNS("http://www.w3.org/2000/svg","g");
-  const p=document.createElementNS("http://www.w3.org/2000/svg","path");
-  p.classList.add("icono-mano");p.setAttribute("stroke",color);
-  p.setAttribute("d",t==='L'?`M${x-4},${y} a4,4 0 0,1 8,0`:`M${x-4},${y} l8,0 M${x},${y} l0,-5`);
+  const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+  const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.classList.add('icono-mano');p.setAttribute('stroke',color);
+  p.setAttribute('d',t==='L'?`M${x-4},${y} a4,4 0 0,1 8,0`:`M${x-4},${y} l8,0 M${x},${y} l0,-5`);
   g.appendChild(p);return g;
 }
 
-function calcDif(parcial, x) {
-  // 1. Calculamos posición teórica para los armónicos fáciles
-  const tt = 12 * Math.log2(LARGO_CUERDA / (LARGO_CUERDA - (x - OFFSET_X)));
-  const esExacto = Math.abs(tt - Math.round(tt)) < 0.1;
-
-  // 2. NIVEL 0: Los básicos que "salen solos" (Octava, Quinta, 2ª Octava en trastes fijos)
-  if (esExacto && parcial <= 4) return 0;
-
-  // 3. NIVEL 3 (Máxima dificultad): 
-  // Si el parcial es muy elevado (9 o más), es difícil en CUALQUIER traste.
-  // O si estamos en una zona extremadamente aguda del puente (>15).
-  if (parcial > 9 || tt > 15) return 3;
-
-  // 4. NIVEL 2 (Dificultad intermedia):
-  // Parciales medios (5 al 8) o zona del mástil a partir del traste 12.
-  if (parcial > 4 || tt > 12) return 2;
-
-  // 5. NIVEL 1: El resto (naturales estándar)
+function calcDif(parcial,x){
+  const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
+  const esExacto=Math.abs(tt-Math.round(tt))<0.1;
+  if(esExacto&&parcial<=4)return 0;
+  if(parcial>9||tt>15)return 3;
+  if(parcial>4||tt>12)return 2;
   return 1;
 }
 
-function toggleFreeze(id){
+function toggleFreeze(id,e){
+  e.stopPropagation();
   const idx=congelados.findIndex(c=>c.id===id);
-  if(idx>-1){ congelados.splice(idx,1); }
-  else {
-    const item=resultadosActuales.find(r=>generarID(r)===id);
-    if(item){
-      const nota=document.getElementById('inputNota').value.trim().toUpperCase();
-      congelados.push({...item,id,notaObjetivo:nota});
-    }
-  }
+  if(idx>-1)congelados.splice(idx,1);
+  else{const item=resultadosActuales.find(r=>generarID(r)===id);if(item){const nota=document.getElementById('inputNota').value.trim().toUpperCase();congelados.push({...item,id,notaObjetivo:nota});}}
   buscarNota();
 }
-
-function borrarCongelados(){congelados=[];buscarNota();}
+function borrarCongelados(){congelados=[];cerrarGlobos();buscarNota();}
 
 function renderTabla(){
   const box=document.getElementById('infoBox');
@@ -1182,71 +1676,245 @@ function renderTabla(){
     ...congelados.map(r=>buildRow(r,true)),
     ...resultadosActuales.filter(r=>!idsC.has(generarID(r))).map(r=>buildRow(r,false))
   ];
-  if(!rows.length){
-    box.innerHTML=`<div class="empty-state"><span style="font-size:22px;opacity:.3">♩</span><span>Sin armónicos para esta nota</span></div>`;
-    return;
-  }
+  if(!rows.length){box.innerHTML=`<div class="empty-state"><span style="font-size:22px;opacity:.3">♩</span><span>Sin armónicos para esta nota</span></div>`;return;}
   box.innerHTML=rows.join('');
 }
 
 function buildRow(r,frozen){
   const id=frozen?r.id:generarID(r);
   const fc=frozen?' frozen':'';
+  const sel=selectedRowId===id?' selected':'';
   const ba=frozen?' on':'';
   const tag=frozen?`<span class="frozen-tag">${r.notaObjetivo}</span> `:'';
-  const diffHTML = (r.dificultad > 0) 
-  ? `<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(Math.min(r.dificultad, 3))}</div>` 
-  : '';
+  const diffHTML=r.dificultad>0?`<div class="diff-dots">${'<div class="diff-dot"></div>'.repeat(Math.min(r.dificultad,3))}</div>`:'';
 
   if(r.type==='nat'){
     const cc=frozen?'var(--freeze)':getCentsColor(r.desv);
     const cbg=frozen?'#cffafe':'var(--surface-2)';
     const cs=(r.desv>0?'+':'')+r.desv+'¢';
-    return `<div class="result-row${fc}">
-      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}')" title="${frozen?'Descongelar':'Congelar'}">${snowSVG}</button>
+    return `<div class="result-row${fc}${sel}" data-id="${id}" onclick="selectRow('${id}', resultadosActuales.find(x=>x.id==='${id}')||congelados.find(x=>x.id==='${id}'), event)">
+      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}',event)">${snowSVG}</button>
       <div class="row-body">
         <div class="row-main">${tag}Cuerda <b>${r.cuerda.nota}</b> · P${r.arm.p} <span style="opacity:.6;font-size:11px">(${r.arm.frac})</span></div>
         <div class="row-sub">${r.arm.n}</div>
       </div>
-      <div class="row-right">
-        ${diffHTML}
-        <span class="sym" style="color:${frozen?'var(--freeze)':r.arm.c}">${r.arm.sym}</span>
-        <span class="cents" style="color:${cc};background:${cbg}">${cs}</span>
-      </div>
+      <div class="row-right">${diffHTML}<span class="sym" style="color:${frozen?'var(--freeze)':r.arm.c}">${r.arm.sym}</span><span class="cents-badge" style="color:${cc};background:${cbg}">${cs}</span></div>
     </div>`;
   } else {
     const ac=frozen?'var(--freeze)':'var(--purple-art)';
-    return `<div class="result-row${fc}">
-      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}')" title="${frozen?'Descongelar':'Congelar'}">${snowSVG}</button>
+    return `<div class="result-row${fc}${sel}" data-id="${id}">
+      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}',event)">${snowSVG}</button>
       <div class="row-body">
         <div class="row-main">${tag}Art. 8.ª en <b>${r.cuerda.nota}</b> · Tr. ${r.traste}</div>
         <div class="row-sub">Armónico artificial</div>
       </div>
-      <div class="row-right">
-        <span class="sym" style="color:${ac}">\uE261</span>
-        <span class="cents">0¢</span>
-      </div>
+      <div class="row-right"><span class="sym" style="color:${ac}">\uE261</span><span class="cents-badge">0¢</span></div>
     </div>`;
   }
 }
 
-// Navegación con flechas
-window.addEventListener("keydown", (e)=>{
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-        e.preventDefault();
-        let input = document.getElementById('inputNota');
-        let m = notaToMidi(input.value.trim());
-        if(!m) return;
-        if(e.key === "ArrowUp") { m++; direccionVisor = "subiendo"; }
-        else { m--; direccionVisor = "bajando"; }
-        const nNames=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-        let nueva = nNames[m%12] + (Math.floor(m/12)-1);
-        input.value = nueva;
-        lastMidiVisor = m;
-        buscarNota();
-        highlightKey(nueva);
-    }
+// Cierre de globos manejado en pointerup de setupCamera
+
+
+// Teclado
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){cerrarGlobos();return;}
+  if(e.key==='ArrowUp'||e.key==='ArrowDown'){
+    e.preventDefault();
+    let input=document.getElementById('inputNota');let m=notaToMidi(input.value.trim());if(!m)return;
+    if(e.key==='ArrowUp'){m++;direccionVisor='subiendo';}else{m--;direccionVisor='bajando';}
+    m=Math.max(52,Math.min(115,m)); // limitar E3..G8
+    const nn=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    let nueva=nn[m%12]+(Math.floor(m/12)-1);
+    input.value=nueva;lastMidiVisor=m;buscarNota();highlightKey(nueva);
+  }
 });
+
+// ══════════════════════════════════════════════════════════════
+// CONFIGURACIÓN
+// ══════════════════════════════════════════════════════════════
+
+const INSTRUMENTOS = {
+  guitar: {
+    nombre_es: 'guitarra', nombre_en: 'guitar',
+    escala_mm: 650, largo_svg: 860,
+    trastes: 22,
+    cuerdas: [
+      {nota:'E4',y:56, midi:64},{nota:'B3',y:98, midi:59},
+      {nota:'G3',y:140,midi:55},{nota:'D3',y:182,midi:50},
+      {nota:'A2',y:224,midi:45},{nota:'E2',y:266,midi:40}
+    ]
+  },
+  timple: {
+    nombre_es: 'timple', nombre_en: 'timple',
+    escala_mm: 420, largo_svg: 860,
+    trastes: 18,
+    cuerdas: [
+      {nota:'G4',y:56, midi:67},{nota:'C5',y:112,midi:72},
+      {nota:'E4',y:168,midi:64},{nota:'A4',y:224,midi:69},
+      {nota:'D5',y:280,midi:74}
+    ]
+  }
+};
+
+let currentLang = 'es';
+let currentInstrumento = 'guitar';
+let darkMode = false;
+
+const I18N = {
+  es: {
+    config: 'Configuración',
+    lang: 'Idioma',
+    theme: 'Apariencia',
+    darkMode: 'Modo nocturno',
+    instrument: 'Instrumento',
+    guitar: 'Guitarra',
+    timple: 'Timple',
+    nota: 'Nota',
+    art: 'Art. 8.ª',
+    parciales: 'Parciales 8–22',
+    cents: '~50¢',
+    borrar: 'Borrar ❄',
+    notacion: 'Notación',
+    altura: 'Altura',
+    detalles: 'Detalles',
+    oct: 'Oct.',
+    desviac: 'DESVIAC.',
+    nut: 'Nut →',
+    bridge: 'Bridge →',
+  },
+  en: {
+    config: 'Settings',
+    lang: 'Language',
+    theme: 'Appearance',
+    darkMode: 'Dark mode',
+    instrument: 'Instrument',
+    guitar: 'Guitar',
+    timple: 'Timple',
+    nota: 'Note',
+    art: 'Art. 8va',
+    parciales: 'Partials 8–22',
+    cents: '~50¢',
+    borrar: 'Clear ❄',
+    notacion: 'Notation',
+    altura: 'Pitch',
+    detalles: 'Details',
+    oct: 'Oct.',
+    desviac: 'DEVIATION',
+    nut: 'Nut →',
+    bridge: 'Bridge →',
+  }
+};
+
+function toggleConfig() {
+  document.getElementById('config-panel').classList.toggle('open');
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = I18N[lang];
+  // Botones del panel
+  document.getElementById('config-title').textContent   = t.config;
+  document.getElementById('cfg-lang-label').textContent = t.lang;
+  document.getElementById('cfg-theme-label').textContent= t.theme;
+  document.getElementById('cfg-dark-label').textContent = t.darkMode;
+  document.getElementById('cfg-inst-label').textContent = t.instrument;
+  document.getElementById('opt-guitar').textContent     = t.guitar;
+  document.getElementById('opt-timple').textContent     = t.timple;
+  // Top bar
+  document.querySelector('.nota-label').textContent     = t.nota;
+  document.querySelector('label[for="checkArtificial"]').textContent = t.art;
+  document.querySelector('label[for="checkSuperiores"]').textContent = t.parciales;
+  document.querySelector('label[for="checkCercanos"]').textContent   = t.cents;
+  document.querySelector('.btn-clear').textContent      = t.borrar;
+  // Botones activos de idioma
+  document.getElementById('opt-es').classList.toggle('active', lang==='es');
+  document.getElementById('opt-en').classList.toggle('active', lang==='en');
+  // Actualizar globos existentes (pestañas)
+  document.querySelectorAll('.globo-btn').forEach(btn => {
+    if (btn.textContent === 'Notación' || btn.textContent === 'Notation')
+      btn.textContent = t.notacion;
+    else if (btn.textContent === 'Altura' || btn.textContent === 'Pitch')
+      btn.textContent = t.altura;
+    else if (btn.textContent === 'Detalles' || btn.textContent === 'Details')
+      btn.textContent = t.detalles;
+  });
+}
+
+function toggleDark() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark', darkMode);
+  document.getElementById('dark-toggle').classList.toggle('on', darkMode);
+}
+
+function setInstrumento(inst) {
+  currentInstrumento = inst;
+  const cfg = INSTRUMENTOS[inst];
+  // Actualizar constantes globales
+  window.LARGO_CUERDA_ACTUAL = cfg.largo_svg;
+  window.ESCALA_MM_ACTUAL    = cfg.escala_mm;
+  window.TRASTES_MAX         = cfg.trastes;
+
+  // Actualizar CUERDAS_DATA global
+  CUERDAS_DATA.length = 0;
+  cfg.cuerdas.forEach(c => CUERDAS_DATA.push(c));
+
+  // Actualizar título
+  const spanInst = document.getElementById('titulo-instrumento');
+  if (inst === 'timple') {
+    const lang = currentLang;
+    spanInst.innerHTML =
+      '<span class="timple-t">T</span>' +
+      '<span class="timple-i">i</span>' +
+      '<span class="timple-m">m</span>' +
+      '<span class="timple-p">p</span>' +
+      '<span class="timple-l">l</span>' +
+      '<span class="timple-e">e</span>';
+  } else {
+    spanInst.textContent = currentLang === 'es' ? 'guitarra' : 'guitar';
+  }
+
+  // Actualizar botones
+  document.getElementById('opt-guitar').classList.toggle('active', inst==='guitar');
+  document.getElementById('opt-timple').classList.toggle('active', inst==='timple');
+
+  // Redibujar
+  borrarCongelados();
+  dibujar();
+  buscarNota();
+}
+
+// Parchar getX y ESCALA_MM para que usen el instrumento activo
+const _getX_orig = getX;
+function getX(t) {
+  const L = window.LARGO_CUERDA_ACTUAL || LARGO_CUERDA;
+  return OFFSET_X + (L - (L / Math.pow(2, t/12)));
+}
+function getXRatio(r) {
+  const L = window.LARGO_CUERDA_ACTUAL || LARGO_CUERDA;
+  return OFFSET_X + (L * r);
+}
+
+// Parchar dibujar para limitar trastes según instrumento
+const _dibujar_orig = dibujar;
+function dibujar() {
+  const maxT = window.TRASTES_MAX || 22;
+  _dibujar_orig();
+}
+
+function resetTodo() {
+  borrarCongelados();
+  zoomLevel = window.innerWidth < 600 ? 0.35 : 1;
+  panX = 0; panY = 0;
+  document.getElementById('mastil').style.setProperty('--zoom', zoomLevel);
+  document.getElementById('mastil').style.transform = '';
+  activeNodeKey = null; selectedRowId = null;
+  document.querySelectorAll('.result-row.selected').forEach(r=>r.classList.remove('selected'));
+  const footer = document.getElementById('globos-footer');
+  if(footer) footer.classList.remove('active');
+  document.getElementById('globos-scroll').innerHTML = '';
+  buscarNota();
+}
 
 init();
 </script>
