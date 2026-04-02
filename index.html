@@ -4,577 +4,529 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Tesauro Armónico · Guitarra</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500&display=swap" rel="stylesheet">
+
 <style>
+/* ══════════════════════════════════════════════
+   TESAURO ARMÓNICO · CONTEMPORARY EDITION
+   Inspired by Darmstädter Ferienkurse
+══════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500&display=swap');
+
 :root {
-  --bg: #f9f8f5; --surface: #ffffff; --surface-2: #f2f1ee;
-  --border: #e4e2dc; --border-strong: #ccc9c0;
-  --text: #1c1b18; --text-2: #6b6860; --text-3: #9e9b94;
-  --accent: #2563eb; --accent-subtle: #eff4ff;
-  --purple-art: #7c3aed; --freeze: #0891b2; --freeze-bg: #ecfeff;
-  --c-p2: #16a34a; --c-p3: #ca8a04; --c-p5: #ea580c;
-  --c-p7: #2563eb; --c-px: #71717a; --c-alert: #dc2626;
-  --c-oct: #16a34a;   /* Octavas          */
-  --c-5th: #ca8a04;   /* Quintas          */
-  --c-3M:  #ea580c;   /* 3.ª Mayor         */
-  --c-7m:  #2563eb;   /* 7.ª menor sept.   */
-  --c-6m:  #9333ea;   /* 6.ª menor tridec. */
-  --c-7M:  #db2777;   /* 7.ª Mayor         */
-  --c-2M:  #71717a;   /* 2.ª Mayor / 9.ª    */
-  --c-4a:  #0e7490;   /* 4.ª aum. undec.   */
-  --c-2m:  #b45309;   /* 2.ª menor / sch.  */
-  --c-3m:  #15803d;   /* 3.ª menor 19-lím. */
-  --fret: #c4bfb5; --string: #d1ccc0; --nut: #57534e;
-  --node-grey: #c8c6c0;
+  --bg: #f5f4f0;
+  --surface: #ffffff;
+  --surface-2: #f0efeb;
+  --border: #d8d6d0;
+  --border-strong: #a0a09a;
+  --text: #0a0a08;
+  --text-2: #4a4a46;
+  --text-3: #8a8a84;
+  --accent: #c8001e;
+  --accent-subtle: #fff0f2;
+  --accent-2: #0a0a08;
+  --purple-art: #4a0080;
+  --freeze: #005080;
+  --freeze-bg: #e8f4ff;
+  --c-p2: #007a3d;
+  --c-p5: #c8001e;
+  --c-p7: #0047ab;
+  --c-alert: #c8001e;
+  --c-oct: #007a3d;
+  --c-5th: #9a6000;
+  --c-3M:  #c8001e;
+  --c-7m:  #0047ab;
+  --c-6m:  #6a0070;
+  --c-7M:  #a0004a;
+  --c-2M:  #5a5a54;
+  --c-4a:  #005070;
+  --c-2m:  #804010;
+  --c-3m:  #006030;
+  --fret: #b8b4a8;
+  --string: #c8c4b8;
+  --nut: #2a2a24;
+  --node-grey: #c0beb8;
+  --radius: 0px;
 }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow: hidden; }
-@font-face { font-family: 'Bravura'; src: url('fonts/Bravura.woff2') format('woff2'); font-weight: normal; font-style: normal; font-display: block; }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+@font-face {
+  font-family: 'Bravura';
+  src: url('fonts/Bravura.woff2') format('woff2');
+  font-weight: normal; font-style: normal; font-display: block;
+}
 
 /* ── Layout ── */
 .app { height: 100vh; display: grid; grid-template-rows: auto auto 1fr; overflow: hidden; }
 
 /* ── Header ── */
-.header { padding: 12px 28px 0; display: flex; align-items: center; gap: 12px; flex-shrink: 0; user-select: none; }
-.header h1 { font-family: 'Inter Tight', sans-serif; font-size: 20px; font-weight: 400; letter-spacing: -0.03em; }
-.header h1 em { font-style: italic; font-weight: 300; color: var(--text-2); }
-.header-version { font-size: 9px; color: var(--text-3); letter-spacing: 0.06em; }
+.header {
+  padding: 10px 28px 0;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0; user-select: none;
+  border-bottom: 2px solid var(--text);
+  padding-bottom: 8px;
+}
+.header h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.header h1 em {
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+.header-version {
+  font-size: 9px;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Barlow Condensed', sans-serif;
+}
 
 /* ── Top bar ── */
-.top-bar { padding: 12px 28px 14px; display: flex; align-items: center; gap: 20px; flex-wrap: nowrap; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.nota-wrap { position: relative; margin-top: 14px; }
-.nota-label { position: absolute; top: -14px; left: 0; font-size: 10px; font-weight: 500; color: var(--text-3); letter-spacing: 0.07em; text-transform: uppercase; }
-#inputNota { font-family: 'Inter Tight', sans-serif; font-size: 30px; font-weight: 300; letter-spacing: -0.02em; color: var(--text); background: transparent; border: none; border-bottom: 2px solid var(--border-strong); width: 90px; padding: 2px 4px 3px; outline: none; transition: border-color .15s; text-align: center; }
-#inputNota:focus { border-bottom-color: var(--accent); }
-.divider { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+.top-bar {
+  padding: 8px 28px 10px;
+  display: flex; align-items: center; gap: 18px;
+  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface);
+}
+.nota-wrap { position: relative; margin-top: 12px; }
+.nota-label {
+  position: absolute; top: -13px; left: 0;
+  font-size: 9px; font-weight: 600;
+  color: var(--text-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+#inputNota {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--text);
+  width: 90px;
+  padding: 2px 4px 2px;
+  outline: none;
+  transition: border-color .15s;
+  text-align: center;
+  text-transform: uppercase;
+}
+#inputNota:focus { border-bottom-color: var(--accent); color: var(--accent); }
+.divider { width: 1px; height: 32px; background: var(--border); flex-shrink: 0; }
 
 /* Piano */
 .piano-outer { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; }
 .piano-outer::-webkit-scrollbar { display: none; }
-.piano-keys { display: flex; align-items: flex-start; height: 40px; padding: 0 2px; }
+.piano-keys { display: flex; align-items: flex-start; height: 36px; padding: 0 2px; }
 .key { flex-shrink: 0; cursor: pointer; transition: background .1s; user-select: none; position: relative; }
-.key.white { width: 18px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-top: none; border-radius: 0 0 3px 3px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 3px; }
-.key.white:hover { background: #f0efea; }
+.key.white {
+  width: 17px; height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 1px 1px;
+  display: flex; align-items: flex-end; justify-content: center; padding-bottom: 2px;
+}
+.key.white:hover { background: var(--surface-2); }
 .key.white.active { background: var(--accent-subtle); border-color: var(--accent); }
-.key.white.active::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2.5px; background: var(--accent); border-radius: 0 0 2px 2px; }
-.key.black { width: 11px; height: 24px; background: var(--text); border-radius: 0 0 2px 2px; margin: 0 -5.5px; z-index: 2; }
-.key.black:hover { background: #3a3a3a; }
+.key.white.active::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 3px; background: var(--accent);
+}
+.key.black {
+  width: 11px; height: 22px;
+  background: var(--text);
+  border-radius: 0 0 1px 1px;
+  margin: 0 -5.5px; z-index: 2;
+}
+.key.black:hover { background: #2a2a24; }
 .key.black.active { background: var(--accent); }
-.middle-c-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--accent); opacity: .4; margin-bottom: 5px; }
+.middle-c-dot {
+  width: 3px; height: 3px; border-radius: 50%;
+  background: var(--accent); margin-bottom: 4px;
+}
 
-/* Visor miniatura */
-.visor-container { width: 120px; height: 80px; background: white; border: 1px solid var(--border); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; overflow: visible; }
+/* Visor */
+.visor-container {
+  width: 120px; height: 80px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: visible;
+}
 
 /* Checks */
-.checks-wrap { display: grid; grid-template-columns: repeat(3, auto); gap: 5px; flex-shrink: 0; align-items: center; }
-.check-pill { display: flex; align-items: center; gap: 5px; cursor: pointer; padding: 5px 10px; border: 1px solid var(--border); border-radius: 20px; transition: all .15s; user-select: none; white-space: nowrap; background: var(--surface); }
-.check-pill:hover { border-color: var(--border-strong); }
-.check-pill:has(input:checked) { background: var(--accent-subtle); border-color: var(--accent); color: var(--accent); }
-.check-pill input[type="checkbox"] { appearance: none; width: 13px; height: 13px; border: 1.5px solid var(--border-strong); border-radius: 3px; cursor: pointer; display: grid; place-content: center; flex-shrink: 0; transition: all .15s; background: white; }
-.check-pill:has(input:checked) input[type="checkbox"] { background: var(--accent); border-color: var(--accent); }
-.check-pill:has(input:checked) input[type="checkbox"]::before { content: ''; width: 7px; height: 7px; clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); background: white; }
-.check-pill label { font-size: 12px; font-weight: 500; cursor: pointer; pointer-events: none; }
-.btn-clear { font-size: 11px; font-weight: 500; color: var(--text-3); background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px; cursor: pointer; transition: all .15s; white-space: nowrap; }
-.btn-clear:hover { border-color: var(--border-strong); color: var(--text-2); }
-.btn-disabled { opacity: 0.38; pointer-events: none; }
+.checks-wrap {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 4px;
+  flex-shrink: 0;
+  align-items: center;
+}
+.check-pill {
+  display: flex; align-items: center; gap: 5px; cursor: pointer;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  transition: all .12s; user-select: none; white-space: nowrap;
+  background: var(--surface);
+  border-radius: 0;
+}
+.check-pill:hover { border-color: var(--text); }
+.check-pill:has(input:checked) {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--surface);
+}
+.check-pill input[type="checkbox"] {
+  appearance: none; width: 11px; height: 11px;
+  border: 1.5px solid var(--border-strong);
+  cursor: pointer;
+  display: grid; place-content: center;
+  flex-shrink: 0; transition: all .12s; background: white;
+}
+.check-pill:has(input:checked) input[type="checkbox"] {
+  background: var(--accent); border-color: var(--accent);
+}
+.check-pill:has(input:checked) input[type="checkbox"]::before {
+  content: ''; width: 6px; height: 6px;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  background: white;
+}
+.check-pill label { font-size: 11px; font-weight: 600; cursor: pointer; pointer-events: none; letter-spacing: 0.06em; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; }
+.btn-disabled { opacity: 0.3; pointer-events: none; }
 .btn-reset {
-  width: 28px; height: 28px; background: none;
-  border: 1.5px solid var(--border); border-radius: 5px;
+  width: 26px; height: 26px; background: none;
+  border: 1px solid var(--border);
   cursor: pointer; display: inline-flex; align-items: center;
   justify-content: center; color: var(--text-3);
-  transition: all .15s; padding: 0; flex-shrink: 0;
-  vertical-align: middle;
+  transition: all .12s; padding: 0; flex-shrink: 0;
 }
-.btn-reset:hover { border-color: var(--border-strong); color: var(--text-2); }
+.btn-reset:hover { border-color: var(--text); color: var(--text); }
 
 /* ── Main ── */
 .main { display: grid; grid-template-columns: 1fr 290px; overflow: visible; min-height: 0; position: relative; }
 
 /* ── Fretboard ── */
-.fretboard-wrap { display: flex; flex-direction: column; overflow: visible; background: var(--bg); position: relative; }
+.fretboard-wrap { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); position: relative; }
 .fretboard-svg-area { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; min-height: 0; }
 #mastil { width: 1000px; height: auto; flex-shrink: 0; transform-origin: center center; transform: translate(var(--pan-x,0px),var(--pan-y,0px)) scale(var(--zoom,1)); transition: transform .05s ease-out; display: block; }
 
-/* ══════════════════════════════════════════
-   FOOTER DE GLOBOS — invisible hasta que hay selección
-   Sin borde, sin background, solo los globos flotando
-══════════════════════════════════════════ */
+/* ── Globos footer ── */
 #globos-footer {
-  height: 0;
-  overflow: visible;
-  position: relative;
-  flex-shrink: 0;
-  transition: height .35s cubic-bezier(.4,0,.2,1);
-  pointer-events: none;
-  z-index: 20;
+  height: 0; overflow: visible; position: relative;
+  flex-shrink: 0; transition: height .3s cubic-bezier(.4,0,.2,1);
+  pointer-events: none; z-index: 20;
 }
-#globos-footer.active {
-  height: 210px;
-  pointer-events: all;
-}
+#globos-footer.active { height: 210px; pointer-events: all; }
 #globos-scroll {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;  /* se ajusta dinámicamente via JS en desktop */
-  height: 210px;
-  z-index: 50;
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  padding: 0 20px 16px;
-  overflow-x: auto;
-  overflow-y: visible;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
+  position: fixed; bottom: 0; left: 0; right: 0; height: 210px;
+  z-index: 50; display: flex; align-items: flex-end;
+  gap: 8px; padding: 0 20px 14px;
+  overflow-x: auto; overflow-y: visible;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   scroll-behavior: smooth;
 }
-#globos-scroll::-webkit-scrollbar { height: 4px; }
-#globos-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+#globos-scroll::-webkit-scrollbar { height: 3px; }
+#globos-scroll::-webkit-scrollbar-thumb { background: var(--border); }
 
-/* Flechas de scroll del footer */
+/* Flechas de scroll */
 .scroll-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 10;
-  width: 28px;
-  height: 48px;
-  background: rgba(255,255,255,0.92);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 20px;
-  line-height: 1;
-  color: var(--text-2);
-  cursor: pointer;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
-  transition: opacity .2s, color .15s;
-  padding: 0;
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+  width: 24px; height: 48px;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 18px; color: var(--text-2); cursor: pointer;
+  display: none; align-items: center; justify-content: center;
+  transition: color .15s; padding: 0;
 }
 .scroll-arrow:hover { color: var(--text); }
 .scroll-arrow.visible { display: flex; }
 .scroll-arrow-left  { left: 4px; }
 .scroll-arrow-right { right: 4px; }
 
-/* ── Tarjeta de globo individual ── */
+/* ── Globo card ── */
 .globo-card {
-  flex-shrink: 0;
-  width: 193px;
-  height: 193px;
-  background: white;
+  flex-shrink: 0; width: 193px; height: 193px;
+  background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.06);
-  display: flex;
-  flex-direction: column;
+  border-top: 3px solid var(--text);
+  display: flex; flex-direction: column;
   overflow: hidden;
-  transition: border-color .2s, box-shadow .2s, transform .2s;
-  cursor: default;
-  position: relative;
+  transition: border-color .15s, box-shadow .15s;
+  cursor: default; position: relative;
 }
-.globo-card:hover {
-  box-shadow: 0 6px 20px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
-}
-.globo-card.focused {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.15), 0 6px 20px rgba(0,0,0,.12);
-}
+.globo-card:hover { border-top-color: var(--accent); }
+.globo-card.focused { border-top-color: var(--accent); border-color: var(--accent); }
 
-/* Cabecera del globo */
 .globo-head {
-  display: flex;
-  height: 26px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  display: flex; height: 26px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
 }
 .globo-head-frac {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-  background: #fafaf9;
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--text); background: var(--surface-2);
   border-right: 1px solid var(--border);
 }
 .globo-head-dist {
-  flex: 1.2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  color: var(--text-3);
-  background: #fafaf9;
-  gap: 2px;
+  flex: 1.2; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--text-3); background: var(--surface-2); gap: 2px;
 }
-.globo-head-dist b { color: var(--text-2); font-weight: 600; font-size: 11px; }
+.globo-head-dist b { color: var(--text-2); font-weight: 700; font-size: 11px; font-family: 'Barlow Condensed', sans-serif; }
 
-/* Botones del globo */
-.globo-actions {
-  display: flex;
-  height: 24px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
+.globo-actions { display: flex; height: 22px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .globo-btn {
-  flex: 1;
-  background: white;
-  border: none;
-  font-size: 8px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  cursor: pointer;
-  transition: all .15s;
+  flex: 1; background: white; border: none;
+  font-size: 7px; font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; letter-spacing: .10em; text-transform: uppercase;
+  color: var(--text-3); cursor: pointer; transition: all .12s;
 }
 .globo-btn + .globo-btn { border-left: 1px solid var(--border); }
-.globo-btn:hover { background: var(--surface-2); color: var(--text-2); }
-.globo-btn.active { background: var(--surface-2); color: var(--text); font-weight: 600; }
+.globo-btn:hover { background: var(--surface-2); color: var(--text); }
+.globo-btn.active { background: var(--text); color: white; }
 
-/* Cuerpo del globo */
-.globo-body {
-  flex: 1;
-  position: relative;
-  overflow: hidden;
-}
-.globo-notation svg {
-  overflow: visible !important;
-}
-
-/* Face: notación SVG */
+.globo-body { flex: 1; position: relative; overflow: hidden; }
+.globo-notation svg { overflow: visible !important; }
 .globo-notation {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 6px;
-  transition: opacity .2s;
-  overflow: visible;
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 4px 6px; transition: opacity .2s; overflow: visible;
 }
 .globo-notation svg { width: 100%; height: 100%; overflow: visible; }
-
-/* Face: detalles */
 .globo-details {
-  position: absolute;
-  inset: 0;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s;
-  background: #fafaf9;
+  position: absolute; inset: 0; padding: 8px 10px;
+  display: flex; flex-direction: column; gap: 5px;
+  justify-content: center; opacity: 0; pointer-events: none;
+  transition: opacity .2s; background: var(--surface-2);
 }
 .globo-details.visible { opacity: 1; pointer-events: all; }
 .globo-notation.hidden { opacity: 0; pointer-events: none; }
 
-/* Barra de cents */
-.cents-bar-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.cents-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 9px;
-  color: var(--text-3);
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-.cents-val {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: -.01em;
-}
+/* Barra cents */
+.cents-bar-wrap { display: flex; flex-direction: column; gap: 3px; }
+.cents-label { display: flex; justify-content: space-between; font-size: 8px; color: var(--text-3); letter-spacing: .10em; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; }
+.cents-val { font-size: 13px; font-weight: 700; font-family: 'Barlow Condensed', sans-serif; }
 .cents-val.neg { color: var(--c-p7); }
 .cents-val.pos { color: var(--c-p5); }
 .cents-val.zero { color: var(--c-p2); }
-.cents-track {
-  height: 5px;
-  background: var(--border);
-  border-radius: 3px;
-  position: relative;
-  overflow: hidden;
-}
-.cents-fill {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  border-radius: 3px;
-  transition: width .4s ease;
-}
+.cents-track { height: 4px; background: var(--border); position: relative; overflow: hidden; }
+.cents-fill { position: absolute; top: 0; height: 100%; }
 .cents-fill.neg { background: var(--c-p7); right: 50%; }
 .cents-fill.pos { background: var(--c-p5); left: 50%; }
-.cents-center-mark {
-  position: absolute;
-  left: 50%;
-  top: -1px;
-  width: 1px;
-  height: calc(100% + 2px);
-  background: var(--border-strong);
-  transform: translateX(-50%);
-}
-
-/* Distancias en details */
-.dist-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  margin-top: 2px;
-}
-.dist-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 10px;
-}
-.dist-row-label { color: var(--text-3); font-size: 9px; }
-.dist-row-val { font-weight: 600; color: var(--text); font-family: 'Inter', monospace; font-size: 11px; }
-.dist-row-unit { color: var(--text-3); font-size: 9px; }
-
-/* Nota sonante pequeña */
-.globo-sounding {
-  font-size: 9px;
-  color: var(--text-3);
-  text-align: center;
-  margin-top: 2px;
-}
+.cents-center-mark { position: absolute; left: 50%; top: -1px; width: 1px; height: calc(100% + 2px); background: var(--border-strong); transform: translateX(-50%); }
+.dist-rows { display: flex; flex-direction: column; gap: 3px; margin-top: 2px; }
+.dist-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; }
+.dist-row-label { color: var(--text-3); font-size: 8px; text-transform: uppercase; letter-spacing: .06em; font-family: 'Barlow Condensed', sans-serif; }
+.dist-row-val { font-weight: 700; color: var(--text); font-family: 'Barlow Condensed', monospace; font-size: 12px; }
+.dist-row-unit { color: var(--text-3); font-size: 8px; }
+.globo-sounding { font-size: 9px; color: var(--text-3); text-align: center; margin-top: 2px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; }
 
 /* ── SVG classes ── */
 .cuerda { stroke: var(--string); }
-.label-cuerda { font-size: 10.5px; text-anchor: end; fill: var(--text-2); font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; user-select: none; transition: fill .15s; }
+.label-cuerda { font-size: 10px; text-anchor: end; fill: var(--text-2); font-weight: 700; font-family: 'Barlow Condensed', sans-serif; cursor: pointer; user-select: none; transition: fill .12s; letter-spacing: 0.04em; }
 .label-cuerda:hover { fill: var(--accent); }
-.label-cuerda.cuerda-fija { fill: #00e5ff; font-weight: bold; filter: drop-shadow(0 0 2px #00e5ff); }
-.label-romano { font-size: 9px; fill: var(--text-3); text-anchor: middle; font-weight: 500; font-family: 'Inter', sans-serif; }
+.label-cuerda.cuerda-fija { fill: #0070c0; font-weight: bold; filter: drop-shadow(0 0 2px #0070c0); }
+.label-romano { font-size: 8px; fill: var(--text-3); text-anchor: middle; font-weight: 600; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; }
 .traste-metal { stroke: var(--fret); stroke-width: 1.5; }
 .cejuela { stroke: var(--nut); stroke-width: 3; }
-.nodo { stroke: white; stroke-width: 1.5; cursor: pointer; }
+.nodo { stroke: white; stroke-width: 1.1; cursor: pointer; }
 .nodo.greyed { fill: var(--node-grey) !important; stroke: white; }
 .nodo.pulsing { animation: nodoPulse .6s ease-out; }
-.guia-vertical { stroke-width: 1; stroke-dasharray: 3,2; opacity: .85; }
+.guia-vertical { stroke-width: 0.6; stroke-dasharray: 3,2; opacity: .85; }
 .guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: .6; }
 .icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
+#guitar-contour path { stroke: var(--fret) !important; }
 
-@keyframes nodoPulse {
-  0%   { r: 7; opacity: 1; }
-  40%  { r: 13; opacity: .5; }
-  100% { r: 7; opacity: 1; }
-}
+
+@keyframes nodoPulse { 0% { r:7; opacity:1; } 40% { r:13; opacity:.5; } 100% { r:7; opacity:1; } }
 
 /* ── Side panel ── */
-.side-panel { position: relative; z-index: 10; border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; background: var(--surface); }
-.panel-top { padding: 12px 14px 10px; border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.panel-label { font-size: 10px; font-weight: 600; color: var(--text-3); letter-spacing: .07em; text-transform: uppercase; }
-.legend { display: flex; flex-wrap: wrap; gap: 6px 10px; }
-.legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-2); }
-.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.side-panel {
+  position: relative; z-index: 10;
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface);
+}
+.panel-top {
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0; display: flex;
+  align-items: center; justify-content: space-between; gap: 10px;
+}
+.panel-label {
+  font-size: 9px; font-weight: 700; color: var(--text-3);
+  letter-spacing: .12em; text-transform: uppercase;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 5px 8px; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--text-2); font-family: 'Barlow Condensed', sans-serif; font-weight: 500; }
+.dot { width: 6px; height: 6px; flex-shrink: 0; }
 .results-list { overflow-y: auto; flex: 1; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-.results-list::-webkit-scrollbar { width: 4px; }
-.results-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 6px; color: var(--text-3); font-size: 13px; padding: 20px; text-align: center; }
-.result-row { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-bottom: 1px solid var(--border); transition: background .1s; cursor: pointer; }
+.results-list::-webkit-scrollbar { width: 3px; }
+.results-list::-webkit-scrollbar-thumb { background: var(--border); }
+.empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 6px; color: var(--text-3); font-size: 12px; padding: 20px; text-align: center; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; }
+.result-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--border);
+  transition: background .1s; cursor: pointer;
+}
 .result-row:last-child { border-bottom: none; }
 .result-row:hover { background: var(--surface-2); }
-.result-row.frozen { background: var(--freeze-bg); }
-.result-row.selected { background: #fffbeb; border-left: 2px solid #ca8a04; }
-.freeze-btn { width: 20px; height: 20px; border: none; background: none; cursor: pointer; padding: 0; border-radius: 3px; display: grid; place-content: center; flex-shrink: 0; color: var(--text-3); transition: all .12s; }
-.freeze-btn:hover { color: var(--freeze); background: var(--freeze-bg); }
+.result-row.frozen { background: #eef4ff; }
+.result-row.selected { background: #fff0f2; border-left: 3px solid var(--accent); }
+.freeze-btn { width: 20px; height: 20px; border: none; background: none; cursor: pointer; padding: 0; display: grid; place-content: center; flex-shrink: 0; color: var(--text-3); transition: all .12s; }
+.freeze-btn:hover { color: var(--freeze); }
 .freeze-btn.on { color: var(--freeze); }
 .freeze-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
 .row-body { flex: 1; min-width: 0; }
-.row-main { font-size: 12.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.row-main b { font-weight: 600; }
-.row-sub { font-size: 11px; color: var(--text-3); margin-top: .5px; }
+.row-main { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; letter-spacing: 0.02em; }
+.row-main b { font-weight: 800; }
+.row-sub { font-size: 10px; color: var(--text-3); margin-top: 1px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
 .row-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .diff-dots { display: flex; gap: 2px; }
-.diff-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--c-alert); opacity: .45; }
-.cents-badge { font-family: 'Inter', monospace; font-size: 11px; font-weight: 600; padding: 2px 5px; border-radius: 4px; background: var(--surface-2); min-width: 34px; text-align: center; }
-.frozen-tag { font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--freeze); background: #cffafe; padding: 1px 4px; border-radius: 3px; }
-.sym { font-family: 'Bravura', serif; font-size: 24px; line-height: 1; width: 24px; text-align: center; flex-shrink: 0; }
+.diff-dot { width: 4px; height: 4px; background: var(--c-alert); opacity: .5; }
+.cents-badge {
+  font-family: 'Barlow Condensed', monospace;
+  font-size: 12px; font-weight: 700;
+  padding: 2px 5px;
+  background: var(--surface-2);
+  min-width: 34px; text-align: center;
+  letter-spacing: 0.02em;
+}
+.frozen-tag { font-size: 8px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--freeze); background: #ddeeff; padding: 1px 4px; }
+.sym { font-family: 'Bravura', serif; font-size: 22px; line-height: 1; width: 22px; text-align: center; flex-shrink: 0; }
 
+/* Responsive */
 @media (min-width: 1280px) { .main { grid-template-columns: 1fr 320px; } }
-
-/* ── Tablet (≤860px) ── */
 @media (max-width: 860px) {
   .main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; }
   .side-panel { border-left: none; border-top: 1px solid var(--border); max-height: 220px; }
   .divider { display: none; }
 }
-
-/* ── Móvil (≤600px) ── */
 @media (max-width: 600px) {
-  /* Layout general */
   .app { grid-template-rows: auto auto 1fr auto; height: 100dvh; }
-  html, body { overflow: hidden; }
-
-  /* Header compacto */
   .header { padding: 8px 14px 0; }
-  .header h1 { font-size: 15px; }
+  .header h1 { font-size: 16px; }
   .header-version { display: none; }
-
-  /* Top bar en columna */
-  .top-bar {
-    padding: 8px 14px 8px;
-    flex-wrap: wrap;
-    gap: 8px;
-    align-items: flex-start;
-  }
-
-  /* Nota input más pequeño para no hacer zoom en iOS */
-  #inputNota { font-size: 22px; width: 70px; }
-  .nota-label { font-size: 9px; }
-
-  /* Piano ocupa toda la anchura */
+  .top-bar { padding: 8px 14px; flex-wrap: wrap; gap: 8px; }
+  #inputNota { font-size: 24px; width: 70px; }
   .piano-outer { order: 3; width: 100%; flex: none; }
-
-  /* Visor más pequeño */
   .visor-container { width: 90px; height: 60px; order: 2; }
-  #svg-visor { width: 90px; height: 60px; }
-
-  /* Checks en 2 columnas */
-  .checks-wrap {
-    order: 4;
-    width: 100%;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-  }
+  .checks-wrap { order: 4; width: 100%; grid-template-columns: repeat(3, 1fr); gap: 3px; }
   .check-pill { padding: 4px 6px; justify-content: center; }
-  .check-pill label { font-size: 10px; }
-
-  /* Fretboard */
-  .fretboard-svg-area { min-height: 0; }
-
-  /* Sidebar bajo el fretboard, más compacto */
-  .main { grid-template-rows: 1fr auto; }
-  .side-panel {
-    max-height: 180px;
-    border-left: none;
-    border-top: 1px solid var(--border);
-  }
-  .panel-top { padding: 8px 12px; }
-  .legend { gap: 4px 8px; }
-  .legend-item { font-size: 10px; }
-
-  /* Globos más pequeños en móvil */
+  .divider { display: none; }
   .globo-card { width: 160px; height: 160px; }
   #globos-footer.active { height: 175px; }
-  #globos-scroll { height: 175px; padding: 0 12px 12px; gap: 8px; }
-
-  /* Config panel ocupa toda la pantalla en móvil */
-  #config-panel {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 200;
-    transform: translateX(100%);
-  }
-  #config-panel.open { transform: translateX(0); }
-
-  /* Dividers ocultos */
-  .divider { display: none; }
+  #globos-scroll { height: 175px; padding: 0 12px 12px; gap: 6px; }
+  #config-panel { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 200; }
 }
 
-/* ── Config panel ─────────────────────────────────── */
+/* ── Config panel ── */
 .btn-menu {
   background: none; border: none; cursor: pointer;
   padding: 5px 8px; color: var(--text-2);
-  font-size: 18px; line-height: 1; border-radius: 6px;
-  transition: background .15s;
+  font-size: 18px; line-height: 1;
+  transition: color .12s;
 }
-.btn-menu:hover { background: var(--surface-2); }
+.btn-menu:hover { color: var(--text); }
 
 #config-panel {
   position: absolute; top: 0; right: 0; bottom: 0; left: 0;
-  background: var(--surface);
-  z-index: 100; transform: translateX(100%);
+  background: var(--surface); z-index: 100;
+  transform: translateX(100%);
   transition: transform .25s cubic-bezier(.4,0,.2,1);
   display: flex; flex-direction: column;
-  box-shadow: none; border: none;
 }
 #config-panel.open { transform: translateX(0); }
 .config-header {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 16px 10px; border-bottom: 1px solid var(--border);
+  padding: 12px 16px 10px; border-bottom: 2px solid var(--text);
 }
-.config-header h3 { font-size: 13px; font-weight: 600; color: var(--text); margin:0; }
-.config-close {
-  background: none; border: none; cursor: pointer; font-size: 16px;
-  color: var(--text-3); padding: 2px 6px; border-radius: 4px;
+.config-header h3 {
+  font-size: 13px; font-weight: 800; color: var(--text); margin: 0;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: .12em; text-transform: uppercase;
 }
-.config-close:hover { background: var(--surface-2); }
+.config-close { background: none; border: none; cursor: pointer; font-size: 16px; color: var(--text-3); padding: 2px 6px; }
+.config-close:hover { color: var(--text); }
 .config-body { padding: 16px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
 .config-section { display: flex; flex-direction: column; gap: 8px; }
 .config-label {
-  font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  font-size: 9px; font-weight: 800; letter-spacing: .12em;
   text-transform: uppercase; color: var(--text-3);
+  font-family: 'Barlow Condensed', sans-serif;
+  border-bottom: 1px solid var(--border); padding-bottom: 4px;
 }
-.config-options { display: flex; gap: 6px; }
+.config-options { display: flex; gap: 4px; }
 .config-opt {
   flex: 1; padding: 7px 10px; border: 1px solid var(--border);
-  border-radius: 8px; background: var(--surface); cursor: pointer;
-  font-size: 12px; font-weight: 500; color: var(--text-2);
-  text-align: center; transition: all .15s;
+  background: var(--surface); cursor: pointer;
+  font-size: 11px; font-weight: 700; color: var(--text-2);
+  text-align: center; transition: all .12s;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; text-transform: uppercase;
 }
-.config-opt:hover { border-color: var(--border-strong); color: var(--text); }
-.config-opt.active {
-  background: var(--accent); color: white;
-  border-color: var(--accent); font-weight: 600;
-}
+.config-opt:hover { border-color: var(--text); color: var(--text); }
+.config-opt.active { background: var(--text); color: white; border-color: var(--text); }
 .config-toggle {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 12px; border: 1px solid var(--border);
-  border-radius: 8px; cursor: pointer;
+  padding: 8px 10px; border: 1px solid var(--border); cursor: pointer;
 }
-.config-toggle span { font-size: 12px; color: var(--text-2); }
+.config-toggle span { font-size: 11px; color: var(--text-2); font-family: 'Barlow Condensed', sans-serif; letter-spacing: .04em; }
 .toggle-switch {
-  width: 36px; height: 20px; background: var(--border);
-  border-radius: 10px; position: relative; transition: background .2s;
+  width: 34px; height: 18px; background: var(--border);
+  position: relative; transition: background .2s;
 }
-.toggle-switch.on { background: var(--accent); }
+.toggle-switch.on { background: var(--text); }
 .toggle-switch::after {
   content: ''; position: absolute; top: 2px; left: 2px;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: white; transition: left .2s;
+  width: 14px; height: 14px; background: white; transition: left .2s;
 }
 .toggle-switch.on::after { left: 18px; }
 
-/* Timple title */
-.timple-title { display: inline; }
-.timple-t { color: #FFD700; }
-.timple-i { color: #FFD700; }
-.timple-m { color: #003087; }
-.timple-p { color: #003087; }
-.timple-l { color: #FFD700; }
-.timple-e { color: #FFD700; }
+/* Timple */
+.timple-t { color: #FFD700; } .timple-i { color: #FFD700; }
+.timple-m { color: #003087; } .timple-p { color: #003087; }
+.timple-l { color: #FFD700; } .timple-e { color: #FFD700; }
 
-/* ── Modo nocturno ─────────────────────────────────── */
+/* ── Modo nocturno ── */
 body.dark {
-  --bg: #1a1a1e;
-  --surface: #25252b;
-  --surface-2: #2e2e36;
-  --border: #3a3a44;
-  --border-strong: #55555f;
-  --text: #e8e8f0;
-  --text-2: #a8a8b8;
-  --text-3: #68687a;
-  --freeze: #4a6fa5;
+  --bg: #0e0e0c;
+  --surface: #1a1a18;
+  --surface-2: #242420;
+  --border: #2e2e2a;
+  --border-strong: #484840;
+  --text: #f0f0ec;
+  --text-2: #a0a098;
+  --text-3: #606058;
+  --freeze: #4a8ab0;
+  --accent: #e8203a;
 }
 body.dark .globo-card { background: var(--surface); }
 body.dark .globo-btn { background: var(--surface); color: var(--text-3); }
-body.dark .globo-btn.active { background: var(--surface-2); color: var(--text); }
+body.dark .globo-btn.active { background: var(--text); color: var(--bg); }
 body.dark #config-panel { background: var(--surface); }
-
 </style>
 </head>
 <body>
@@ -598,7 +550,10 @@ body.dark #config-panel { background: var(--surface); }
     </div>
     <div class="divider"></div>
     <div class="piano-outer" id="piano"></div>
-    <div class="divider"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:16px;flex-shrink:0;color:var(--text-3);cursor:default;" title="Flechas ↑↓ del teclado">
+      <span style="font-size:36px;line-height:1;">&#x25B4;</span>
+      <span style="font-size:36px;line-height:1;">&#x25BE;</span>
+    </div>
     <div class="visor-container">
       <svg id="svg-visor" width="120" height="64" viewBox="0 -30 120 110" font-family="Bravura">
         <g stroke="#e4e2dc" stroke-width="0.8"><path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/></g>
@@ -609,8 +564,8 @@ body.dark #config-panel { background: var(--surface); }
     <div class="divider"></div>
     <div class="checks-wrap">
       <label class="check-pill"><input type="checkbox" id="checkArtificial" onchange="buscarNota()"><label for="checkArtificial">Artificiales</label></label>
-      <label class="check-pill"><input type="checkbox" id="checkSuperiores" onchange="buscarNota()"><label for="checkSuperiores">Parciales 8–22</label></label>
-      <label class="check-pill"><input type="checkbox" id="checkCercanos" onchange="buscarNota()"><label for="checkCercanos">Cercanos</label></label>
+      <label class="check-pill"><input type="checkbox" id="checkSuperiores" checked onchange="buscarNota()"><label for="checkSuperiores">Parciales 8–22</label></label>
+      <label class="check-pill"><input type="checkbox" id="checkCercanos" checked onchange="buscarNota()"><label for="checkCercanos">Cercanos</label></label>
       <label class="check-pill btn-disabled"><input type="checkbox" disabled><label>Multifónicos</label></label>
       <label class="check-pill btn-disabled"><input type="checkbox" disabled><label>Composer</label></label>
       <button class="btn-reset" onclick="resetTodo()" title="Restablecer todo">
@@ -625,10 +580,50 @@ body.dark #config-panel { background: var(--surface); }
 
   <div class="main">
     <div class="fretboard-wrap">
-      <div class="fretboard-svg-area">
-        <svg id="mastil" viewBox="0 0 1000 310">
+      <div class="fretboard-svg-area" style="overflow:visible">
+        <svg id="mastil" viewBox="0 0 1000 165" overflow="visible">
           <g id="trastero"></g>
           <g id="cuerdas-group"></g>
+          <g id="guitar-contour"
+             transform="matrix(0,-1.323077,1.323077,0,500.0683,51.1894)"
+             style="pointer-events:none">
+<g id="Shape884" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape884_nwe0000"  d="M -441.7425410493739 -114.8716665435517 Q -435.062362162369 -115.279836831076 -426.8563064588938 -116.13687087560669 Q -418.6502507554186 -116.9939049201374 -401.8936356044136 -121.6233966409345 " stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape884'</title>
+</g>
+<g id="Shape440" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape440_nwe0000"  d="M -357.0929380444503 -151.4237304620503 A 89.0692 89.0692 0 0 1 -402.116 -121.56" stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape440'</title>
+</g>
+<g id="Shape439" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape439_nwe0000"  d="M -341.9076683125881 -177.515551328617 A 89 89 0 0 1 -357.093 -151.424" stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape439'</title>
+</g>
+<g id="Shape436" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape436_nwe0000"  d="M -337.03086735079586 -219.91617070605886 A 89 89 0 0 1 -341.944 -177.418" stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape436'</title>
+</g>
+<g id="Shape438" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape438_nwe0000"  d="M -338.4620131943796 -228.0549637348606 A 152.842 152.842 0 0 1 -337.031 -219.916" stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape438'</title>
+</g>
+<g id="Shape443" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape443_nwe0000"  d="M -352.0551640062125 -328.9145133911696 Q -355.3069201539045 -322.7213774230194 -356.5653724819631 -317.7153932614759 Q -357.8238248100216 -312.7094090999325 -358.25140059955766 -308.3958234320759 Q -358.6789763890937 -304.0822377642193 -357.18552120009565 -294.9163347877275 Q -355.6920660110976 -285.7504318112357 -349.45215579190756 -265.6768430918732 Q -343.2122455727175 -245.6032543725107 -338.4620131943796 -228.0549637348605 " stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape443'</title>
+</g>
+<g id="Shape444" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape444_nwe0000"  d="M -304.0597302638335 -424.48038102336426 A 628.027 628.027 0 0 1 -351.255 -330.394" stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape444'</title>
+</g>
+<g id="Shape1311" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape1311_nwe0000"  d="M -351.214958794736 -330.3940768602313 L -352.0153354208612 -328.9145133911696 " stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape1311'</title>
+</g>
+<g id="Shape437" transform="translate(443.201896,-113.412312) scale(1,-1)">
+<path id="Shape437_nwe0000"  d="M -295.8070707266655 -468.5886856567595 A 122 122 0 0 1 -304.06 -424.48" stroke="#191919" stroke-width="0.7 px" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape437'</title>
+</g>
+          </g>
           <g id="capa-nodos"></g>
         </svg>
       </div>
@@ -697,8 +692,7 @@ body.dark #config-panel { background: var(--surface); }
         </div>
       </div>
       <div class="panel-top">
-        
-        <div class="legend">
+          <div class="legend">
           <div class="legend-item"><div class="dot" style="background:var(--c-oct)"></div>Oct.</div>
           <div class="legend-item"><div class="dot" style="background:var(--c-5th)"></div>5.ª</div>
           <div class="legend-item"><div class="dot" style="background:var(--c-3M)"></div>3.ª M</div>
@@ -822,172 +816,187 @@ function calcHE(fundName, parcial, midiCuerda) {
   return {spec, pcRes:pcR, midi:midiR, name, pref, cents:hd.cents};
 }
 
-// renderHESVG — dibuja nota HE en el grupo gEl.
-// useMidiDirect=true → usa el MIDI real sin normalizar octava (para Altura)
-// useMidiDirect=false → normaliza a rango [-1,5], octavas superiores con 8va
+// renderHESVG — dibuja nota HE con detección de colisiones y contención en viewBox.
 function renderHESVG(gEl, midi, spec, preferFlat, stringGlyph, fretNum, showCents, centsVal, useMidiDirect) {
   if (!gEl) return;
   while (gEl.firstChild) gEl.removeChild(gEl.firstChild);
 
   const svgNS = 'http://www.w3.org/2000/svg';
-  const YBASE = 80;   // y de Mi4 (1ª línea)
-  const SPX   = 5;    // px por paso diatónico
-  const MI4DS = 4*7+2;
+  const YBASE=80, SPX=5, MI4DS=30;
 
-  const pc        = ((midi % 12) + 12) % 12;
-  const stepInOct = preferFlat ? STEP_FL[pc] : STEP_SH[pc];
+  // ── Normalización de octava ──────────────────────────────────
+  const pcN = ((midi%12)+12)%12;
+  const stepN = preferFlat ? STEP_FL[pcN] : STEP_SH[pcN];
+  let fromE4 = (Math.floor(midi/12)-1)*7 + stepN - MI4DS;
+  let octavasDown = 0;
+  const LIMITE = showCents ? 8 : 12;
+  while (fromE4 > LIMITE) { fromE4 -= 7; octavasDown++; }
+  while (fromE4 < -8)     { fromE4 += 7; }
+  const needsOttava = octavasDown > 0;
+  const ottGlyph    = octavasDown >= 2 ? '\uE515' : '\uE511';
 
-  let fromE4, needsOttava = false;
-
-  if (useMidiDirect) {
-    // ALTURA: usar octava real, bajando todas las que hagan falta hasta fromE4 <= 12 (Do6)
-    // Do6 = fromE4=12 = última nota antes de ledger line excesiva
-    // Si se baja alguna octava, se muestra glifo 8va
-    let midiToUse = midi;
-    while (true) {
-      const octTry = Math.floor(midiToUse/12)-1;
-      const fTry = octTry*7 + stepInOct - MI4DS;
-      if (fTry <= 12) { fromE4 = fTry; break; }
-      midiToUse -= 12;
-      needsOttava = true;
-    }
-    // Subir octavas si está muy baja (fromE4 < -1)
-    // Subir solo si completamente fuera del viewBox (y>120)
-    while (fromE4 < -8) { fromE4 += 7; }
-  } else {
-    // NOTACIÓN: usar MIDI real (midiPisado), bajar octavas si supera Do5 (fromE4=5)
-    // Límite superior: fromE4=5 (Do5, 2 líneas adicionales arriba del pentagrama)
-    // Si supera → bajar octava y mostrar glifo 8va
-    let midiToUse = midi;
-    while (true) {
-      const octTry = Math.floor(midiToUse/12)-1;
-      const fTry = octTry*7 + stepInOct - MI4DS;
-      if (fTry <= 12) { fromE4 = fTry; break; }
-      midiToUse -= 12;
-      needsOttava = true;
-    }
-    // Subir solo si completamente fuera del viewBox
-    while (fromE4 < -8) { fromE4 += 7; }
-  }
-
-  const y  = YBASE - fromE4 * SPX;
+  const y  = YBASE - fromE4*SPX;
   const nx = 60;
+  const stemUp = fromE4 <= 4;
 
-  function bTxt(x, ch, fill, sz) {
-    const t = document.createElementNS(svgNS, 'text');
-    t.setAttribute('x', String(x)); t.setAttribute('y', String(y));
-    t.setAttribute('font-family', 'Bravura,serif');
-    t.setAttribute('font-size', sz || '20px');
-    t.setAttribute('fill', fill);
-    t.textContent = ch;
-    return t;
+  // ── Helpers SVG ──────────────────────────────────────────────
+  function mkt(x,ty,ch,fill,fsz,ff) {
+    const t=document.createElementNS(svgNS,'text');
+    t.setAttribute('x',String(x)); t.setAttribute('y',String(ty));
+    t.setAttribute('font-family',ff||'Bravura,serif');
+    t.setAttribute('font-size',fsz||'20px'); t.setAttribute('fill',fill);
+    t.textContent=ch; return t;
   }
-  function bLine(x1, x2, ly) {
-    const l = document.createElementNS(svgNS, 'line');
-    l.setAttribute('x1',String(x1)); l.setAttribute('x2',String(x2));
-    l.setAttribute('y1',String(ly)); l.setAttribute('y2',String(ly));
-    l.setAttribute('stroke','#aaa'); l.setAttribute('stroke-width','0.8');
+  function mkl(x1,x2,ly) {
+    const l=document.createElementNS(svgNS,'line');
+    l.setAttribute('x1',String(x1));l.setAttribute('x2',String(x2));
+    l.setAttribute('y1',String(ly));l.setAttribute('y2',String(ly));
+    l.setAttribute('stroke','#aaa');l.setAttribute('stroke-width','0.8');
     return l;
   }
 
-  // Ledger lines
-  if (fromE4 >= 10) for (let s=10; s<=fromE4; s+=2) gEl.appendChild(bLine(nx-6,nx+14,YBASE-s*SPX));
-  if (fromE4 <=-2) for (let s=-2; s>=fromE4; s-=2) gEl.appendChild(bLine(nx-6,nx+14,YBASE-s*SPX));
+  // ── Sistema de colisiones ─────────────────────────────────────
+  // Cada caja: [x1,y1,x2,y2]
+  const placed = [];
+  function hits(b) { return placed.some(p=>b[0]<p[2]&&b[2]>p[0]&&b[1]<p[3]&&b[3]>p[1]); }
+  function inVB(b) { return b[0]>=-4&&b[2]<=99&&b[1]>=-4&&b[3]<=124; }
+  function reg(b)  { placed.push(b); return b; }
 
-  // Glifo 8va encima de la nota
-  if (needsOttava) {
-    const ov = document.createElementNS(svgNS,'text');
-    ov.setAttribute('x', String(nx-6));
-    ov.setAttribute('y', String(y - 26));
-    ov.setAttribute('font-family','Bravura,serif');
-    ov.setAttribute('font-size','14px');
-    ov.setAttribute('fill','#111');
-    ov.textContent = '\uE511';
-    gEl.appendChild(ov);
+  // Intentar posición; si colisiona, desplazar en dirección preferida
+  function resolve(box, dx, dy, steps) {
+    let b=[...box];
+    for(let i=0;i<steps;i++) {
+      if(!hits(b) && inVB(b)) return b;
+      b=[b[0]+dx, b[1]+dy, b[2]+dx, b[3]+dy];
+    }
+    return box; // fallback a posición original
   }
 
-  // Accidentales HE: [glifo HE] [cromático] [nota]
+  // ── 1. Ledger lines ──────────────────────────────────────────
+  if (fromE4>=10) for(let s=10;s<=fromE4;s+=2) gEl.appendChild(mkl(nx-6,nx+14,YBASE-s*SPX));
+  if (fromE4<=-2) for(let s=-2;s>=fromE4;s-=2) gEl.appendChild(mkl(nx-6,nx+14,YBASE-s*SPX));
+
+  // ── 2. Anclas: cabeza y plica (no se mueven) ─────────────────
+  reg([nx-2, y-14, nx+14, y+2]);  // cabeza (margen real hacia arriba)
+  if (stemUp) reg([nx+8, y-32, nx+14, y]);   // plica arriba
+  else        reg([nx-2, y,    nx+4,  y+32]); // plica abajo
+
+  // ── 3. Accidentales (izquierda de la cabeza) ─────────────────
   const hasHE   = !!(spec && spec.heChar);
   const hasBase = !!(spec && spec.baseChar);
-  const baseX   = nx - 12;
-  const heX     = hasBase ? baseX - 15 : baseX;
-  if (hasHE)   gEl.appendChild(bTxt(heX,   spec.heChar,   '#c8502a', '40px'));
-  if (hasBase) gEl.appendChild(bTxt(baseX, spec.baseChar, '#444',    '40px'));
+  let accLeft = nx - 10; // borde izquierdo disponible
 
-  // Plica: fromE4 <= 4 → stemUp () a la derecha; >= 5 → stemDown () a la izquierda
-  const stemUp   = fromE4 <= 4;
-  const stemGlyph = stemUp ? '\uE93E' : '\uE93F';
-  const stemX = stemUp ? (showCents ? nx + 10.45 : nx + 9.2) : nx - 0;
-  const st = document.createElementNS(svgNS,'text');
-  st.setAttribute('x',String(stemX)); st.setAttribute('y',String(y));
-  st.setAttribute('font-family','Bravura,serif'); st.setAttribute('font-size','40px');
-  st.setAttribute('fill','#111'); st.textContent = stemGlyph;
-  gEl.appendChild(st);
+  if (hasBase) {
+    let bx = accLeft - 14;
+    const b = resolve([bx, y-18, bx+12, y+2], -3, 0, 10);
+    reg(b); accLeft = b[0]-2;
+    gEl.appendChild(mkt(b[0], y, spec.baseChar, '#444', '40px'));
+  }
+  if (hasHE) {
+    let hx = accLeft - 14;
+    const b = resolve([hx, y-14, hx+12, y+2], -3, 0, 10);
+    reg(b); accLeft = b[0]-2;
+    gEl.appendChild(mkt(b[0], y, spec.heChar, '#c8502a', '40px'));
+  }
 
-  // Cabeza de nota
-  const headGlyph = showCents ? '\uE0A4' : '\uE0DD';  // Altura: normal; Notación: abierta
-  gEl.appendChild(bTxt(nx, headGlyph, '#111', '40px'));
-
-  // Glifo armónico : solo en Notación (stringGlyph presente = notación)
-  // Si plica arriba →  debajo de la nota (fuera pentagrama)
-  // Si plica abajo  →  encima de la nota (fuera pentagrama)
+  // ── 4. Glifo armónico  — registrar ANTES del 8va
   if (stringGlyph !== undefined && stringGlyph !== null) {
-    // Es face Notación
-    const harmX = nx + 2.6;
-    let harmY;
+    const hx = nx + 2.8;
+    let hb;
     if (stemUp) {
-      // plica arriba → glifo armónico abajo (debajo línea 1 o debajo de la nota si está baja)
-      harmY = Math.max(YBASE + 10, y + 12);
+      // Plica arriba → círculo DEBAJO de la cabeza
+      const hy = Math.max(YBASE + 8, y + 12);
+      hb = [hx-4, hy-16, hx+14, hy+4];
+      hb = resolve(hb, 0, +2, 20);
     } else {
-      // plica abajo → glifo armónico arriba
-      harmY = Math.min(YBASE - 8*SPX - 16, y - 12);
+      // Plica abajo → círculo ENCIMA de la cabeza
+      const hy = Math.max(2, y - 16);
+      hb = [hx-4, hy-16, hx+14, hy+4];
+      hb = resolve(hb, 0, -2, 20);
     }
-    const hg = document.createElementNS(svgNS,'text');
-    hg.setAttribute('x',String(harmX)); hg.setAttribute('y',String(harmY));
-    hg.setAttribute('font-family','Bravura,serif'); hg.setAttribute('font-size','22px');
-    hg.setAttribute('fill','#555'); hg.textContent = '\uE614';
-    gEl.appendChild(hg);
+    reg(hb);
+    gEl.appendChild(mkt(hx, hb[3]-2, '', '#555', '22px'));
   }
 
-  // Cents en Altura
+  // ── 5. Cabeza y plica ────────────────────────────────────────
+  const stX = stemUp ? (showCents ? nx+10.45 : nx+9.2) : nx;
+  gEl.appendChild(mkt(stX, y, stemUp?'\uE93E':'\uE93F', '#111', '40px'));
+  gEl.appendChild(mkt(nx,  y, showCents?'\uE0A4':'\uE0DD', '#111', '40px'));
+
+  // ── 6. Cents (Altura) ────────────────────────────────────────
   if (showCents && centsVal !== undefined && centsVal !== 0) {
-    const centsStr = (centsVal > 0 ? '+' : '') + centsVal + '¢';
-    const ct = document.createElementNS(svgNS,'text');
-    ct.setAttribute('x', String(nx + 16)); ct.setAttribute('y', String(y - 4));
-    ct.setAttribute('font-family','Inter,sans-serif'); ct.setAttribute('font-size','7px');
-    ct.setAttribute('fill', centsVal < 0 ? '#2563eb' : '#ea580c');
-    ct.setAttribute('font-weight','600'); ct.textContent = centsStr;
-    gEl.appendChild(ct);
+    const cs=(centsVal>0?'+':'')+centsVal+'¢';
+    const b=[nx+14, y-10, nx+32, y];
+    reg(b);
+    const ct=mkt(b[0], y-4, cs, centsVal<0?'#2563eb':'#ea580c', '7px', 'Inter,sans-serif');
+    ct.setAttribute('font-weight','600'); gEl.appendChild(ct);
   }
 
-  // Glifo de cuerda — solo en Notación (stringGlyph presente)
+  // ── 7. Glifo 8va / 15ma — registrar DESPUÉS del círculo (lo evita hacia arriba)
+  // Si nota muy alta (y<30, plica abajo): 8va a la izquierda para dejar espacio al círculo
+  if (needsOttava) {
+    const ow = ottGlyph==='' ? 26 : 20;
+    let ox, oy;
+    if (y < 30 && !stemUp) {
+      // Nota alta con plica abajo: 8va a la izquierda de la cabeza
+      ox = nx - 28; oy = y - 4;
+    } else {
+      ox = nx - 6; oy = Math.max(4, y - 28);
+    }
+    let ob = [ox, oy-2, ox+ow, oy+12];
+    if (hits(ob)) {
+      const ob0 = [...ob];  // guardar posición original
+      for(let i=0;i<30;i++){if(!hits(ob))break;ob=[ob[0],ob[1]-2,ob[2],ob[3]-2];}
+      if (ob[1] < -2) {  // salió del viewBox → mejor mover en X
+        ob = ob0;
+        for(let i=0;i<20;i++){if(!hits(ob))break;ob=[ob[0]-3,ob[1],ob[2]-3,ob[3]];}
+      }
+    }
+    if (ob[0] < 2) ob = [2, ob[1], 2+ow, ob[3]];
+    reg(ob);
+    gEl.appendChild(mkt(ob[0], ob[3], ottGlyph, '#111', '14px'));
+  }
+
+
+  // ── 8. Glifo de cuerda (Notación) ────────────────────────────
   if (stringGlyph) {
-    const stringY = fromE4 < 0
-      ? YBASE - fromE4 * SPX + 28
-      : YBASE + 26;
-    const sg = document.createElementNS(svgNS,'text');
-    sg.setAttribute('x',String(nx)); sg.setAttribute('y',String(stringY));
-    sg.setAttribute('font-family','Bravura,serif'); sg.setAttribute('font-size','18px');
-    sg.setAttribute('fill','#888'); sg.setAttribute('text-anchor','middle');
-    sg.textContent = stringGlyph;
-    gEl.appendChild(sg);
+    const syRaw = fromE4<0 ? YBASE-fromE4*SPX+28 : YBASE+26;
+    let sx=nx, sy=syRaw;
+    let sb;
+    if (syRaw > 114) {
+      // No cabe abajo → a la izquierda de la nota
+      sx=nx+24; sy=y;
+      sb=[sx-10, sy-14, sx+10, sy+4];
+    } else {
+      sb=[sx-10, sy-16, sx+10, sy+4];
+    }
+    const fb = resolve(sb, -3, 0, 10);
+    reg(fb);
+    const sg=mkt(fb[0]+10, fb[3]-4, stringGlyph, '#888', '18px');
+    sg.setAttribute('text-anchor','middle'); gEl.appendChild(sg);
   }
 
-  // Número romano — solo en Notación
-  if (stringGlyph !== undefined && stringGlyph !== null && fretNum && fretNum > 0) {
-    const ROMANS = ['','I','II','III','IV','V','VI','VII','VIII','IX','X',
-                    'XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII'];
-    const romanStr = (fretNum >= 1 && fretNum <= 22) ? ROMANS[fretNum] : null;
-    if (romanStr) {
-      const romanY = fromE4 > 5
-        ? y - 8
-        : YBASE - 6*SPX - 14;
-      const rt = document.createElementNS(svgNS,'text');
-      rt.setAttribute('x',String(nx-20)); rt.setAttribute('y',String(romanY));
-      rt.setAttribute('font-family','Inter,sans-serif'); rt.setAttribute('font-size','12px');
-      rt.setAttribute('fill','#aaa'); rt.setAttribute('text-anchor','middle');
-      rt.textContent = romanStr;
-      gEl.appendChild(rt);
+  // ── 9. Número romano (Notación) ──────────────────────────────
+  if (stringGlyph !== undefined && stringGlyph !== null && fretNum>0) {
+    const ROMANS=['','I','II','III','IV','V','VI','VII','VIII','IX','X',
+                  'XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI','XXII'];
+    const rStr = fretNum<=20 ? ROMANS[fretNum] : null;
+    if (rStr) {
+      const rw = rStr.length*7;
+      let rx, ry;
+      if (fromE4>8) {
+        rx=nx-38; ry=Math.max(10, y-8);
+      } else {
+        rx=nx-20; ry=YBASE-8*SPX-10;
+      }
+      let rb=[rx-rw/2, ry-12, rx+rw/2, ry];
+      rb = resolve(rb, -3, -2, 20);
+      // Clampear al viewBox
+      const cy=Math.max(12, Math.min(118, rb[3]));
+      const cx=Math.max(rw/2+2, Math.min(93-rw/2, rb[0]+rw/2));
+      reg([cx-rw/2, cy-12, cx+rw/2, cy]);
+      const rt=mkt(cx, cy, rStr, '#aaa', '12px', 'Times New Roman,serif');
+      rt.setAttribute('text-anchor','middle'); gEl.appendChild(rt);
     }
   }
 }
@@ -1002,9 +1011,12 @@ function getEscalaMM() { return window.ESCALA_MM_ACTUAL || ESCALA_MM; }
 const OFFSET_X     = 72;
 
 const CUERDAS_DATA = [
-  {nota:'E4',y:56, midi:64},{nota:'B3',y:98, midi:59},
-  {nota:'G3',y:140,midi:55},{nota:'D3',y:182,midi:50},
-  {nota:'A2',y:224,midi:45},{nota:'E2',y:266,midi:40}
+  {nota:'E4',y:49.2, y_cej:54.4,y_pue:44.1,midi:64},
+  {nota:'B3',y:62.5, y_cej:65.6,y_pue:59.5,midi:59},
+  {nota:'G3',y:75.8, y_cej:76.9,y_pue:74.8,midi:55},
+  {nota:'D3',y:89.2, y_cej:88.1,y_pue:90.2,midi:50},
+  {nota:'A2',y:102.5,y_cej:99.4,y_pue:105.5,midi:45},
+  {nota:'E2',y:115.8,y_cej:110.6,y_pue:120.9,midi:40}
 ];
 
 const SERIE = [
@@ -1153,30 +1165,40 @@ function dibujarMastil(){
   const tr=document.getElementById('trastero');tr.innerHTML='';
   const maxTrastes = window.TRASTES_MAX || 22;
   for(let i=0;i<=maxTrastes;i++){
+    // XXI y XXII ocultos completamente
+    if(i===21||i===22) continue;
     let x=getX(i),l=document.createElementNS('http://www.w3.org/2000/svg','line');
-    l.setAttribute('x1',x);l.setAttribute('y1',36);l.setAttribute('x2',x);l.setAttribute('y2',280);
+    const firstStr=CUERDAS_DATA[0],lastStr=CUERDAS_DATA[CUERDAS_DATA.length-1];
+    const secondStr=CUERDAS_DATA[1]; // B3
+    const L_t=window.LARGO_CUERDA_ACTUAL||LARGO_CUERDA;
+    const t_r=(x-OFFSET_X)/L_t;
+    const y_top=Math.round((firstStr.y_cej||firstStr.y)+t_r*((firstStr.y_pue||firstStr.y)-(firstStr.y_cej||firstStr.y)));
+    // Traste XX: línea solo hasta B3
+    const bottomStr = (i===20) ? secondStr : lastStr;
+    const y_bot=Math.round((bottomStr.y_cej||bottomStr.y)+t_r*((bottomStr.y_pue||bottomStr.y)-(bottomStr.y_cej||bottomStr.y)));
+    l.setAttribute('x1',x);l.setAttribute('y1',y_top);l.setAttribute('x2',x);l.setAttribute('y2',y_bot);
     l.classList.add(i===0?'cejuela':'traste-metal');tr.appendChild(l);
     if(i>0&&(i<=Math.min(16,maxTrastes)||i%2===0)&&i<=maxTrastes){
       // Centrar el número romano en el espacio ENTRE traste i-1 y traste i
       const xCenter = (getX(i-1) + x) / 2;
       let t=document.createElementNS('http://www.w3.org/2000/svg','text');
-      t.setAttribute('x',xCenter);t.setAttribute('y',28);
+      t.setAttribute('x',xCenter);t.setAttribute('y',44);
       t.textContent=toRoman(i);t.classList.add('label-romano');tr.appendChild(t);
     }
   }
-  [3,5,7,9,12,15,17,19,21].forEach(f=>{
+  [3,5,7,9,12,15,17,19].forEach(f=>{
     const cx=(getX(f-1)+getX(f))/2;
-    if(f===12){[290,298].forEach(cy=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',2.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);});}
-    else{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',294);c.setAttribute('r',2.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);}
+    if(f===12){[120,128].forEach(cy=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',1.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);});}
+    else{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',124);c.setAttribute('r',1.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);}
   });
   const cg=document.getElementById('cuerdas-group');cg.innerHTML='';
   const widths=[0.8,1.0,1.2,1.45,1.7,2.0];
   CUERDAS_DATA.forEach((c,i)=>{
     let l=document.createElementNS('http://www.w3.org/2000/svg','line');
-    l.setAttribute('x1',OFFSET_X);l.setAttribute('y1',c.y);l.setAttribute('x2',OFFSET_X+LARGO_CUERDA);l.setAttribute('y2',c.y);
+    const L_actual=window.LARGO_CUERDA_ACTUAL||LARGO_CUERDA;l.setAttribute('x1',OFFSET_X);l.setAttribute('y1',c.y_cej||c.y);l.setAttribute('x2',OFFSET_X+L_actual);l.setAttribute('y2',c.y_pue||c.y);
     l.classList.add('cuerda');l.style.strokeWidth=widths[i];cg.appendChild(l);
     let t=document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x',OFFSET_X-8);t.setAttribute('y',c.y+4);t.textContent=c.nota;t.classList.add('label-cuerda');
+    t.setAttribute('x',OFFSET_X-8);t.setAttribute('y',(c.y_cej||c.y)+4);t.textContent=c.nota;t.classList.add('label-cuerda');
     t.onclick=()=>{if(cuerdasFijas.has(c.nota)){cuerdasFijas.delete(c.nota);t.classList.remove('cuerda-fija');}else{cuerdasFijas.add(c.nota);t.classList.add('cuerda-fija');}buscarNota();};
     t.onmouseenter=()=>{if(!cuerdasFijas.has(c.nota))mostrarSoloCuerda(c.nota);};
     t.onmouseleave=()=>buscarNota();
@@ -1192,9 +1214,9 @@ function renderVisor(midi){
   let ms=(oct*7+d.s)-(4*7+6),ma=d.alt,es=d.en?(oct*7+d.enS)-(4*7+6):null,ea=d.enAlt;
   if(direccionVisor==='bajando'&&d.en){[ms,es]=[es,ms];[ma,ea]=[ea,ma];}
   let msD=ms,esD=es,ottGlyph=null,ottLeft=false;
-  if(ms>=24){msD=ms-14;ottGlyph='';ottLeft=true;}   // E8+: 15ma a la izquierda
-  else if(ms>=17){msD=ms-14;ottGlyph='';}            // E7-D8: 15ma arriba
-  else if(ms>=10){msD=ms-7; ottGlyph='';}            // E6-D7: 8va arriba
+  if(ms>=25){msD=ms-14;ottGlyph='';ottLeft=true;}   // Fa8+: 15ma izquierda
+  else if(ms>=18){msD=ms-14;ottGlyph='';}            // Fa7-Mi8: 15ma arriba
+  else if(ms>=11){msD=ms-7; ottGlyph='';}            // Fa6-Mi7: 8va arriba
   if(esD!==null){
     if(esD>=17)esD-=14;
     else if(esD>=10)esD-=7;
@@ -1598,13 +1620,13 @@ function dibujarArmonico(r,isFrozen){
       if(gcd(n,r.arm.p)===1){
         const xPos=Math.round(getXRatio(n/r.arm.p));
         if(!drawn.has(xPos)){
-          drawNode(xPos,r.cuerda.y,color,r.cuerda,r.arm,n,r.arm.p);
+          drawNode(xPos,getStringY(r.cuerda,xPos),color,r.cuerda,r.arm,n,r.arm.p);
           drawn.add(xPos);
         }
       }
     }
   } else {
-    drawArt(getX(r.traste),getX(r.traste+12),r.cuerda.y,color);
+    drawArt(getX(r.traste),getX(r.traste+12),getStringY(r.cuerda,getX(r.traste)),color);
   }
 }
 
@@ -1613,12 +1635,15 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
   const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
   const esExacto=Math.abs(tt-Math.round(tt))<0.1;
   if(!esExacto){
-    const bar=document.createElementNS('http://www.w3.org/2000/svg','line');
-    bar.setAttribute('x1',x);bar.setAttribute('y1',y-13);bar.setAttribute('x2',x);bar.setAttribute('y2',y+13);
-    bar.setAttribute('stroke',c);bar.classList.add('guia-vertical');capa.appendChild(bar);
+    const barT=document.createElementNS('http://www.w3.org/2000/svg','line');
+    barT.setAttribute('x1',x);barT.setAttribute('y1',y-8);barT.setAttribute('x2',x);barT.setAttribute('y2',y-5);
+    barT.setAttribute('stroke',c);barT.classList.add('guia-vertical');capa.appendChild(barT);
+    const barB=document.createElementNS('http://www.w3.org/2000/svg','line');
+    barB.setAttribute('x1',x);barB.setAttribute('y1',y+5);barB.setAttribute('x2',x);barB.setAttribute('y2',y+8);
+    barB.setAttribute('stroke',c);barB.classList.add('guia-vertical');capa.appendChild(barB);
   }
   const el=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  el.setAttribute('cx',x);el.setAttribute('cy',y);el.setAttribute('r',7);
+  el.setAttribute('cx',x);el.setAttribute('cy',y);el.setAttribute('r',4);
   el.setAttribute('fill',c);el.classList.add('nodo');
 
   if (cuerda && arm) {
@@ -1740,9 +1765,12 @@ const INSTRUMENTOS = {
     escala_mm: 650, largo_svg: 860,
     trastes: 22,
     cuerdas: [
-      {nota:'E4',y:56, midi:64},{nota:'B3',y:98, midi:59},
-      {nota:'G3',y:140,midi:55},{nota:'D3',y:182,midi:50},
-      {nota:'A2',y:224,midi:45},{nota:'E2',y:266,midi:40}
+      {nota:'E4',y:49.2, y_cej:54.4,y_pue:44.1,midi:64},
+      {nota:'B3',y:62.5, y_cej:65.6,y_pue:59.5,midi:59},
+      {nota:'G3',y:75.8, y_cej:76.9,y_pue:74.8,midi:55},
+      {nota:'D3',y:89.2, y_cej:88.1,y_pue:90.2,midi:50},
+      {nota:'A2',y:102.5,y_cej:99.4,y_pue:105.5,midi:45},
+      {nota:'E2',y:115.8,y_cej:110.6,y_pue:120.9,midi:40}
     ]
   },
   timple: {
@@ -1771,9 +1799,9 @@ const I18N = {
     guitar: 'Guitarra',
     timple: 'Timple',
     nota: 'Nota',
-    art: 'Art. 8.ª',
+    art: 'Artificiales',
     parciales: 'Parciales 8–22',
-    cents: '~50¢',
+    cents: 'Cercanos',
     borrar: 'Borrar ❄',
     notacion: 'Notación',
     altura: 'Altura',
@@ -1792,9 +1820,9 @@ const I18N = {
     guitar: 'Guitar',
     timple: 'Timple',
     nota: 'Note',
-    art: 'Art. 8va',
+    art: 'Artificials',
     parciales: 'Partials 8–22',
-    cents: '~50¢',
+    cents: 'Cercanos',
     borrar: 'Clear ❄',
     notacion: 'Notation',
     altura: 'Pitch',
@@ -1826,7 +1854,6 @@ function setLang(lang) {
   document.querySelector('label[for="checkArtificial"]').textContent = t.art;
   document.querySelector('label[for="checkSuperiores"]').textContent = t.parciales;
   document.querySelector('label[for="checkCercanos"]').textContent   = t.cents;
-  document.querySelector('.btn-clear').textContent      = t.borrar;
   // Botones activos de idioma
   document.getElementById('opt-es').classList.toggle('active', lang==='es');
   document.getElementById('opt-en').classList.toggle('active', lang==='en');
@@ -1880,12 +1907,17 @@ function setInstrumento(inst) {
 
   // Redibujar
   borrarCongelados();
-  dibujar();
+  dibujarMastil();
   buscarNota();
 }
 
-// Parchar getX y ESCALA_MM para que usen el instrumento activo
-const _getX_orig = getX;
+// getX y getXRatio usan LARGO_CUERDA_ACTUAL cuando hay instrumento activo
+function getStringY(cuerda, x) {
+  const L = window.LARGO_CUERDA_ACTUAL || LARGO_CUERDA;
+  const yc = cuerda.y_cej !== undefined ? cuerda.y_cej : cuerda.y;
+  const yp = cuerda.y_pue !== undefined ? cuerda.y_pue : cuerda.y;
+  return yc + (x - OFFSET_X) / L * (yp - yc);
+}
 function getX(t) {
   const L = window.LARGO_CUERDA_ACTUAL || LARGO_CUERDA;
   return OFFSET_X + (L - (L / Math.pow(2, t/12)));
@@ -1895,24 +1927,23 @@ function getXRatio(r) {
   return OFFSET_X + (L * r);
 }
 
-// Parchar dibujar para limitar trastes según instrumento
-const _dibujar_orig = dibujar;
-function dibujar() {
-  const maxT = window.TRASTES_MAX || 22;
-  _dibujar_orig();
-}
-
 function resetTodo() {
-  borrarCongelados();
+  // 1. Estado de selección
+  activeNodeKey  = null;
+  selectedRowId  = null;
+  activeSelection = null;
+  // 2. Limpiar congelados y globos
+  congelados = [];
+  cerrarGlobos();
+  // 3. Reset cámara — usar las mismas CSS variables que setupCamera
   zoomLevel = window.innerWidth < 600 ? 0.35 : 1;
-  panX = 0; panY = 0;
-  document.getElementById('mastil').style.setProperty('--zoom', zoomLevel);
-  document.getElementById('mastil').style.transform = '';
-  activeNodeKey = null; selectedRowId = null;
-  document.querySelectorAll('.result-row.selected').forEach(r=>r.classList.remove('selected'));
-  const footer = document.getElementById('globos-footer');
-  if(footer) footer.classList.remove('active');
-  document.getElementById('globos-scroll').innerHTML = '';
+  panX = 0;
+  panY = 0;
+  const mastil = document.getElementById('mastil');
+  mastil.style.setProperty('--zoom',  zoomLevel);
+  mastil.style.setProperty('--pan-x', '0px');
+  mastil.style.setProperty('--pan-y', '0px');
+  // 4. Redibujar
   buscarNota();
 }
 
