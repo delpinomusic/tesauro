@@ -343,21 +343,7 @@ html, body {
 .dist-row-unit { color: var(--text-3); font-size: 8px; }
 .globo-sounding { font-size: 9px; color: var(--text-3); text-align: center; margin-top: 2px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; }
 
-/* ── SVG classes ── */
-.cuerda { stroke: var(--string); }
-.label-cuerda { font-size: 10px; text-anchor: end; fill: var(--text-2); font-weight: 700; font-family: 'Barlow Condensed', sans-serif; cursor: pointer; user-select: none; transition: fill .12s; letter-spacing: 0.04em; }
-.label-cuerda:hover { fill: var(--accent); }
-.label-cuerda.cuerda-fija { fill: #0070c0; font-weight: bold; filter: drop-shadow(0 0 2px #0070c0); }
-.label-romano { font-size: 8px; fill: var(--text-3); text-anchor: middle; font-weight: 600; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; }
-.traste-metal { stroke: var(--fret); stroke-width: 1.5; }
-.cejuela { stroke: var(--nut); stroke-width: 3; }
-.nodo { stroke: white; stroke-width: 1.1; cursor: pointer; }
-.nodo.greyed { fill: var(--node-grey) !important; stroke: white; }
-.nodo.pulsing { animation: nodoPulse .6s ease-out; }
-.guia-vertical { stroke-width: 0.6; stroke-dasharray: 3,2; opacity: .85; }
-.guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: .6; }
-.icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
-#guitar-contour path { stroke: var(--fret) !important; }
+	
 
 
 @keyframes nodoPulse { 0% { r:7; opacity:1; } 40% { r:13; opacity:.5; } 100% { r:7; opacity:1; } }
@@ -583,6 +569,24 @@ body.dark #config-panel { background: var(--surface); }
       <div class="fretboard-svg-area" style="overflow:visible">
         <svg id="mastil" viewBox="0 0 1000 165" overflow="visible">
           <g id="trastero"></g>
+          <g id="boca" style="pointer-events:none" transform="matrix(0,-1.0849,1.0849,0,628.9923,155.4125)">
+            <g id="Shape503" transform="translate(540.012264,-205.825654) scale(1,-1)">
+<circle cx="-472.8070707266655" cy="-264.5886856567591" r="44.0" stroke="var(--fret)" stroke-width="0.7" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none"/>
+<title>b'Shape503'</title>
+</g>
+            <g id="Shape516" transform="translate(540.012264,-205.825654) scale(1,-1)">
+<path id="Shape516_nwe0000"  d="M -505.69629997022815 -232.42817260481317 A 46 46 0 1 1 -439.918 -232.428" stroke="var(--fret)" stroke-width="0.7" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape516'</title>
+</g>
+            <g id="Shape511" transform="translate(540.012264,-205.825654) scale(1,-1)">
+<path id="Shape511_nwe0000"  d="M -505.30383247264825 -207.14340320445643 A 66 66 0 1 1 -440.31 -207.143" stroke="var(--fret)" stroke-width="0.7" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape511'</title>
+</g>
+            <g id="Shape506" transform="translate(540.012264,-205.825654) scale(1,-1)">
+<path id="Shape506_nwe0000"  d="M -505.32187169352915 -208.30558234781546 A 65 65 0 1 1 -440.277 -208.315" stroke="var(--fret)" stroke-width="0.7" style="stroke-width:0.7;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:square;fill:none;fill-opacity:1;fill-rule: evenodd"/>
+<title>b'Shape506'</title>
+</g>
+          </g>
           <g id="cuerdas-group"></g>
           <g id="guitar-contour"
              transform="matrix(0,-1.323077,1.323077,0,500.0683,51.1894)"
@@ -1175,7 +1179,7 @@ function dibujarMastil(){
     const y_top=Math.round((firstStr.y_cej||firstStr.y)+t_r*((firstStr.y_pue||firstStr.y)-(firstStr.y_cej||firstStr.y)));
     // Traste XX: línea solo hasta B3
     const bottomStr = (i===20) ? secondStr : lastStr;
-    const y_bot=Math.round((bottomStr.y_cej||bottomStr.y)+t_r*((bottomStr.y_pue||bottomStr.y)-(bottomStr.y_cej||bottomStr.y)));
+    const y_bot=Math.round((bottomStr.y_cej||	bottomStr.y)+t_r*((bottomStr.y_pue||bottomStr.y)-(bottomStr.y_cej||bottomStr.y)));
     l.setAttribute('x1',x);l.setAttribute('y1',y_top);l.setAttribute('x2',x);l.setAttribute('y2',y_bot);
     l.classList.add(i===0?'cejuela':'traste-metal');tr.appendChild(l);
     if(i>0&&(i<=Math.min(16,maxTrastes)||i%2===0)&&i<=maxTrastes){
@@ -1186,7 +1190,7 @@ function dibujarMastil(){
       t.textContent=toRoman(i);t.classList.add('label-romano');tr.appendChild(t);
     }
   }
-  [3,5,7,9,12,15,17,19].forEach(f=>{
+  [3,5,7,9,12,15,17].forEach(f=>{
     const cx=(getX(f-1)+getX(f))/2;
     if(f===12){[120,128].forEach(cy=>{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',1.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);});}
     else{const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',cx);c.setAttribute('cy',124);c.setAttribute('r',1.5);c.setAttribute('fill','var(--border-strong)');tr.appendChild(c);}
