@@ -343,7 +343,21 @@ html, body {
 .dist-row-unit { color: var(--text-3); font-size: 8px; }
 .globo-sounding { font-size: 9px; color: var(--text-3); text-align: center; margin-top: 2px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em; }
 
-	
+/* ── SVG classes ── */
+.cuerda { stroke: var(--string); }
+.label-cuerda { font-size: 10px; text-anchor: end; fill: var(--text-2); font-weight: 700; font-family: 'Barlow Condensed', sans-serif; cursor: pointer; user-select: none; transition: fill .12s; letter-spacing: 0.04em; }
+.label-cuerda:hover { fill: var(--accent); }
+.label-cuerda.cuerda-fija { fill: #0070c0; font-weight: bold; filter: drop-shadow(0 0 2px #0070c0); }
+.label-romano { font-size: 8px; fill: var(--text-3); text-anchor: middle; font-weight: 600; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; }
+.traste-metal { stroke: var(--fret); stroke-width: 1.5; }
+.cejuela { stroke: var(--nut); stroke-width: 3; }
+.nodo { stroke: white; stroke-width: 0.8; cursor: pointer; }
+.nodo.greyed { fill: var(--node-grey) !important; stroke: white; }
+.nodo.pulsing { animation: nodoPulse .6s ease-out; }
+.guia-vertical { stroke-width: 0.6; stroke-dasharray: 0.8,0.4; opacity: .85; }
+.guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: .6; }
+.icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
+#guitar-contour path { stroke: var(--fret) !important; }
 
 
 @keyframes nodoPulse { 0% { r:7; opacity:1; } 40% { r:13; opacity:.5; } 100% { r:7; opacity:1; } }
