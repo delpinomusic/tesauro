@@ -1543,7 +1543,7 @@ function buildPiano(){
   const piano=document.getElementById('piano');
   const nombres=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   const notas=[];
-  for(let o=3;o<=8;o++){for(let i=0;i<12;i++){let n=nombres[i]+o;if(o===3&&i<4)continue;if(o===8&&i>7)break;notas.push(n);}}
+  for(let o=3;o<=8;o++){for(let i=0;i<12;i++){let n=nombres[i]+o;if(o===3&&i<4)continue;if(o===8&&i>11)break;notas.push(n);}}
   const wrap=document.createElement('div');wrap.className='piano-keys';
   notas.forEach(n=>{
     const k=document.createElement('div');k.className=`key ${n.includes('#')?'black':'white'}`;k.dataset.note=n;
@@ -2531,7 +2531,7 @@ function onMIDIMessage(e){
     inp.value = noteName;
     let m = notaToMidi(noteName);
     if(m){ if(m>lastMidiVisor)direccionVisor='subiendo'; if(m<lastMidiVisor)direccionVisor='bajando'; lastMidiVisor=m; }
-    buscarNota(); highlightKey(noteName);
+    buscarNota(); highlightKey(noteName); renderAccidental();
   }
 }
 
