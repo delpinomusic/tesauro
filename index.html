@@ -513,6 +513,30 @@ html, body {
 }
 .frozen-tag { font-size: 8px; font-weight: 800; letter-spacing: .10em; text-transform: uppercase; color: var(--freeze); background: #ddeeff; padding: 1px 4px; }
 .sym { font-family: 'Bravura', serif; font-size: 22px; line-height: 1; width: 22px; text-align: center; flex-shrink: 0; }
+#btn-freeze-mode.active  { background: var(--text); color: var(--bg); border-color: var(--text); }
+#btn-historial.active    { background: var(--text); color: var(--bg); border-color: var(--text); }
+.hist-row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-bottom: 1px solid var(--border);
+  transition: background .1s; cursor: pointer;
+}
+.hist-row:hover { background: var(--surface-2); }
+.hist-row:last-child { border-bottom: none; }
+.hist-nota-big {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px; font-weight: 800; color: var(--text);
+  min-width: 38px; flex-shrink: 0;
+}
+.hist-meta {
+  font-size: 11px; color: var(--text-3);
+  font-family: 'Barlow', sans-serif;
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.hist-arm {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; color: var(--text-2); font-weight: 500;
+}
+.row-string-glyph { font-family: 'Bravura', serif; font-size: 26px; font-weight: 800; width: 20px; text-align: center; flex-shrink: 0; line-height: 1; color: var(--text-2); margin-top: 14px; }
 
 /* Responsive */
 @media (min-width: 1280px) { .main { grid-template-columns: 1fr 320px; } }
@@ -923,13 +947,22 @@ body.dark #config-panel { background: var(--surface); }
           <div class="legend-item"><div class="dot" style="background:var(--c-2m)"></div>2.ª m</div>
           <div class="legend-item"><div class="dot" style="background:var(--freeze)"></div>❄</div>
         </div>
-          <button onclick="resetTodo()" title="Restablecer todo" style="background:none;border:none;cursor:pointer;flex-shrink:0;padding:2px;margin-left:8px;">
-            <svg width="25" height="25" viewBox="0 0 14 14" fill="none">
-              <rect x="0.5" y="0.5" width="13" height="13" stroke="var(--text-3)" stroke-width="0.5"/>
-              <line x1="0.5" y1="0.5" x2="13.5" y2="13.5" stroke="var(--text-3)" stroke-width="0.5"/>
-              <line x1="13.5" y1="0.5" x2="0.5" y2="13.5" stroke="var(--text-3)" stroke-width="0.5"/>
-            </svg>
-          </button>
+          <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;margin-left:8px;">
+            <button id="btn-historial" onclick="toggleHistorial()" title="Historial de selecciones"
+              style="background:none;border:1px solid var(--border);cursor:pointer;padding:0;width:25px;height:25px;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all .12s;">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+            </button>
+            <button id="btn-freeze-mode" onclick="toggleFreezeMode()" title="Modo congelacion"
+              style="background:none;border:1px solid var(--border);cursor:pointer;padding:2px;width:25px;height:25px;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all .12s;">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>
+            </button>
+            <button onclick="resetTodo()" title="Restablecer todo" style="background:none;border:1px solid var(--border);cursor:pointer;flex-shrink:0;padding:0;width:25px;height:25px;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:all .12s;">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                <line x1="0.5" y1="0.5" x2="13.5" y2="13.5" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="13.5" y1="0.5" x2="0.5" y2="13.5" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+            </button>
+          </div>
       </div>
       <div class="results-list" id="infoBox"></div>
     </div>
@@ -1282,6 +1315,91 @@ let cuerdasFijas = new Set();
 let lastMidiVisor = 71, direccionVisor = 'subiendo';
 let selectedRowId = null;
 let activeNodeKey = null; // 'cuerda.nota-arm.p-n/p'
+let freezeMode   = false;
+let historialMode = false;
+let historial     = []; // {nota, cuerda, arm, armNombre, strGlifo}
+
+function addToHistorial(nota, cuerda, arm) {
+  // Sin duplicado consecutivo exacto
+  if (historial.length &&
+      historial[0].nota === nota &&
+      historial[0].cuerda === cuerda.nota &&
+      historial[0].arm === arm.p) return;
+  historial.unshift({
+    nota,
+    cuerda:    cuerda.nota,
+    arm:       arm.p,
+    armFrac:   arm.frac,
+    armNombre: arm.n,
+    armColor:  arm.c,
+    armSym:    arm.sym,
+    strGlifo:  STRING_GLYPH[cuerda.nota] || ''
+  });
+  if (historial.length > 40) historial.pop();
+}
+
+function toggleHistorial() {
+  historialMode = !historialMode;
+  document.getElementById('btn-historial').classList.toggle('active', historialMode);
+  if (historialMode) renderHistorialEnBox();
+  else               renderTabla();
+}
+
+function renderHistorialEnBox() {
+  const box = document.getElementById('infoBox');
+  if (!historial.length) {
+    box.innerHTML = '<div class="empty-state"><span style="font-size:22px;opacity:.3">⊙</span><span>Sin selecciones aún</span></div>';
+    return;
+  }
+  box.innerHTML = historial.map((h, i) => {
+    const notaBase = h.nota.replace(/\d/, '');
+    return `<div class="hist-row" onclick="cargarDesdeHistorial(${i})">
+      <span class="hist-nota-big">${h.nota}</span>
+      <div style="flex:1;min-width:0;">
+        <div class="hist-arm">${notaBase} · <span style="opacity:.6;font-size:11px">(${h.armFrac})</span></div>
+        <div class="hist-meta">${h.cuerda} · ${h.armNombre}</div>
+      </div>
+      <span style="font-family:'Bravura',serif;font-size:22px;color:${h.armColor}">${h.armSym}</span>
+    </div>`;
+  }).join('');
+}
+
+function cargarDesdeHistorial(i) {
+  const h = historial[i];
+  if (!h) return;
+
+  // Marcar entrada activa visualmente
+  document.querySelectorAll('.hist-row').forEach((r,j) => {
+    r.style.background = j === i ? 'var(--accent-subtle)' : '';
+    r.style.borderLeft  = j === i ? '3px solid var(--accent)' : '';
+  });
+
+  // Cargar nota en el input
+  const inp = document.getElementById('inputNota');
+  inp.value = h.nota;
+  let m = notaToMidi(h.nota);
+  if (m) { lastMidiVisor = m; renderVisor(m); }
+  highlightKey(h.nota); renderAccidental();
+
+  // buscarNota dibuja el diapasón pero NO toca el infoBox (guard historialMode)
+  buscarNota();
+
+  // Mostrar globos de la cuerda+parcial guardados en el historial
+  const cuerda = CUERDAS_DATA.find(c => c.nota === h.cuerda);
+  const arm    = SERIE.find(s => s.p === h.arm);
+  if (cuerda && arm) {
+    activeSelection = {cuerda, arm};
+    applyNodeGreying(cuerda, arm);
+    mostrarGlobos(cuerda, arm, null);
+  }
+}
+
+function toggleFreezeMode() {
+  freezeMode = !freezeMode;
+  const btn = document.getElementById('btn-freeze-mode');
+  if (btn) btn.classList.toggle('active', freezeMode);
+  renderTabla();
+}
 
 const snowSVG = `<svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M12 12l7-7M12 12l-7-7M12 12l7 7M12 12l-7 7M12 5l3 2M12 5l-3 2M12 19l3-2M12 19l-3-2M5 12l2-3M5 12l2 3M19 12l-2-3M19 12l-2 3"/></svg>`;
 
@@ -1814,6 +1932,9 @@ function selectRow(id, rowData, e) {
     activeSelection = {cuerda: rowData.cuerda, arm: rowData.arm};
     applyNodeGreying(rowData.cuerda, rowData.arm);
     mostrarGlobos(rowData.cuerda, rowData.arm, null);
+    // Registrar en historial (silencioso)
+    const notaActual = document.getElementById('inputNota').value.trim().toUpperCase();
+    addToHistorial(notaActual, rowData.cuerda, rowData.arm);
   }
 }
 
@@ -1956,6 +2077,7 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
     const outer = document.createElementNS('http://www.w3.org/2000/svg','path');
     outer.setAttribute('d','M 0 -8.5 L 11 0 L 0 8.5 L -11 0 Z');
     outer.setAttribute('fill', c);
+    outer.setAttribute('class', 'armonico');
     el.appendChild(outer);
     // Rombo interior (relleno blanco)
     const inner = document.createElementNS('http://www.w3.org/2000/svg','path');
@@ -1970,6 +2092,7 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
     circle.setAttribute('cx','0'); circle.setAttribute('cy','0');
     circle.setAttribute('r', r);
     circle.setAttribute('fill', c);
+    circle.setAttribute('class', 'armonico');
     circle.setAttribute('stroke','white');
     circle.setAttribute('stroke-width','1.5');
     el.appendChild(circle);
@@ -2024,6 +2147,7 @@ function toggleFreeze(id,e){
 function borrarCongelados(){congelados=[];cerrarGlobos();buscarNota();}
 
 function renderTabla(){
+  if (historialMode) return; // El box está mostrando el historial
   const box=document.getElementById('infoBox');
   const idsC=new Set(congelados.map(c=>c.id));
   const rows=[
@@ -2046,10 +2170,15 @@ function buildRow(r,frozen){
     const cc=frozen?'var(--freeze)':getCentsColor(r.desv);
     const cbg=frozen?'#cffafe':'var(--surface-2)';
     const cs=(r.desv>0?'+':'')+r.desv+'¢';
+    const notaBase = r.cuerda.nota.replace(/\d/,'');
+    const strGlifo = STRING_GLYPH[r.cuerda.nota] || '';
+    const leftEl = freezeMode
+      ? `<button class="freeze-btn${ba}" onclick="toggleFreeze('${id}',event)">${snowSVG}</button>`
+      : `<span class="row-string-glyph">${strGlifo}</span>`;
     return `<div class="result-row${fc}${sel}" data-id="${id}" onclick="selectRow('${id}', resultadosActuales.find(x=>x.id==='${id}')||congelados.find(x=>x.id==='${id}'), event)">
-      <button class="freeze-btn${ba}" onclick="toggleFreeze('${id}',event)">${snowSVG}</button>
+      ${leftEl}
       <div class="row-body">
-        <div class="row-main">${tag}Cuerda <b>${r.cuerda.nota}</b> · P${r.arm.p} <span style="opacity:.6;font-size:11px">(${r.arm.frac})</span></div>
+        <div class="row-main">${tag}<b>${notaBase}</b> · P${r.arm.p} <span style="opacity:.6;font-size:11px">(${r.arm.frac})</span></div>
         <div class="row-sub">${r.arm.n}</div>
       </div>
       <div class="row-right">${diffHTML}<span class="sym" style="color:${frozen?'var(--freeze)':r.arm.c}">${r.arm.sym}</span><span class="cents-badge" style="color:${cc};background:${cbg}">${cs}</span></div>
