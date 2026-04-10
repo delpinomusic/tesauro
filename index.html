@@ -11,7 +11,15 @@
    Inspired by Darmstädter Ferienkurse
 ══════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;600;700;800&family=Barlow:wght@300;400;500&display=swap');
+@font-face { font-family: 'Barlow'; src: url('fonts/Barlow-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; }
+@font-face { font-family: 'Barlow'; src: url('fonts/Barlow-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; }
+@font-face { font-family: 'Barlow'; src: url('fonts/Barlow-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; }
+@font-face { font-family: 'Barlow Condensed'; src: url('fonts/BarlowCondensed-Light.woff2') format('woff2'); font-weight: 300; font-style: normal; }
+@font-face { font-family: 'Barlow Condensed'; src: url('fonts/BarlowCondensed-Regular.woff2') format('woff2'); font-weight: 400; font-style: normal; }
+@font-face { font-family: 'Barlow Condensed'; src: url('fonts/BarlowCondensed-Medium.woff2') format('woff2'); font-weight: 500; font-style: normal; }
+@font-face { font-family: 'Barlow Condensed'; src: url('fonts/BarlowCondensed-SemiBold.woff2') format('woff2'); font-weight: 600; font-style: normal; }
+@font-face { font-family: 'Barlow Condensed'; src: url('fonts/BarlowCondensed-Bold.woff2') format('woff2'); font-weight: 700; font-style: normal; }
+@font-face { font-family: 'Barlow Condensed'; src: url('fonts/BarlowCondensed-ExtraBold.woff2') format('woff2'); font-weight: 800; font-style: normal; }
 
 :root {
   --bg: #f5f4f0;
@@ -71,31 +79,33 @@ html, body {
 
 /* ── Header ── */
 .header {
+  background: var(--surface-2);
   padding: 10px 28px 0;
   display: flex; align-items: center; gap: 12px;
   flex-shrink: 0; user-select: none;
   border-bottom: 2px solid var(--text);
   padding-bottom: 8px;
+  background: var(--text);
+  color: var(--bg);
 }
 .header h1 {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Barlow', sans-serif;
   font-size: 22px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: -0.03em;
 }
 .header h1 em {
-  font-style: normal;
+  font-style: italic;
   font-weight: 300;
-  letter-spacing: 0.12em;
   color: var(--accent);
+  letter-spacing: -0.02em;
 }
 .header-version {
-  font-size: 9px;
+  font-size: 10px;
   color: var(--text-3);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.09em;
   font-family: 'Barlow Condensed', sans-serif;
+  margin-top: 9.9px;
 }
 
 /* ── Top bar ── */
@@ -118,22 +128,66 @@ html, body {
 }
 #inputNota {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 32px;
+  font-size: 20px;
   font-weight: 700;
   letter-spacing: 0.02em;
-  color: var(--text);
+  color: transparent;
+  caret-color: var(--text);
   background: transparent;
   border: none;
-  border-bottom: 2px solid var(--text);
+  border-bottom: 1px solid var(--text);
   width: 90px;
   padding: 2px 4px 2px;
   outline: none;
   transition: border-color .15s;
   text-align: center;
   text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
-#inputNota:focus { border-bottom-color: var(--accent); color: var(--accent); }
+#inputNota:focus { border-bottom-color: var(--accent); caret-color: var(--accent); }
+/* Display visual Bravura encima del input */
+#nota-display {
+  position: absolute;
+  top: 1; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--text);
+  transition: color .15s;
+  white-space: nowrap;
+  z-index: 2;
+  line-height: 1;
+}
+#nota-display .acc {
+  font-family: 'Bravura', serif;
+  font-size: 38px;
+  line-height: 0;
+  vertical-align: center;
+}
+.nota-wrap.focused #nota-display { color: var(--accent); }
+/* ── Overlay escritura ── */
+#input-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 150;
+  display: none;
+}
+#input-overlay.visible { display: block; }
+.nota-wrap { position: relative; z-index: 1; }
+.nota-wrap.focused { z-index: 160; }
+
 .divider { width: 1px; height: 32px; background: var(--border); flex-shrink: 0; }
+.nav-arrows { display:flex; flex-direction:column; gap:1px; flex-shrink:0; margin-left: -18px;}
+.nav-arrow {
+  width:20px; height:16px;
+  background:none; border:1px solid var(--border);
+  cursor:pointer; display:flex; align-items:center; justify-content:center;
+  color:var(--text-3); transition:all .12s; padding:0;
+}
+.nav-arrow:hover { border-color:var(--text); color:var(--text); background:var(--surface-2); }
+
 
 /* Piano */
 .piano-outer { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; flex: 1; min-width: 0; }
@@ -169,6 +223,8 @@ html, body {
 
 /* Visor */
 .visor-container {
+  width: 240px;
+  height: 128px;
   width: 120px; height: 80px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -179,8 +235,8 @@ html, body {
 
 /* Checks */
 .checks-wrap {
-  display: grid;
-  grid-template-columns: repeat(3, auto);
+  display: flex;
+  flex-wrap: nowrap;
   gap: 4px;
   flex-shrink: 0;
   align-items: center;
@@ -229,6 +285,21 @@ html, body {
 .main { display: grid; grid-template-columns: 1fr 290px; overflow: visible; min-height: 0; position: relative; }
 
 /* ── Fretboard ── */
+.armonico {
+  fill-rule: evenodd;
+}
+
+.nodo .armonico {
+  stroke: white;
+  stroke-width: 0.1;
+}
+.nodo.greyed .armonico  {
+  fill: var(--node-grey) !important;
+}
+
+.nodo.greyed .guia-vertical   {
+  fill: var(--node-grey) !important;
+}
 .fretboard-wrap { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); position: relative; }
 .fretboard-svg-area { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; min-height: 0; }
 #mastil { width: 1000px; height: auto; flex-shrink: 0; transform-origin: center center; transform: translate(var(--pan-x,0px),var(--pan-y,0px)) scale(var(--zoom,1)); transition: transform .05s ease-out; display: block; }
@@ -325,7 +396,7 @@ html, body {
 .globo-notation.hidden { opacity: 0; pointer-events: none; }
 
 /* Barra cents */
-.cents-bar-wrap { display: flex; flex-direction: column; gap: 3px; }
+.cents-bar-wrap { display: flex; flex-direction: column; gap: 2px; }
 .cents-label { display: flex; justify-content: space-between; font-size: 8px; color: var(--text-3); letter-spacing: .10em; text-transform: uppercase; font-family: 'Barlow Condensed', sans-serif; }
 .cents-val { font-size: 13px; font-weight: 700; font-family: 'Barlow Condensed', sans-serif; }
 .cents-val.neg { color: var(--c-p7); }
@@ -336,7 +407,7 @@ html, body {
 .cents-fill.neg { background: var(--c-p7); right: 50%; }
 .cents-fill.pos { background: var(--c-p5); left: 50%; }
 .cents-center-mark { position: absolute; left: 50%; top: -1px; width: 1px; height: calc(100% + 2px); background: var(--border-strong); transform: translateX(-50%); }
-.dist-rows { display: flex; flex-direction: column; gap: 3px; margin-top: 2px; }
+.dist-rows { display: flex; flex-direction: column; gap: 2px; margin-top: 2px; }
 .dist-row { display: flex; justify-content: space-between; align-items: center; font-size: 10px; }
 .dist-row-label { color: var(--text-3); font-size: 8px; text-transform: uppercase; letter-spacing: .06em; font-family: 'Barlow Condensed', sans-serif; }
 .dist-row-val { font-weight: 700; color: var(--text); font-family: 'Barlow Condensed', monospace; font-size: 12px; }
@@ -357,6 +428,30 @@ html, body {
 .guia-vertical { stroke-width: 0.6; stroke-dasharray: 0.8,0.4; opacity: .85; }
 .guia-90 { stroke-width: 1; stroke-dasharray: 3,3; stroke: var(--purple-art); opacity: .6; }
 .icono-mano { fill: none; stroke-width: 1.5; stroke-linecap: round; }
+
+/* ── MIDI ── */
+.midi-wrap {
+  display: flex; align-items: center; margin-right: -10px; ;
+  flex-shrink: 0; cursor: pointer; margin-left: auto;
+}
+.midi-logo {
+  height: 33.5px; width: auto; opacity: 0.35;
+  transition: opacity .2s; margin-right: -6px;
+  filter: invert(1);
+}
+.midi-logo.active { opacity: 1; }
+.midi-leds {
+  display: flex; flex-direction: column; gap: 5.5px;
+}
+.midi-led {
+  width: 7px; height: 7px;
+  background: var(--border-strong);
+  transition: background .1s;
+  filter: invert(1);
+}
+.midi-led.on-green  { background: #00e050; }
+.midi-led.on-pink   { background: #cc66ff; }
+.btn-menu { background: none; border: none; cursor: pointer; padding: 5px 8px; color: var(--text-2); font-size: 18px; line-height: 1; transition: color .12s; flex-shrink: 0; margin-left: 0; }
 #guitar-contour path { stroke: var(--fret) !important; }
 
 
@@ -402,9 +497,9 @@ html, body {
 .freeze-btn.on { color: var(--freeze); }
 .freeze-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
 .row-body { flex: 1; min-width: 0; }
-.row-main { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Barlow Condensed', sans-serif; font-weight: 600; letter-spacing: 0.02em; }
+.row-main { font-size: 18px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-family: 'Barlow Condensed', sans-serif; font-weight: 500; letter-spacing: 0.03em; }
 .row-main b { font-weight: 800; }
-.row-sub { font-size: 10px; color: var(--text-3); margin-top: 1px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
+.row-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; font-family: 'Barlow', sans-serif; letter-spacing: 0.04em; text-transform: uppercase; }
 .row-right { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
 .diff-dots { display: flex; gap: 2px; }
 .diff-dot { width: 4px; height: 4px; background: var(--c-alert); opacity: .5; }
@@ -527,14 +622,54 @@ body.dark .globo-card { background: var(--surface); }
 body.dark .globo-btn { background: var(--surface); color: var(--text-3); }
 body.dark .globo-btn.active { background: var(--text); color: var(--bg); }
 body.dark #config-panel { background: var(--surface); }
+
+/* ── Flotantes ── */
+.panel-float {
+  position: fixed;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--border-strong);
+  z-index: 200; display: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.panel-float.visible { display: block; }
+.panel-float-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 8px; cursor: move; border-bottom: 1px solid var(--border);
+}
+.panel-float-header span {
+  font-size: 8px; font-weight: 700; letter-spacing:.12em;
+  text-transform: uppercase; color: var(--text-3);
+  font-family:'Barlow Condensed',sans-serif; pointer-events:none;
+}
+.panel-float-close {
+  background:none; border:none; cursor:pointer;
+  font-size:11px; color:var(--text-3); padding:0 2px; line-height:1;
+}
+.panel-float-close:hover { color:var(--text); }
+.topbar-toggle {
+  background:none; border:1px solid var(--border);
+  cursor:pointer; padding:2px 6px;
+  color:var(--text-3); font-size:13px; line-height:1;
+  transition:all .12s; flex-shrink:0;
+}
+.topbar-toggle:hover { border-color:var(--text); color:var(--text); }
+.topbar-toggle.active { background:var(--text); color:var(--bg); border-color:var(--text); }
 </style>
 </head>
 <body>
 <div class="app">
   <div class="header">
-    <h1 id="titulo-app">Tesauro <em>armónico</em> de la <span id="titulo-instrumento">guitarra</span></h1>
-    <span class="header-version">Juan del Pino · v7.0</span>
-    <button class="btn-menu" id="btn-menu" onclick="toggleConfig()" title="Configuración" style="margin-left:auto;padding:6px 12px;display:flex;flex-direction:column;gap:3px;justify-content:center;align-items:center;width:36px;height:34px;">
+    <h1 id="titulo-app">Tesauro <em>armónico</em> de la <span id="titulo-instrumento">Guitarra</span></h1>
+    <span class="header-version">Juan del Pino · v.11.2</span>
+    <div class="midi-wrap" onclick="toggleMIDI()" title="Activar MIDI">
+      <img src="assets/midi/MIDI_LOGO.svg" class="midi-logo" id="midi-logo" alt="MIDI"/>
+      <div class="midi-leds">
+        <div class="midi-led" id="led-note" title="Nota activa"></div>
+        <div class="midi-led" id="led-conn" title="MIDI conectado"></div>
+      </div>
+    </div>
+    <button class="btn-menu" id="btn-menu" onclick="toggleConfig()" title="Configuración" style="padding:6px 12px;display:flex;flex-direction:column;gap:3px;justify-content:center;align-items:center;width:36px;height:34px;">
       <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
       <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
       <span style="display:block;width:20px;height:1.5px;background:currentColor;border-radius:1px"></span>
@@ -545,37 +680,70 @@ body.dark #config-panel { background: var(--surface); }
 
   <div class="top-bar">
     <div class="nota-wrap">
-      <span class="nota-label">Nota</span>
+      <span class="nota-label">Altura</span>
       <input type="text" id="inputNota" value="B4" oninput="actualizarDesdeInput()" spellcheck="false" autocomplete="off">
+      <div id="nota-display"><span id="nota-display-text">B4</span></div>
     </div>
-    <div class="divider"></div>
-    <div class="piano-outer" id="piano"></div>
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:16px;flex-shrink:0;color:var(--text-3);cursor:default;" title="Flechas ↑↓ del teclado">
-      <span style="font-size:36px;line-height:1;">&#x25B4;</span>
-      <span style="font-size:36px;line-height:1;">&#x25BE;</span>
+    <div class="nav-arrows" title="Flechas ↑↓ del teclado">
+      <button class="nav-arrow" onclick="navArrow(1)"><svg width="9" height="7" viewBox="0 0 8 6"><polygon points="4,0 8,6 0,6" fill="currentColor"/></svg></button>
+      <button class="nav-arrow" onclick="navArrow(-1)"><svg width="9" height="7" viewBox="0 0 8 6"><polygon points="0,0 8,0 4,6" fill="currentColor"/></svg></button>
     </div>
-    <div class="visor-container">
-      <svg id="svg-visor" width="120" height="64" viewBox="0 -30 120 110" font-family="Bravura">
-        <g stroke="#e4e2dc" stroke-width="0.8"><path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/></g>
-        <text x="8" y="38" font-size="22pt" fill="#1c1b18">&#xE050;</text>
-        <g id="note-group-visor"></g>
+    <button class="topbar-toggle" id="toggle-piano" onclick="togglePanel('piano-float','toggle-piano')" title="Piano" style="padding:0;border:none;line-height:0;">
+      <svg viewBox="0 0 16 20" width="22" height="30" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <rect x="0" y="0" width="16" height="20" fill="currentColor"/>
+        <rect x="1" y="1" width="4" height="18" fill="var(--surface,white)"/>
+        <rect x="6" y="1" width="4" height="18" fill="var(--surface,white)"/>
+        <rect x="11" y="1" width="4" height="18" fill="var(--surface,white)"/>
+        <rect x="4" y="1" width="3" height="11" fill="currentColor"/>
+        <rect x="9" y="1" width="3" height="11" fill="currentColor"/>
       </svg>
-    </div>
+    </button>
+    <button class="topbar-toggle" id="toggle-visor" onclick="togglePanel('visor-float','toggle-visor')" title="Visor" style="padding:0 ;line-height:0;border:none;">
+      <svg viewBox="0 55 80 50" width="40" height="37" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="currentColor" stroke-width="2" pointer-events="none">
+          <line x1="0" y1="60.5" x2="110" y2="60.5"/>
+          <line x1="0" y1="70.5" x2="110" y2="70.5"/>
+          <line x1="0" y1="80.5" x2="110" y2="80.5"/>
+          <line x1="0" y1="90.5" x2="110" y2="90.5"/>
+          <line x1="0" y1="100.5" x2="110" y2="100.5"/>
+        </g>
+        <text x="10" y="90.1" font-size="30pt" font-family="Bravura,serif" fill="currentColor">&#xE050;</text>
+        <text x="55" y="80.5" font-size="30pt" font-family="Bravura,serif" fill="currentColor">&#xE0A4;</text>
+      </svg>
+    </button>
     <div class="divider"></div>
+    <div id="piano-float" class="panel-float">
+      <div class="panel-float-header" id="piano-drag">
+        <span>Piano</span>
+        <button class="panel-float-close" onclick="togglePanel('piano-float','toggle-piano')">✕</button>
+      </div>
+      <div style="padding:6px 8px;">
+        <div class="piano-outer" id="piano"></div>
+      </div>
+    </div>
+    <div id="visor-float" class="panel-float">
+      <div class="panel-float-header" id="visor-drag">
+        <span>Visor</span>
+        <button class="panel-float-close" onclick="togglePanel('visor-float','toggle-visor')">✕</button>
+      </div>
+      <div style="padding:6px 8px;">
+        <div class="visor-container" style="width:256px;height:160px;overflow:visible;">
+          <svg id="svg-visor" width="256" height="160" viewBox="0 -30 120 110" font-family="Bravura">
+            <g stroke="#e4e2dc" stroke-width="0.8"><path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/></g>
+            <text x="8" y="38" font-size="22pt" fill="#1c1b18">&#xE050;</text>
+            <g id="note-group-visor"></g>
+          </svg>
+        </div>
+      </div>
+    </div>
     <div class="checks-wrap">
       <label class="check-pill"><input type="checkbox" id="checkArtificial" onchange="buscarNota()"><label for="checkArtificial">Artificiales</label></label>
       <label class="check-pill"><input type="checkbox" id="checkSuperiores" checked onchange="buscarNota()"><label for="checkSuperiores">Parciales 8–22</label></label>
       <label class="check-pill"><input type="checkbox" id="checkCercanos" checked onchange="buscarNota()"><label for="checkCercanos">Cercanos</label></label>
-      <label class="check-pill btn-disabled"><input type="checkbox" disabled><label>Multifónicos</label></label>
-      <label class="check-pill btn-disabled"><input type="checkbox" disabled><label>Composer</label></label>
-      <button class="btn-reset" onclick="resetTodo()" title="Restablecer todo">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="1" y="1" width="10" height="10" rx="1.5"/>
-          <line x1="3.5" y1="3.5" x2="8.5" y2="8.5"/>
-          <line x1="8.5" y1="3.5" x2="3.5" y2="8.5"/>
-        </svg>
-      </button>
+      <label class="check-pill btn-disabled" style="margin-left:48px"><input type="checkbox" disabled><label>Multifónicos</label></label>
+      <label class="check-pill btn-disabled" style="margin-left:48px"><input type="checkbox" disabled><label>Composer</label></label>
     </div>
+
   </div>
 
   <div class="main">
@@ -601,6 +769,7 @@ body.dark #config-panel { background: var(--surface); }
 <title>b'Shape506'</title>
 </g>
           </g>
+          <rect x="645.76" y="47.34" width="14.61" height="14.19" fill="var(--bg)" style="pointer-events:none"/>
           <g id="cuerdas-group"></g>
           <g id="guitar-contour"
              transform="matrix(0,-1.323077,1.323077,0,500.0683,51.1894)"
@@ -707,9 +876,40 @@ body.dark #config-panel { background: var(--surface); }
             </div>
           </div>
 
+          <div class="config-section">
+            <div class="config-label">Nodos</div>
+            <div class="config-options">
+              <button class="config-opt" id="opt-circle" onclick="setNodeShape('circle')">Círculo</button>
+              <button class="config-opt active" id="opt-diamond" onclick="setNodeShape('diamond')">Diamante</button>
+            </div>
+            <div class="config-toggle" style="margin-top:4px">
+              <span>Tamaño</span>
+              <input type="range" min="0.5" max="2" step="0.1" value="1"
+                style="width:100px"
+                oninput="setNodeSize(this.value)">
+            </div>
+          </div>
+
+          <div class="config-section">
+            <div class="config-label">MIDI</div>
+            <div id="midi-status" style="font-size:11px;color:var(--text-3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em;">Sin conexión</div>
+            <div class="config-options" id="midi-device-wrap" style="display:none">
+              <select id="midi-device-select"
+                style="flex:1;padding:6px 8px;border:1px solid var(--border);background:var(--surface);
+                       color:var(--text);font-size:11px;font-family:'Barlow Condensed',sans-serif;
+                       letter-spacing:.06em;cursor:pointer;"
+                onchange="selectMIDIDevice(this.value)">
+              </select>
+            </div>
+            <div class="config-toggle" onclick="toggleMIDIListen()">
+              <span id="midi-listen-label">Escucha MIDI</span>
+              <div class="toggle-switch" id="midi-listen-toggle"></div>
+            </div>
+          </div>
+
         </div>
       </div>
-      <div class="panel-top">
+      <div class="panel-top" style="display:flex;align-items:flex-start;justify-content:space-between;">
           <div class="legend">
           <div class="legend-item"><div class="dot" style="background:var(--c-oct)"></div>Oct.</div>
           <div class="legend-item"><div class="dot" style="background:var(--c-5th)"></div>5.ª</div>
@@ -723,6 +923,13 @@ body.dark #config-panel { background: var(--surface); }
           <div class="legend-item"><div class="dot" style="background:var(--c-2m)"></div>2.ª m</div>
           <div class="legend-item"><div class="dot" style="background:var(--freeze)"></div>❄</div>
         </div>
+          <button onclick="resetTodo()" title="Restablecer todo" style="background:none;border:none;cursor:pointer;flex-shrink:0;padding:2px;margin-left:8px;">
+            <svg width="25" height="25" viewBox="0 0 14 14" fill="none">
+              <rect x="0.5" y="0.5" width="13" height="13" stroke="var(--text-3)" stroke-width="0.5"/>
+              <line x1="0.5" y1="0.5" x2="13.5" y2="13.5" stroke="var(--text-3)" stroke-width="0.5"/>
+              <line x1="13.5" y1="0.5" x2="0.5" y2="13.5" stroke="var(--text-3)" stroke-width="0.5"/>
+            </svg>
+          </button>
       </div>
       <div class="results-list" id="infoBox"></div>
     </div>
@@ -1084,7 +1291,17 @@ function getX(t){return OFFSET_X+(LARGO_CUERDA-(LARGO_CUERDA/Math.pow(2,t/12)));
 function getXRatio(r){return OFFSET_X+(LARGO_CUERDA*r);}
 function generarID(r){return r.type==='nat'?`nat-${r.cuerda.nota}-${r.arm.p}`:`art-${r.cuerda.nota}-${r.traste}`;}
 function getCentsColor(c){if(Math.abs(c)<=5)return'var(--c-p2)';if(c<0)return'var(--c-p7)';return'var(--c-p5)';}
-function notaToMidi(n){const m=n.match(/([A-G]#?)(\d)/);if(!m)return null;const idx=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].indexOf(m[1]);if(idx===-1)return null;return(parseInt(m[2])+1)*12+idx;}
+function notaToMidi(n){
+  // Normalizar: Bb→BB, Ab→AB, etc. (bemol como B sufijo)
+  const norm=n.toUpperCase().replace(/([A-G])B(\d)/,'$1B$2');
+  const m=norm.match(/^([A-G][B#]?)(\d)$/);
+  if(!m)return null;
+  const map={'C':0,'C#':1,'DB':1,'D':2,'D#':3,'EB':3,'E':4,'F':5,
+             'F#':6,'GB':6,'G':7,'G#':8,'AB':8,'A':9,'A#':10,'BB':10,'B':11};
+  const idx=map[m[1]];
+  if(idx===undefined)return null;
+  return(parseInt(m[2])+1)*12+idx;
+}
 
 let zoomLevel = window.innerWidth < 600 ? 0.35 : 1;
 let panX=0,panY=0,isDragging=false,startX,startY;
@@ -1096,7 +1313,7 @@ function setupCamera(){
 
   wrap.addEventListener('wheel',e=>{
     e.preventDefault();
-    zoomLevel=Math.min(Math.max(.4,zoomLevel-e.deltaY*.001),3);
+    zoomLevel=Math.min(Math.max(.4,zoomLevel-e.deltaY*.001),5);
     m.style.setProperty('--zoom',zoomLevel);
   },{passive:false});
 
@@ -1152,13 +1369,55 @@ function setupCamera(){
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      zoomLevel = Math.min(Math.max(.4, zoomLevel + (dist - lastPinchDist) * 0.005), 3);
+      zoomLevel = Math.min(Math.max(.4, zoomLevel + (dist - lastPinchDist) * 0.005), 5);
       m.style.setProperty('--zoom', zoomLevel);
       lastPinchDist = dist;
     }
   }, {passive: false});
   wrap.addEventListener('touchend', () => { lastPinchDist = null; }, {passive: true});
 }
+
+
+function togglePanel(id, btnId){
+  const el=document.getElementById(id);
+  const btn=document.getElementById(btnId);
+  const show=!el.classList.contains('visible');
+  el.classList.toggle('visible', show);
+  if(btn) btn.classList.toggle('active', show);
+  if(show && !el._pos){
+    el._pos=true;
+    const hh=document.querySelector('.header').offsetHeight;
+    const th=document.querySelector('.top-bar').offsetHeight;
+    const sp=document.querySelector('.side-panel');
+    const sw=sp?sp.offsetWidth:296;
+    el.style.top=(hh+th+8)+'px';
+    el.style.right=sw+'px';
+    el.style.left='auto';
+  }
+}
+
+function makeDraggable(panelId, handleId){
+  const panel=document.getElementById(panelId);
+  const handle=document.getElementById(handleId);
+  if(!panel||!handle)return;
+  let ox=0,oy=0,sx=0,sy=0;
+  handle.addEventListener('mousedown',e=>{
+    if(e.target.closest('button'))return;
+    e.preventDefault();
+    const r=panel.getBoundingClientRect();
+    ox=r.left; oy=r.top; sx=e.clientX; sy=e.clientY;
+    panel.style.right='auto';
+    function mv(e){panel.style.left=(ox+e.clientX-sx)+'px';panel.style.top=(oy+e.clientY-sy)+'px';}
+    function up(){document.removeEventListener('mousemove',mv);document.removeEventListener('mouseup',up);}
+    document.addEventListener('mousemove',mv);
+    document.addEventListener('mouseup',up);
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  makeDraggable('piano-float','piano-drag');
+  makeDraggable('visor-float','visor-drag');
+});
 
 function init(){buildPiano();dibujarMastil();buscarNota();highlightKey('B4');setupCamera();document.getElementById('mastil').style.setProperty('--zoom',zoomLevel);}
 
@@ -1171,13 +1430,40 @@ function buildPiano(){
   notas.forEach(n=>{
     const k=document.createElement('div');k.className=`key ${n.includes('#')?'black':'white'}`;k.dataset.note=n;
     if(n==='C4'){const d=document.createElement('div');d.className='middle-c-dot';k.appendChild(d);}
-    k.onclick=()=>{document.getElementById('inputNota').value=n;let m=notaToMidi(n);if(m>lastMidiVisor)direccionVisor='subiendo';if(m<lastMidiVisor)direccionVisor='bajando';lastMidiVisor=m;buscarNota();highlightKey(n);};
+    k.onclick=()=>{document.getElementById('inputNota').value=n;let m=notaToMidi(n);if(m>lastMidiVisor)direccionVisor='subiendo';if(m<lastMidiVisor)direccionVisor='bajando';lastMidiVisor=m;buscarNota();highlightKey(n);renderAccidental();};
     wrap.appendChild(k);
   });
   piano.appendChild(wrap);
 }
-function highlightKey(note){document.querySelectorAll('.key').forEach(k=>k.classList.toggle('active',k.dataset.note===note.toUpperCase()));}
-function actualizarDesdeInput(){const val=document.getElementById('inputNota').value.trim().toUpperCase();let m=notaToMidi(val);if(m){if(m>lastMidiVisor)direccionVisor='subiendo';if(m<lastMidiVisor)direccionVisor='bajando';lastMidiVisor=m;}buscarNota();highlightKey(val);}
+function highlightKey(note){
+  const midi=notaToMidi(note.trim().toUpperCase());
+  document.querySelectorAll('.key').forEach(k=>{
+    if(midi){
+      // Comparar por MIDI para que Ab=G#, Bb=A#, etc.
+      const km=notaToMidi(k.dataset.note);
+      k.classList.toggle('active', km===midi);
+    } else {
+      k.classList.toggle('active', k.dataset.note===note.toUpperCase());
+    }
+  });
+}
+function actualizarDesdeInput(){
+  const raw=document.getElementById('inputNota').value.trim().toUpperCase();
+  let m=notaToMidi(raw);
+  if(m){
+    if(m>lastMidiVisor)direccionVisor='subiendo';
+    if(m<lastMidiVisor)direccionVisor='bajando';
+    lastMidiVisor=m;
+    highlightKey(raw);
+    renderVisor(m);
+    if(/[0-9]$/.test(raw)) cerrarOverlay();
+    else resetOverlayTimer();
+  } else {
+    resetOverlayTimer();
+  }
+  buscarNota();
+  renderAccidental();
+}
 
 function dibujarMastil(){
   const tr=document.getElementById('trastero');tr.innerHTML='';
@@ -1660,9 +1946,34 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
     barB.setAttribute('x1',x);barB.setAttribute('y1',y+5);barB.setAttribute('x2',x);barB.setAttribute('y2',y+8);
     barB.setAttribute('stroke',c);barB.classList.add('guia-vertical');capa.appendChild(barB);
   }
-  const el=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  el.setAttribute('cx',x);el.setAttribute('cy',y);el.setAttribute('r',4);
-  el.setAttribute('fill',c);el.classList.add('nodo');
+  const el = document.createElementNS('http://www.w3.org/2000/svg','g');
+  el.setAttribute('class','nodo');
+
+  if(nodeShape === 'diamond'){
+    const sc = 0.35 * nodeSize;
+    el.setAttribute('transform', `translate(${x}, ${y}) scale(${sc})`);
+    // Rombo exterior (relleno de color)
+    const outer = document.createElementNS('http://www.w3.org/2000/svg','path');
+    outer.setAttribute('d','M 0 -8.5 L 11 0 L 0 8.5 L -11 0 Z');
+    outer.setAttribute('fill', c);
+    el.appendChild(outer);
+    // Rombo interior (relleno blanco)
+    const inner = document.createElementNS('http://www.w3.org/2000/svg','path');
+    inner.setAttribute('d','M -1 -5.0 L 6.5 1 L 1 5.0 L -6.5 -1 Z');
+    inner.setAttribute('fill','white');
+    el.appendChild(inner);
+  } else {
+    // Círculo clásico
+    const r = 4 * nodeSize;
+    el.setAttribute('transform', `translate(${x}, ${y})`);
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx','0'); circle.setAttribute('cy','0');
+    circle.setAttribute('r', r);
+    circle.setAttribute('fill', c);
+    circle.setAttribute('stroke','white');
+    circle.setAttribute('stroke-width','1.5');
+    el.appendChild(circle);
+  }
 
   if (cuerda && arm) {
     const nodeKey = `${cuerda.nota}-${arm.p}-${n_num}/${n_den}`;
@@ -1761,15 +2072,45 @@ function buildRow(r,frozen){
 
 // Teclado
 window.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){cerrarGlobos();return;}
+  const inp=document.getElementById('inputNota');
+  const isInputFocused=(document.activeElement===inp);
+
+  if(e.key==='Escape'){
+    cerrarGlobos();
+    cerrarOverlay();
+    return;
+  }
+
+  if(e.key==='Enter' && isInputFocused){
+    cerrarOverlay();
+    return;
+  }
+
   if(e.key==='ArrowUp'||e.key==='ArrowDown'){
     e.preventDefault();
-    let input=document.getElementById('inputNota');let m=notaToMidi(input.value.trim());if(!m)return;
+    let m=notaToMidi(inp.value.trim());if(!m)return;
     if(e.key==='ArrowUp'){m++;direccionVisor='subiendo';}else{m--;direccionVisor='bajando';}
-    m=Math.max(52,Math.min(115,m)); // limitar E3..G8
+    m=Math.max(52,Math.min(115,m));
     const nn=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
     let nueva=nn[m%12]+(Math.floor(m/12)-1);
-    input.value=nueva;lastMidiVisor=m;buscarNota();highlightKey(nueva);
+    inp.value=nueva;lastMidiVisor=m;buscarNota();highlightKey(nueva);
+    renderVisor(m);
+    renderAccidental();
+    return;
+  }
+
+  // Escucha global: si el usuario pulsa A-G sin modificadores y sin foco en input
+  if(!isInputFocused && !e.ctrlKey && !e.metaKey && !e.altKey){
+    const nota=/^[A-Ga-g]$/.test(e.key);
+    const num =/^[0-9]$/.test(e.key);
+    const acc = e.key==='#'||e.key==='b'||e.key==='B';
+    if(nota||num||acc){
+      e.preventDefault();
+      inp.focus();
+      inp.value=e.key.toUpperCase();
+      abrirOverlay();
+      actualizarDesdeInput();
+    }
   }
 });
 
@@ -1806,6 +2147,8 @@ const INSTRUMENTOS = {
 let currentLang = 'es';
 let currentInstrumento = 'guitar';
 let darkMode = false;
+let nodeShape = 'diamond'; // 'circle' | 'diamond'
+let nodeSize  = 1.0;       // multiplicador de tamaño
 
 const I18N = {
   es: {
@@ -1884,6 +2227,18 @@ function setLang(lang) {
     else if (btn.textContent === 'Detalles' || btn.textContent === 'Details')
       btn.textContent = t.detalles;
   });
+}
+
+function setNodeShape(shape){
+  nodeShape = shape;
+  document.getElementById('opt-circle').classList.toggle('active', shape==='circle');
+  document.getElementById('opt-diamond').classList.toggle('active', shape==='diamond');
+  buscarNota();
+}
+
+function setNodeSize(val){
+  nodeSize = parseFloat(val);
+  buscarNota();
 }
 
 function toggleDark() {
@@ -1965,7 +2320,209 @@ function resetTodo() {
   buscarNota();
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// MIDI
+// ══════════════════════════════════════════════════════════════
+let midiAccess   = null;
+let midiEnabled  = false;
+let midiListening= false;
+let midiInput    = null;
+let ledNoteTimer = null;
+
+function toggleMIDI(){
+  if(!navigator.requestMIDIAccess){
+    alert('Tu navegador no soporta Web MIDI. Usa Chrome o Edge.');
+    return;
+  }
+  if(midiAccess){ toggleMIDIListen(); return; }
+  navigator.requestMIDIAccess().then(access=>{
+    midiAccess = access;
+    midiEnabled = true;
+    document.getElementById('midi-logo').classList.add('active');
+    document.getElementById('led-conn').classList.add('on-pink');
+    document.getElementById('midi-status').textContent = 'Conectado';
+    document.getElementById('midi-device-wrap').style.display = '';
+    populateMIDIDevices();
+    // Escucha por defecto en primer dispositivo
+    const inputs = [...midiAccess.inputs.values()];
+    if(inputs.length){ setMIDIInput(inputs[0]); midiListening=true; document.getElementById('midi-listen-toggle').classList.add('on'); }
+    midiAccess.onstatechange = ()=>populateMIDIDevices();
+  }).catch(()=>{
+    document.getElementById('midi-status').textContent = 'Permiso denegado';
+  });
+}
+
+function populateMIDIDevices(){
+  const sel = document.getElementById('midi-device-select');
+  sel.innerHTML = '';
+  [...midiAccess.inputs.values()].forEach(input=>{
+    const opt = document.createElement('option');
+    opt.value = input.id; opt.textContent = input.name;
+    sel.appendChild(opt);
+  });
+  if(midiInput) sel.value = midiInput.id;
+}
+
+function selectMIDIDevice(id){
+  const input = midiAccess.inputs.get(id);
+  if(input) setMIDIInput(input);
+}
+
+function setMIDIInput(input){
+  if(midiInput) midiInput.onmidimessage = null;
+  midiInput = input;
+  midiInput.onmidimessage = onMIDIMessage;
+}
+
+function toggleMIDIListen(){
+  if(!midiAccess) return;
+  midiListening = !midiListening;
+  document.getElementById('midi-listen-toggle').classList.toggle('on', midiListening);
+  if(!midiListening && midiInput) midiInput.onmidimessage = null;
+  else if(midiListening && midiInput) midiInput.onmidimessage = onMIDIMessage;
+}
+
+function onMIDIMessage(e){
+  const [status, note] = e.data;
+  const isNoteOn = (status & 0xf0) === 0x90 && e.data[2] > 0;
+  const isNoteOff= (status & 0xf0) === 0x80 || ((status & 0xf0)===0x90 && e.data[2]===0);
+  if(isNoteOn){
+    // LED verde
+    document.getElementById('led-note').classList.add('on-green');
+    clearTimeout(ledNoteTimer);
+    ledNoteTimer = setTimeout(()=>document.getElementById('led-note').classList.remove('on-green'),300);
+    // Convertir MIDI note a nombre
+    const names = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const name  = names[note % 12];
+    const octave= Math.floor(note/12)-1;
+    const noteName = name + octave;
+    // Actualizar input y buscar
+    const inp = document.getElementById('inputNota');
+    inp.value = noteName;
+    let m = notaToMidi(noteName);
+    if(m){ if(m>lastMidiVisor)direccionVisor='subiendo'; if(m<lastMidiVisor)direccionVisor='bajando'; lastMidiVisor=m; }
+    buscarNota(); highlightKey(noteName);
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════
+// OVERLAY + TECLADO GLOBAL + BRAVURA VISUAL
+// ══════════════════════════════════════════════════════════
+let _overlayTimer = null;
+
+function abrirOverlay(){
+  const ov=document.getElementById('input-overlay');
+  const wrap=document.querySelector('.nota-wrap');
+  if(ov){ ov.style.display='block'; }
+  if(wrap) wrap.classList.add('focused');
+  resetOverlayTimer();
+  // Click fuera del overlay cierra
+  ov.onclick=()=>cerrarOverlay();
+}
+
+function cerrarOverlay(){
+  const ov=document.getElementById('input-overlay');
+  const wrap=document.querySelector('.nota-wrap');
+  if(ov) ov.style.display='none';
+  if(wrap) wrap.classList.remove('focused');
+  clearTimeout(_overlayTimer);
+  const inp=document.getElementById('inputNota');
+  if(document.activeElement===inp) inp.blur();
+}
+
+function resetOverlayTimer(){
+  clearTimeout(_overlayTimer);
+  _overlayTimer=setTimeout(cerrarOverlay,2000);
+}
+
+// Abrir overlay al hacer focus en el input
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('inputNota');
+  if(!inp)return;
+  inp.addEventListener('focus',()=>abrirOverlay());
+  inp.addEventListener('input',()=>{
+    resetOverlayTimer();
+    renderAccidental();
+  });
+});
+
+function renderAccidental(){
+  const inp=document.getElementById('inputNota');
+  const disp=document.getElementById('nota-display-text');
+  if(!inp||!disp)return;
+  const raw=inp.value.trim().toUpperCase();
+  const m=raw.match(/^([A-G])([B#]?)(\d?)$/);
+  if(!m){ disp.textContent=raw; return; }
+  let nota=m[1], acc=m[2], oct=m[3];
+
+  // Si es nota accidentada, elegir bemol o sostenido según dirección
+  // Notas negras: C#/Db, D#/Eb, F#/Gb, G#/Ab, A#/Bb
+  const BLACK_SHARP=['C#','D#','F#','G#','A#'];
+  const BLACK_FLAT =['DB','EB','GB','AB','BB'];
+  const noteAcc=nota+acc;
+  const isBlack=BLACK_SHARP.includes(noteAcc)||BLACK_FLAT.includes(noteAcc);
+
+  if(isBlack){
+    // Convertir siempre a la forma correcta según dirección
+    const midi=notaToMidi(raw+oct) || notaToMidi(raw);
+    const nn_sh=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+    const nn_fl=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+    if(midi){
+      const pc=midi%12;
+      if(direccionVisor==='bajando'){
+        // Bemoles
+        const name=nn_fl[pc];
+        nota=name[0];
+        acc=name.length>1?'B':'';
+      } else {
+        // Sostenidos
+        const name=nn_sh[pc];
+        nota=name[0];
+        acc=name.length>1?'#':'';
+      }
+      // Actualizar el valor real del input también
+      inp.value=nota+(acc==='B'?'B':acc===''?'':acc)+oct;
+    }
+  }
+
+  let html_out=nota;
+  if(acc==='#') html_out+=`<span class="acc"></span>`;
+  else if(acc==='B') html_out+=`<span class="acc"></span>`;
+  html_out+=oct;
+  disp.innerHTML=html_out;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const inp=document.getElementById('inputNota');
+  if(!inp)return;
+  // Render inicial
+  renderAccidental();
+  inp.addEventListener('blur',()=>{
+    let v=inp.value.trim().toUpperCase();
+    inp.value=v;
+    renderAccidental();
+  });
+});
+
+
+function navArrow(dir){
+  const inp=document.getElementById('inputNota');
+  let m=notaToMidi(inp.value.trim());
+  if(!m)return;
+  m+=dir;
+  if(dir>0)direccionVisor='subiendo';
+  else      direccionVisor='bajando';
+  m=Math.max(52,Math.min(115,m));
+  const nn=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  let nueva=nn[m%12]+(Math.floor(m/12)-1);
+  inp.value=nueva; lastMidiVisor=m; buscarNota(); highlightKey(nueva);
+  renderVisor(m); renderAccidental();
+}
+
 init();
 </script>
+<div id="input-overlay"></div>
 </body>
 </html>
