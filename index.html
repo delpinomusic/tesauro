@@ -754,7 +754,7 @@ body.dark #config-panel { background: var(--surface); }
         <div class="visor-container" style="width:256px;height:160px;overflow:visible;">
           <svg id="svg-visor" width="256" height="160" viewBox="0 -30 120 110" font-family="Bravura">
             <g stroke="#e4e2dc" stroke-width="0.8"><path d="M0 12.5H120M0 20.5H120M0 28.5H120M0 36.5H120M0 44.5H120"/></g>
-            <text x="8" y="38" font-size="22pt" fill="#1c1b18">&#xE050;</text>
+            <text x="8" y="37" font-size="24pt" fill="#1c1b18">&#xE050;</text>
             <g id="note-group-visor"></g>
           </svg>
         </div>
@@ -1087,11 +1087,13 @@ function renderHESVG(gEl, midi, spec, preferFlat, stringGlyph, fretNum, showCent
   const stepN = preferFlat ? STEP_FL[pcN] : STEP_SH[pcN];
   let fromE4 = (Math.floor(midi/12)-1)*7 + stepN - MI4DS;
   let octavasDown = 0;
-  const LIMITE = showCents ? 8 : 12;
-  while (fromE4 > LIMITE) { fromE4 -= 7; octavasDown++; }
-  while (fromE4 < -8)     { fromE4 += 7; }
+  // Mismos umbrales que renderVisor (ms = fromE4 - 4 → +4 en cada umbral)
+  if      (fromE4 >= 29) { fromE4 -= 21; octavasDown = 3; }  // triple 22ma (F8+)
+  else if (fromE4 >= 22) { fromE4 -= 14; octavasDown = 2; }  // 15ma (F7–E8)
+  else if (fromE4 >= 15) { fromE4 -= 7;  octavasDown = 1; }  // 8va  (F6–E7)
+  while (fromE4 < -8) { fromE4 += 7; }
   const needsOttava = octavasDown > 0;
-  const ottGlyph    = octavasDown >= 2 ? '\uE515' : '\uE511';
+  const ottGlyph    = octavasDown >= 3 ? '\uE518' : octavasDown >= 2 ? '\uE515' : '\uE511';
 
   const y  = YBASE - fromE4*SPX;
   const nx = 60;
@@ -1636,12 +1638,13 @@ function renderVisor(midi){
   let ms=(oct*7+d.s)-(4*7+6),ma=d.alt,es=d.en?(oct*7+d.enS)-(4*7+6):null,ea=d.enAlt;
   if(direccionVisor==='bajando'&&d.en){[ms,es]=[es,ms];[ma,ea]=[ea,ma];}
   let msD=ms,esD=es,ottGlyph=null,ottLeft=false;
-  if(ms>=25){msD=ms-14;ottGlyph='';ottLeft=true;}   // Fa8+: 15ma izquierda
-  else if(ms>=18){msD=ms-14;ottGlyph='';}            // Fa7-Mi8: 15ma arriba
-  else if(ms>=11){msD=ms-7; ottGlyph='';}            // Fa6-Mi7: 8va arriba
+  if(ms>=25){msD=ms-21; ottGlyph='\ue518'; ottLeft=false;}         // 22ma (triple): desde F8
+  else if(ms>=18){msD=ms-14; ottGlyph='\ue515'; ottLeft=ms>=23;}   // 15ma: left desde Eb8
+  else if(ms>=11){msD=ms-7;  ottGlyph='\ue511'; ottLeft=ms>=16;}   // 8va: left desde Eb7
   if(esD!==null){
-    if(esD>=17)esD-=14;
-    else if(esD>=10)esD-=7;
+    if(esD>=24)esD-=21;      // triple octava (espejo de ms>=25)
+    else if(esD>=17)esD-=14; // 15ma
+    else if(esD>=10)esD-=7;  // 8va
   }
   dvNote(50,yBase-(msD*4),ma,false,msD,ottGlyph,ottLeft);
   if(esD!==null)dvNote(80,yBase-(esD*4),ea,true,esD,null,false);
@@ -2219,7 +2222,7 @@ window.addEventListener('keydown',e=>{
     e.preventDefault();
     let m=notaToMidi(inp.value.trim());if(!m)return;
     if(e.key==='ArrowUp'){m++;direccionVisor='subiendo';}else{m--;direccionVisor='bajando';}
-    m=Math.max(52,Math.min(115,m));
+    m=Math.max(52,Math.min(119,m));
     const nn=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
     let nueva=nn[m%12]+(Math.floor(m/12)-1);
     inp.value=nueva;lastMidiVisor=m;buscarNota();highlightKey(nueva);
@@ -2517,6 +2520,8 @@ function onMIDIMessage(e){
   const isNoteOn = (status & 0xf0) === 0x90 && e.data[2] > 0;
   const isNoteOff= (status & 0xf0) === 0x80 || ((status & 0xf0)===0x90 && e.data[2]===0);
   if(isNoteOn){
+    // Ignorar notas fuera del rango del piano virtual (E3=52, B8=119)
+    if(note < 52 || note > 119) return;
     // LED verde
     document.getElementById('led-note').classList.add('on-green');
     clearTimeout(ledNoteTimer);
@@ -2643,7 +2648,7 @@ function navArrow(dir){
   m+=dir;
   if(dir>0)direccionVisor='subiendo';
   else      direccionVisor='bajando';
-  m=Math.max(52,Math.min(115,m));
+  m=Math.max(52,Math.min(119,m));
   const nn=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
   let nueva=nn[m%12]+(Math.floor(m/12)-1);
   inp.value=nueva; lastMidiVisor=m; buscarNota(); highlightKey(nueva);
