@@ -289,16 +289,20 @@ html, body {
   fill-rule: evenodd;
 }
 
-.nodo .armonico {
+.nodo path.armonico {
   stroke: white;
   stroke-width: 0.1;
+}
+.nodo circle.armonico {
+  stroke: white;
+  stroke-width: 0.6;
 }
 .nodo.greyed .armonico  {
   fill: var(--node-grey) !important;
 }
 
 .nodo.greyed .guia-vertical   {
-  fill: var(--node-grey) !important;
+  stroke: var(--node-grey) !important;
 }
 .fretboard-wrap { display: flex; flex-direction: column; overflow: hidden; background: var(--bg); position: relative; }
 .fretboard-svg-area { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: none; min-height: 0; }
@@ -419,10 +423,10 @@ html, body {
 .label-cuerda { font-size: 10px; text-anchor: end; fill: var(--text-2); font-weight: 700; font-family: 'Barlow Condensed', sans-serif; cursor: pointer; user-select: none; transition: fill .12s; letter-spacing: 0.04em; }
 .label-cuerda:hover { fill: var(--accent); }
 .label-cuerda.cuerda-fija { fill: #0070c0; font-weight: bold; filter: drop-shadow(0 0 2px #0070c0); }
-.label-romano { font-size: 8px; fill: var(--text-3); text-anchor: middle; font-weight: 600; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; }
+.label-romano { font-size: 8px; fill: var(--text-3); text-anchor: middle; font-weight: 600; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; pointer-events: none; user-select: none; }
 .traste-metal { stroke: var(--fret); stroke-width: 1.5; }
 .cejuela { stroke: var(--nut); stroke-width: 3; }
-.nodo { stroke: white; stroke-width: 0.8; cursor: pointer; }
+.nodo { stroke: white; stroke-width: 1.5; cursor: pointer; }
 .nodo.greyed { fill: var(--node-grey) !important; stroke: white; }
 .nodo.pulsing { animation: nodoPulse .6s ease-out; }
 .guia-vertical { stroke-width: 0.6; stroke-dasharray: 0.8,0.4; opacity: .85; }
@@ -1433,8 +1437,17 @@ function setupCamera(){
 
   wrap.addEventListener('wheel',e=>{
     e.preventDefault();
-    zoomLevel=Math.min(Math.max(.4,zoomLevel-e.deltaY*.001),5);
-    m.style.setProperty('--zoom',zoomLevel);
+    if (e.shiftKey) {
+      // Shift+trackpad → pan
+      panX -= e.deltaX * 1.2;
+      panY -= e.deltaY * 1.2;
+      m.style.setProperty('--pan-x', panX + 'px');
+      m.style.setProperty('--pan-y', panY + 'px');
+    } else {
+      // Normal → zoom
+      zoomLevel = Math.min(Math.max(.4, zoomLevel - e.deltaY * .001), 5);
+      m.style.setProperty('--zoom', zoomLevel);
+    }
   },{passive:false});
 
   wrap.addEventListener('pointerdown',e=>{
@@ -1450,8 +1463,25 @@ function setupCamera(){
     wrap.style.cursor = 'grabbing';
   });
 
+  let shiftPanLastX = null, shiftPanLastY = null;
+
   wrap.addEventListener('pointermove',e=>{
-    if(!isDragging) return;
+    // Shift + movimiento de cursor (1 dedo touchpad) → pan sin clic
+    if(e.shiftKey && !isDragging){
+      if(shiftPanLastX !== null){
+        panX += e.clientX - shiftPanLastX;
+        panY += e.clientY - shiftPanLastY;
+        m.style.setProperty('--pan-x', panX+'px');
+        m.style.setProperty('--pan-y', panY+'px');
+      }
+      shiftPanLastX = e.clientX;
+      shiftPanLastY = e.clientY;
+      wrap.style.cursor = 'grabbing';
+      return;
+    }
+    // Soltar Shift: resetear referencia
+    if(!e.shiftKey){ shiftPanLastX = null; shiftPanLastY = null; }
+    if(!isDragging){ wrap.style.cursor = 'grab'; return; }
     const dx = e.clientX - startX - panX;
     const dy = e.clientY - startY - panY;
     if(Math.abs(dx)>3 || Math.abs(dy)>3) dragMoved = true;
@@ -1495,6 +1525,38 @@ function setupCamera(){
     }
   }, {passive: false});
   wrap.addEventListener('touchend', () => { lastPinchDist = null; }, {passive: true});
+
+  // ── Doble clic: zoom toggle centrado en el puntero ───────────
+  const ZOOM_DBL = 3.0;
+  let preZoom = null; // {z, px, py} antes del zoom
+
+  wrap.addEventListener('dblclick', e => {
+    if (e.target.classList.contains('nodo')) return;
+    e.preventDefault();
+
+    if (preZoom !== null) {
+      // Segundo doble clic → restaurar estado anterior
+      zoomLevel = preZoom.z;
+      panX      = preZoom.px;
+      panY      = preZoom.py;
+      preZoom   = null;
+    } else {
+      // Primer doble clic → guardar estado y zoom centrado en el cursor
+      preZoom = { z: zoomLevel, px: panX, py: panY };
+      const rect = wrap.getBoundingClientRect();
+      const cx   = e.clientX - rect.left - rect.width  / 2;
+      const cy   = e.clientY - rect.top  - rect.height / 2;
+      panX = cx - (cx - panX) * (ZOOM_DBL / zoomLevel);
+      panY = cy - (cy - panY) * (ZOOM_DBL / zoomLevel);
+      zoomLevel = ZOOM_DBL;
+    }
+
+    m.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
+    m.style.setProperty('--zoom',  zoomLevel);
+    m.style.setProperty('--pan-x', panX + 'px');
+    m.style.setProperty('--pan-y', panY + 'px');
+    setTimeout(() => { m.style.transition = 'transform .05s ease-out'; }, 320);
+  });
 }
 
 
@@ -1811,6 +1873,18 @@ function crearGlobo(cuerda, arm, n_num, n_den, focusKey) {
 }
 
 // Mostrar todos los globos de una fila
+// ── Centrar instrumento al seleccionar ────────────────────────
+function centrarGuitarra() {
+  const mastil = document.getElementById('mastil');
+  if (!mastil) return;
+  // panX no se toca: el usuario controla qué traste ve.
+  // panY se centra: la guitarra queda centrada verticalmente en el área disponible.
+  setTimeout(() => {
+    panY = 0;
+    mastil.style.setProperty('--pan-y', '0px');
+  }, 30);
+}
+
 function mostrarGlobos(cuerda, arm, focusKey) {
   const footer = document.getElementById('globos-footer');
   const scroll = document.getElementById('globos-scroll');
@@ -1832,6 +1906,7 @@ function mostrarGlobos(cuerda, arm, focusKey) {
   });
 
   footer.classList.add('active');
+  centrarGuitarra();
   // Ajustar right del scroll al ancho real del sidebar (solo en desktop)
   const sidePanel = document.querySelector('.side-panel');
   const isMobile = window.innerWidth <= 600;
@@ -2062,35 +2137,40 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
   const capa=document.getElementById('capa-nodos');
   const tt=12*Math.log2(LARGO_CUERDA/(LARGO_CUERDA-(x-OFFSET_X)));
   const esExacto=Math.abs(tt-Math.round(tt))<0.1;
-  if(!esExacto){
-    const barT=document.createElementNS('http://www.w3.org/2000/svg','line');
-    barT.setAttribute('x1',x);barT.setAttribute('y1',y-8);barT.setAttribute('x2',x);barT.setAttribute('y2',y-5);
-    barT.setAttribute('stroke',c);barT.classList.add('guia-vertical');capa.appendChild(barT);
-    const barB=document.createElementNS('http://www.w3.org/2000/svg','line');
-    barB.setAttribute('x1',x);barB.setAttribute('y1',y+5);barB.setAttribute('x2',x);barB.setAttribute('y2',y+8);
-    barB.setAttribute('stroke',c);barB.classList.add('guia-vertical');capa.appendChild(barB);
-  }
+
+  // Wrapper sin transform: recibe la clase nodo, nodeKey y el clic.
+  // Las líneas guía van aquí (coordenadas SVG puras, sin herencia de escala).
+  // La forma (diamante/círculo) va en un subgrupo con su propio transform.
   const el = document.createElementNS('http://www.w3.org/2000/svg','g');
   el.setAttribute('class','nodo');
 
+  if(!esExacto){
+    const tipY = Math.round(8.5 * 0.35 * nodeSize);
+    const barT=document.createElementNS('http://www.w3.org/2000/svg','line');
+    barT.setAttribute('x1',x);barT.setAttribute('y1',y-tipY-5);barT.setAttribute('x2',x);barT.setAttribute('y2',y-tipY);
+    barT.setAttribute('stroke',c);barT.classList.add('guia-vertical');el.appendChild(barT);
+    const barB=document.createElementNS('http://www.w3.org/2000/svg','line');
+    barB.setAttribute('x1',x);barB.setAttribute('y1',y+tipY);barB.setAttribute('x2',x);barB.setAttribute('y2',y+tipY+5);
+    barB.setAttribute('stroke',c);barB.classList.add('guia-vertical');el.appendChild(barB);
+  }
+
+  // Subgrupo con transform para la forma
+  const shape = document.createElementNS('http://www.w3.org/2000/svg','g');
   if(nodeShape === 'diamond'){
     const sc = 0.35 * nodeSize;
-    el.setAttribute('transform', `translate(${x}, ${y}) scale(${sc})`);
-    // Rombo exterior (relleno de color)
+    shape.setAttribute('transform', `translate(${x}, ${y}) scale(${sc})`);
     const outer = document.createElementNS('http://www.w3.org/2000/svg','path');
     outer.setAttribute('d','M 0 -8.5 L 11 0 L 0 8.5 L -11 0 Z');
     outer.setAttribute('fill', c);
     outer.setAttribute('class', 'armonico');
-    el.appendChild(outer);
-    // Rombo interior (relleno blanco)
+    shape.appendChild(outer);
     const inner = document.createElementNS('http://www.w3.org/2000/svg','path');
     inner.setAttribute('d','M -1 -5.0 L 6.5 1 L 1 5.0 L -6.5 -1 Z');
     inner.setAttribute('fill','white');
-    el.appendChild(inner);
+    shape.appendChild(inner);
   } else {
-    // Círculo clásico
-    const r = 4 * nodeSize;
-    el.setAttribute('transform', `translate(${x}, ${y})`);
+    shape.setAttribute('transform', `translate(${x}, ${y})`);
+    const r = 3 * nodeSize;
     const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
     circle.setAttribute('cx','0'); circle.setAttribute('cy','0');
     circle.setAttribute('r', r);
@@ -2098,14 +2178,13 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
     circle.setAttribute('class', 'armonico');
     circle.setAttribute('stroke','white');
     circle.setAttribute('stroke-width','1.5');
-    el.appendChild(circle);
+    shape.appendChild(circle);
   }
+  el.appendChild(shape);
 
   if (cuerda && arm) {
     const nodeKey = `${cuerda.nota}-${arm.p}-${n_num}/${n_den}`;
     el.dataset.nodeKey = nodeKey;
-
-    // Clic en nodo: seleccionar y mostrar globos
     el.addEventListener('click', e => {
       e.stopPropagation();
       selectNode(cuerda, arm, n_num, n_den, el);
