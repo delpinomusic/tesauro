@@ -295,7 +295,7 @@ html, body {
 }
 .nodo circle.armonico {
   stroke: white;
-  stroke-width: 0.6;
+  stroke-width: 1.5;
 }
 .nodo.greyed .armonico  {
   fill: var(--node-grey) !important;
@@ -683,6 +683,163 @@ body.dark #config-panel { background: var(--surface); }
 }
 .topbar-toggle:hover { border-color:var(--text); color:var(--text); }
 .topbar-toggle.active { background:var(--text); color:var(--bg); border-color:var(--text); }
+
+/* ── DBTA Panel ── */
+#dbta-panel {
+  display: none;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-bottom: 2px solid var(--text);
+  overflow: hidden;
+}
+#dbta-panel.open {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: var(--dbta-h, 368px);
+}
+.dbta-col {
+  display: flex; flex-direction: column;
+  overflow: hidden; padding: 14px 16px;
+  gap: 10px;
+}
+.dbta-col + .dbta-col { border-left: 1px solid var(--border); }
+.dbta-label {
+  font-size: 9px; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--text-3);
+  font-family: 'Barlow Condensed', sans-serif;
+  border-bottom: 1px solid var(--border); padding-bottom: 4px;
+}
+.dbta-radio-group { display: flex; gap: 8px; flex-shrink: 0; }
+.dbta-radio {
+  display: flex; align-items: center; gap: 5px; cursor: pointer;
+  font-size: 11px; font-weight: 600; font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--text-2);
+}
+.dbta-radio input { accent-color: var(--accent); cursor: pointer; }
+.dbta-search {
+  width: 100%; padding: 6px 8px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
+  color: var(--text); outline: none;
+}
+.dbta-search:focus { border-color: var(--text); }
+.dbta-list { flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+.dbta-entrada {
+  padding: 6px 10px; cursor: pointer; border-bottom: 1px solid var(--border);
+  transition: background .1s;
+}
+.dbta-entrada:hover { background: var(--surface-2); }
+.dbta-entrada.active { background: var(--accent-subtle); border-left: 3px solid var(--accent); }
+.dbta-entrada-title {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 14px;
+  font-weight: 700; color: var(--text); letter-spacing: .02em;
+}
+.dbta-entrada-sub {
+  font-size: 10px; color: var(--text-3); font-family: 'Barlow', sans-serif;
+  letter-spacing: .04em;
+}
+.dbta-pasaje {
+  padding: 4px 10px 4px 20px; cursor: pointer;
+  border-bottom: 1px solid var(--border); display: flex;
+  align-items: center; gap: 6px; transition: background .1s;
+}
+.dbta-pasaje:hover { background: var(--surface-2); }
+.dbta-pasaje.active { background: var(--accent-subtle); }
+.dbta-pasaje-label {
+  font-size: 11px; font-family: 'Barlow Condensed', sans-serif;
+  color: var(--text-2); flex: 1;
+}
+.dbta-field-row { display: flex; gap: 8px; }
+.dbta-field { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+.dbta-field label {
+  font-size: 8px; font-weight: 700; letter-spacing: .10em;
+  text-transform: uppercase; color: var(--text-3);
+  font-family: 'Barlow Condensed', sans-serif;
+}
+.dbta-input {
+  width: 100%; padding: 5px 7px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  font-family: 'Barlow', sans-serif; font-size: 12px;
+  color: var(--text); outline: none;
+}
+.dbta-input:focus { border-color: var(--text); }
+.dbta-input:disabled { opacity: .35; cursor: not-allowed; }
+.dbta-textarea {
+  width: 100%; padding: 5px 7px; resize: none; height: 48px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  font-family: 'Barlow', sans-serif; font-size: 11px;
+  color: var(--text); outline: none;
+}
+.dbta-textarea:focus { border-color: var(--text); }
+.dbta-img-placeholder {
+  border: 1px dashed var(--border); height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; letter-spacing: .10em; text-transform: uppercase;
+  color: var(--text-3); font-family: 'Barlow Condensed', sans-serif;
+  opacity: .4; flex-shrink: 0;
+}
+.dbta-btn-row { display: flex; gap: 6px; flex-shrink: 0; }
+.dbta-btn {
+  flex: 1; padding: 6px 10px; border: 1px solid var(--border);
+  background: var(--surface); cursor: pointer;
+  font-size: 10px; font-weight: 700; color: var(--text-2);
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: .08em;
+  text-transform: uppercase; transition: all .12s;
+}
+.dbta-btn:hover { border-color: var(--text); color: var(--text); }
+.dbta-btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+.dbta-btn.primary:hover { background: var(--text-2); }
+.dbta-btn.danger { color: var(--accent); border-color: var(--accent); }
+.dbta-btn.danger:hover { background: var(--accent); color: white; }
+.dbta-btn.frozen-add {
+  background: var(--freeze-bg); color: var(--freeze);
+  border-color: var(--freeze); width: 100%;
+}
+.dbta-btn.frozen-add:hover { background: var(--freeze); color: white; }
+.dbta-empty {
+  padding: 20px; text-align: center;
+  font-size: 11px; color: var(--text-3);
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: .06em;
+}
+.dbta-frozen-preview {
+  font-size: 10px; color: var(--freeze); font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: .04em; flex-shrink: 0;
+}
+/* #btn-dbta ahora usa .mode-btn */
+
+/* ── Botones de modo (Multifónicos / Composer / DBTA) ── */
+.mode-btns {
+  margin-left: auto;
+  margin-right: -28px; /* cancela el padding-right del topbar */
+  display: flex;
+  gap: 0;
+  flex-shrink: 0;
+  width: 290px;
+  border-left: 1px solid var(--border);
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+}
+@media (min-width: 1280px) { .mode-btns { width: 320px; } }
+.mode-btn {
+  flex: 1;
+  height: 100%;
+  padding: 0 6px;
+  border: none;
+  border-left: 1px solid var(--border);
+  background: none;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .10em; text-transform: uppercase;
+  color: var(--text-3);
+  transition: all .12s;
+  display: flex; align-items: center; justify-content: center;
+}
+.mode-btn:first-child { border-left: none; }
+.mode-btn:hover { background: var(--surface-2); color: var(--text); }
+.mode-btn.active { background: var(--text); color: var(--bg); }
+.mode-btn.disabled { opacity: .3; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -768,14 +925,86 @@ body.dark #config-panel { background: var(--surface); }
       <label class="check-pill"><input type="checkbox" id="checkArtificial" onchange="buscarNota()"><label for="checkArtificial">Artificiales</label></label>
       <label class="check-pill"><input type="checkbox" id="checkSuperiores" checked onchange="buscarNota()"><label for="checkSuperiores">Parciales 8–22</label></label>
       <label class="check-pill"><input type="checkbox" id="checkCercanos" checked onchange="buscarNota()"><label for="checkCercanos">Cercanos</label></label>
-      <label class="check-pill btn-disabled" style="margin-left:48px"><input type="checkbox" disabled><label>Multifónicos</label></label>
-      <label class="check-pill btn-disabled" style="margin-left:48px"><input type="checkbox" disabled><label>Composer</label></label>
+    </div>
+    <div class="mode-btns">
+      <button class="mode-btn disabled" id="btn-multifonicos" title="Próximamente">Multifónicos</button>
+      <button class="mode-btn disabled" id="btn-composer" title="Próximamente">Composer</button>
+      <button class="mode-btn" id="btn-dbta" onclick="toggleDBTA()">DBTA</button>
     </div>
 
   </div>
 
   <div class="main">
     <div class="fretboard-wrap">
+      <div id="dbta-panel">
+        <!-- COL IZQ: Búsqueda y lista -->
+        <div class="dbta-col">
+          <div class="dbta-label">Base de Datos · Tesauro Armónico</div>
+          <div class="dbta-radio-group">
+            <label class="dbta-radio"><input type="radio" name="dbta-tipo" value="armonico" checked onchange="dbtaFiltrar()"> Armónico</label>
+            <label class="dbta-radio"><input type="radio" name="dbta-tipo" value="multifonico" onchange="dbtaFiltrar()"> Multifónico</label>
+          </div>
+          <input class="dbta-search" id="dbta-search" type="text" placeholder="Buscar obra, compositor…" oninput="dbtaFiltrar()">
+          <div class="dbta-list" id="dbta-list">
+            <div class="dbta-empty">Sin entradas. Añade la primera.</div>
+          </div>
+          <div class="dbta-btn-row">
+            <button class="dbta-btn primary" onclick="dbtaNuevaEntrada()">+ Entrada</button>
+            <button class="dbta-btn" onclick="dbtaEditarEntrada()">Editar</button>
+            <button class="dbta-btn danger" onclick="dbtaEliminarEntrada()">Eliminar</button>
+          </div>
+        </div>
+        <!-- COL DER: Formulario -->
+        <div class="dbta-col" id="dbta-form-col">
+          <div class="dbta-label" id="dbta-form-title">Nueva entrada</div>
+          <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;">
+            <div class="dbta-field-row">
+              <div class="dbta-field" style="flex:2">
+                <label>Obra</label>
+                <input class="dbta-input" id="dbta-f-obra" type="text" placeholder="Título de la obra">
+              </div>
+            </div>
+            <div class="dbta-field-row">
+              <div class="dbta-field" style="flex:2">
+                <label>Compositor</label>
+                <input class="dbta-input" id="dbta-f-compositor" type="text" placeholder="Apellido, Nombre">
+              </div>
+              <div class="dbta-field" style="flex:0 0 64px">
+                <label>Año</label>
+                <input class="dbta-input" id="dbta-f-año" type="text" placeholder="—">
+              </div>
+            </div>
+            <div class="dbta-field-row">
+              <div class="dbta-field">
+                <label>Instrumento</label>
+                <input class="dbta-input" id="dbta-f-instrumento" type="text" placeholder="Guitarra I">
+              </div>
+            </div>
+            <div class="dbta-label" style="margin-top:4px">Pasaje</div>
+            <div class="dbta-field-row">
+              <div class="dbta-field">
+                <label>Compás inicio</label>
+                <input class="dbta-input" id="dbta-f-c1" type="number" min="1" placeholder="1">
+              </div>
+              <div class="dbta-field">
+                <label>Compás fin</label>
+                <input class="dbta-input" id="dbta-f-c2" type="number" min="1" placeholder="—">
+              </div>
+            </div>
+            <div class="dbta-field">
+              <label>Descripción (opcional)</label>
+              <textarea class="dbta-textarea" id="dbta-f-desc" placeholder="Notas sobre la técnica, dinámica…"></textarea>
+            </div>
+            <div class="dbta-img-placeholder">Imagen de partitura · Próximamente</div>
+            <div class="dbta-frozen-preview" id="dbta-frozen-preview"></div>
+            <button class="dbta-btn frozen-add" onclick="dbtaAñadirCongelados()">❄ Añadir armónicos congelados</button>
+          </div>
+          <div class="dbta-btn-row">
+            <button class="dbta-btn primary" onclick="dbtaGuardar()">Guardar</button>
+            <button class="dbta-btn" onclick="dbtaCancelar()">Cancelar</button>
+          </div>
+        </div>
+      </div>
       <div class="fretboard-svg-area" style="overflow:visible">
         <svg id="mastil" viewBox="0 0 1000 165" overflow="visible">
           <g id="trastero"></g>
@@ -1357,7 +1586,7 @@ function renderHistorialEnBox() {
     box.innerHTML = '<div class="empty-state"><span style="font-size:22px;opacity:.3">⊙</span><span>Sin selecciones aún</span></div>';
     return;
   }
-  box.innerHTML = historial.map((h, i) => {
+  const rows = historial.map((h, i) => {
     const notaBase = h.nota.replace(/\d/, '');
     return `<div class="hist-row" onclick="cargarDesdeHistorial(${i})">
       <span class="hist-nota-big">${h.nota}</span>
@@ -1368,6 +1597,56 @@ function renderHistorialEnBox() {
       <span style="font-family:'Bravura',serif;font-size:22px;color:${h.armColor}">${h.armSym}</span>
     </div>`;
   }).join('');
+
+  const bombaSVG = `<svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" width="36" height="36">
+  <!-- SPARK -->
+  <rect x="12" y="0" width="1" height="1" fill="currentColor"/>
+  <rect x="14" y="0" width="1" height="1" fill="currentColor"/>
+  <rect x="16" y="0" width="1" height="1" fill="currentColor"/>
+  <rect x="13" y="1" width="3" height="1" fill="currentColor"/>
+  <rect x="11" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="12" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="13" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="14" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="15" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="16" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="17" y="2" width="1" height="1" fill="currentColor"/>
+  <rect x="13" y="3" width="3" height="1" fill="currentColor"/>
+  <rect x="12" y="4" width="1" height="1" fill="currentColor"/>
+  <rect x="14" y="4" width="1" height="1" fill="currentColor"/>
+  <rect x="16" y="4" width="1" height="1" fill="currentColor"/>
+  <!-- FUSE -->
+  <rect x="12" y="5" width="1" height="1" fill="currentColor"/>
+  <rect x="11" y="6" width="1" height="1" fill="currentColor"/>
+  <rect x="10" y="7" width="1" height="1" fill="currentColor"/>
+  <!-- BOMB BODY -->
+  <rect x="6"  y="8"  width="5"  height="1" fill="currentColor"/>
+  <rect x="4"  y="9"  width="9"  height="1" fill="currentColor"/>
+  <rect x="3"  y="10" width="11" height="1" fill="currentColor"/>
+  <rect x="2"  y="11" width="11" height="1" fill="currentColor"/>
+  <rect x="2"  y="12" width="11" height="1" fill="currentColor"/>
+  <rect x="2"  y="13" width="11" height="1" fill="currentColor"/>
+  <rect x="2"  y="14" width="11" height="1" fill="currentColor"/>
+  <rect x="3"  y="15" width="9"  height="1" fill="currentColor"/>
+  <rect x="4"  y="16" width="7"  height="1" fill="currentColor"/>
+  <rect x="6"  y="17" width="3"  height="1" fill="currentColor"/>
+  <!-- HIGHLIGHT -->
+  <rect x="4"  y="10" width="2"  height="1" fill="white"/>
+  <rect x="4"  y="11" width="1"  height="1" fill="white"/>
+</svg>`;
+
+  box.innerHTML = rows + `
+    <div style="border-top:1px solid var(--border);margin:4px 0;"></div>
+    <div onclick="borrarHistorial()" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px;cursor:pointer;color:var(--text-3);transition:color .12s;gap:6px;"
+         onmouseenter="this.style.color='var(--accent)'" onmouseleave="this.style.color='var(--text-3)'">
+      ${bombaSVG}
+      <span style="font-size:9px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.10em;text-transform:uppercase;">Borrar historial</span>
+    </div>`;
+}
+
+function borrarHistorial() {
+  historial = [];
+  renderHistorialEnBox();
 }
 
 function cargarDesdeHistorial(i) {
@@ -1601,7 +1880,246 @@ document.addEventListener('DOMContentLoaded',()=>{
   makeDraggable('visor-float','visor-drag');
 });
 
-function init(){buildPiano();dibujarMastil();buscarNota();highlightKey('B4');setupCamera();document.getElementById('mastil').style.setProperty('--zoom',zoomLevel);}
+
+// ══════════════════════════════════════════════════════════════
+// DBTA — Database of Tesauro Armónico
+// ══════════════════════════════════════════════════════════════
+const DBTA_KEY = 'dbta_v1';
+let dbtaDB = { entradas: [] };
+let dbtaMode = false;
+let dbtaEntradaActiva = null; // id de entrada seleccionada
+let dbtaPasajeActivo  = null; // id de pasaje seleccionado
+let dbtaEditMode = false;     // true = editando entrada existente
+let dbtaCongeladosTemp = [];  // congelados capturados para el pasaje
+
+function dbtaLoad() {
+  try {
+    const raw = localStorage.getItem(DBTA_KEY);
+    if (raw) dbtaDB = JSON.parse(raw);
+  } catch(e) { dbtaDB = { entradas: [] }; }
+}
+function dbtaSave() {
+  localStorage.setItem(DBTA_KEY, JSON.stringify(dbtaDB));
+}
+function dbtaUUID() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+
+function toggleDBTA() {
+  dbtaMode = !dbtaMode;
+  document.getElementById('btn-dbta').classList.toggle('active', dbtaMode);
+  const panel = document.getElementById('dbta-panel');
+  panel.classList.toggle('open', dbtaMode);
+  if (dbtaMode) {
+    // Calcular altura: 4× (header + topbar)
+    const hh = document.querySelector('.header').offsetHeight;
+    const th = document.querySelector('.top-bar').offsetHeight;
+    panel.style.setProperty('--dbta-h', (4*(hh+th))+'px');
+    panel.style.height = (4*(hh+th))+'px';
+    dbtaFiltrar();
+    dbtaFormLimpiar();
+  }
+}
+
+function dbtaTipo() {
+  return document.querySelector('input[name="dbta-tipo"]:checked').value;
+}
+
+function dbtaFiltrar() {
+  const q = (document.getElementById('dbta-search').value || '').toLowerCase();
+  const tipo = dbtaTipo();
+  const list = document.getElementById('dbta-list');
+  const entradas = dbtaDB.entradas.filter(e =>
+    e.tipo === tipo &&
+    (!q || e.obra.toLowerCase().includes(q) || (e.compositor||'').toLowerCase().includes(q))
+  );
+  if (!entradas.length) {
+    list.innerHTML = '<div class="dbta-empty">Sin entradas para este filtro.</div>';
+    return;
+  }
+  list.innerHTML = entradas.map(e => {
+    const isActive = e.id === dbtaEntradaActiva;
+    const pasajesHtml = isActive ? e.pasajes.map(p => {
+      const label = p.compas_fin && p.compas_fin !== p.compas_inicio
+        ? `cc. ${p.compas_inicio}–${p.compas_fin}` : `c. ${p.compas_inicio}`;
+      const nArm = (p.armonicos||[]).length;
+      const isPasAct = p.id === dbtaPasajeActivo;
+      return `<div class="dbta-pasaje${isPasAct?' active':''}" onclick="dbtaSelPasaje('${e.id}','${p.id}',event)">
+        <span class="dbta-pasaje-label">${label}${p.descripcion?' · <em style=\"opacity:.6\">' + p.descripcion.slice(0,30) + '</em>':''}</span>
+        <span style="font-size:9px;color:var(--text-3);font-family:'Barlow Condensed',sans-serif">${nArm} arm.</span>
+      </div>`;
+    }).join('') : '';
+    return `<div>
+      <div class="dbta-entrada${isActive?' active':''}" onclick="dbtaSelEntrada('${e.id}')">
+        <div class="dbta-entrada-title">${e.obra}</div>
+        <div class="dbta-entrada-sub">${e.compositor||''}${e.año?' · '+e.año:''}${e.instrumento?' · '+e.instrumento:''}</div>
+      </div>
+      ${pasajesHtml}
+    </div>`;
+  }).join('');
+}
+
+function dbtaSelEntrada(id) {
+  if (dbtaEntradaActiva === id) {
+    dbtaEntradaActiva = null;
+    dbtaPasajeActivo  = null;
+  } else {
+    dbtaEntradaActiva = id;
+    dbtaPasajeActivo  = null;
+  }
+  dbtaFiltrar();
+  // Cargar datos en formulario si hay entrada activa
+  const e = dbtaDB.entradas.find(x => x.id === id);
+  if (e) dbtaFormCargar(e);
+  else   dbtaFormLimpiar();
+}
+
+function dbtaSelPasaje(entId, pasId, ev) {
+  ev.stopPropagation();
+  dbtaEntradaActiva = entId;
+  dbtaPasajeActivo  = pasId;
+  dbtaFiltrar();
+  // Cargar armónicos del pasaje en congelados
+  const entrada = dbtaDB.entradas.find(e => e.id === entId);
+  const pasaje  = entrada && entrada.pasajes.find(p => p.id === pasId);
+  if (!pasaje) return;
+  // Establecer la primera nota objetivo en el input
+  const armonicos = pasaje.armonicos || [];
+  if (armonicos.length) {
+    const inp = document.getElementById('inputNota');
+    inp.value = armonicos[0].notaObjetivo;
+    buscarNota(); highlightKey(armonicos[0].notaObjetivo); renderAccidental();
+  }
+  // Recrear congelados desde los datos guardados
+  congelados = armonicos.map(a => {
+    const cuerda = CUERDAS_DATA.find(c => c.nota === a.cuerda);
+    const arm    = SERIE.find(s => s.p === a.parcial);
+    if (!cuerda || !arm) return null;
+    return { type:'nat', cuerda, arm, desv: a.cents||0,
+             id: `nat-${a.cuerda}-${a.parcial}`, notaObjetivo: a.notaObjetivo,
+             dificultad: 0 };
+  }).filter(Boolean);
+  buscarNota();
+}
+
+function dbtaFormCargar(e) {
+  document.getElementById('dbta-form-title').textContent = 'Editar entrada';
+  document.getElementById('dbta-f-obra').value        = e.obra || '';
+  document.getElementById('dbta-f-compositor').value  = e.compositor || '';
+  document.getElementById('dbta-f-año').value         = e.año || '';
+  document.getElementById('dbta-f-instrumento').value = e.instrumento || '';
+  document.getElementById('dbta-f-c1').value          = '';
+  document.getElementById('dbta-f-c2').value          = '';
+  document.getElementById('dbta-f-desc').value        = '';
+  dbtaCongeladosTemp = [];
+  dbtaUpdateFrozenPreview();
+  dbtaEditMode = true;
+}
+
+function dbtaFormLimpiar() {
+  document.getElementById('dbta-form-title').textContent = 'Nueva entrada';
+  ['dbta-f-obra','dbta-f-compositor','dbta-f-año','dbta-f-instrumento',
+   'dbta-f-c1','dbta-f-c2','dbta-f-desc'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  dbtaCongeladosTemp = [];
+  dbtaUpdateFrozenPreview();
+  dbtaEditMode = false;
+}
+
+function dbtaNuevaEntrada() {
+  dbtaEntradaActiva = null;
+  dbtaPasajeActivo  = null;
+  dbtaFormLimpiar();
+  dbtaFiltrar();
+}
+
+function dbtaEditarEntrada() {
+  const e = dbtaDB.entradas.find(x => x.id === dbtaEntradaActiva);
+  if (!e) { alert('Selecciona una entrada primero.'); return; }
+  dbtaFormCargar(e);
+}
+
+function dbtaEliminarEntrada() {
+  if (!dbtaEntradaActiva) { alert('Selecciona una entrada primero.'); return; }
+  if (!confirm('¿Eliminar esta entrada y todos sus pasajes?')) return;
+  dbtaDB.entradas = dbtaDB.entradas.filter(e => e.id !== dbtaEntradaActiva);
+  dbtaEntradaActiva = null; dbtaPasajeActivo = null;
+  dbtaSave(); dbtaFiltrar(); dbtaFormLimpiar();
+}
+
+function dbtaAñadirCongelados() {
+  if (!congelados.length) {
+    alert('No hay armónicos congelados. Congela algunos en el sidebar primero.'); return;
+  }
+  dbtaCongeladosTemp = congelados.map(c => ({
+    cuerda:       c.cuerda.nota,
+    parcial:      c.arm.p,
+    frac:         c.arm.frac,
+    nombre:       c.arm.n,
+    cents:        c.desv || 0,
+    notaObjetivo: c.notaObjetivo || document.getElementById('inputNota').value.trim().toUpperCase()
+  }));
+  dbtaUpdateFrozenPreview();
+}
+
+function dbtaUpdateFrozenPreview() {
+  const el = document.getElementById('dbta-frozen-preview');
+  if (!dbtaCongeladosTemp.length) { el.textContent = ''; return; }
+  el.textContent = `❄ ${dbtaCongeladosTemp.length} armónico(s) capturado(s): ` +
+    dbtaCongeladosTemp.map(a => `${a.cuerda} P${a.parcial}`).join(', ');
+}
+
+function dbtaGuardar() {
+  const obra = document.getElementById('dbta-f-obra').value.trim();
+  if (!obra) { alert('El campo Obra es obligatorio.'); return; }
+  const c1 = parseInt(document.getElementById('dbta-f-c1').value) || null;
+  const c2 = parseInt(document.getElementById('dbta-f-c2').value) || c1;
+  const tipo = dbtaTipo();
+
+  const nuevoPasaje = c1 ? {
+    id:           dbtaUUID(),
+    compas_inicio: c1,
+    compas_fin:    c2,
+    descripcion:  document.getElementById('dbta-f-desc').value.trim(),
+    imagen:       null,
+    armonicos:    dbtaCongeladosTemp
+  } : null;
+
+  if (dbtaEditMode && dbtaEntradaActiva) {
+    // Actualizar entrada existente
+    const e = dbtaDB.entradas.find(x => x.id === dbtaEntradaActiva);
+    if (e) {
+      e.obra        = obra;
+      e.compositor  = document.getElementById('dbta-f-compositor').value.trim();
+      e.año         = document.getElementById('dbta-f-año').value.trim() || null;
+      e.instrumento = document.getElementById('dbta-f-instrumento').value.trim();
+      if (nuevoPasaje) e.pasajes.push(nuevoPasaje);
+    }
+  } else {
+    // Nueva entrada
+    const nueva = {
+      id:          dbtaUUID(),
+      tipo,
+      obra,
+      compositor:  document.getElementById('dbta-f-compositor').value.trim(),
+      año:         document.getElementById('dbta-f-año').value.trim() || null,
+      instrumento: document.getElementById('dbta-f-instrumento').value.trim(),
+      pasajes:     nuevoPasaje ? [nuevoPasaje] : []
+    };
+    dbtaDB.entradas.push(nueva);
+    dbtaEntradaActiva = nueva.id;
+  }
+  dbtaSave();
+  dbtaFiltrar();
+  dbtaFormLimpiar();
+}
+
+function dbtaCancelar() {
+  dbtaFormLimpiar();
+}
+
+function init(){dbtaLoad();buildPiano();dibujarMastil();buscarNota();highlightKey('B4');setupCamera();document.getElementById('mastil').style.setProperty('--zoom',zoomLevel);}
 
 function buildPiano(){
   const piano=document.getElementById('piano');
@@ -2170,7 +2688,7 @@ function drawNode(x,y,c,cuerda,arm,n_num,n_den){
     shape.appendChild(inner);
   } else {
     shape.setAttribute('transform', `translate(${x}, ${y})`);
-    const r = 3 * nodeSize;
+    const r = 4 * nodeSize;
     const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
     circle.setAttribute('cx','0'); circle.setAttribute('cy','0');
     circle.setAttribute('r', r);
